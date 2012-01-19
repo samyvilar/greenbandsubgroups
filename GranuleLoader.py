@@ -85,12 +85,25 @@ class GranuleLoader(object):
         for index, granule in enumerate(granules):
             if not isinstance(granule, HDFFile):
                 granules[index] = HDFFile(granule)
-            granule.bands       = self.bands
-            granule.set_param   = self.param
-            granule.crop_size   = self.crop_size
-            granule.crop_orig   = self.crop_orig
+            granules[index].bands       = self.bands
+            granules[index].set_param   = self.param
+            granules[index].crop_size   = self.crop_size
+            granules[index].crop_orig   = self.crop_orig
 
         caching_file = self.calc_granules_cached_file_name(granules = granules)
+
+        self.granules = load_cached_or_calculate_and_cached(
+                            caching = self.is_caching(),
+                            file_name = caching_file,
+                            function = multithreading_pool_map,
+                            arguments =
+                            {
+                                'values':self.get_granules(),
+                                'function':load_granules_threaded,
+                                'multithreaded':self.is_multithreading(),
+                            }
+                        )
+
         if self.is_caching():
             caching_func = load_cached_or_calculate_and_cached
         else:
