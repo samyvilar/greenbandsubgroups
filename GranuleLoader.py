@@ -116,13 +116,3 @@ class GranuleLoader(object):
         self.dir = dir
         files = [dir + '/' + file for file in os.listdir(dir) if fnmatch.fnmatch(file, pattern)]
         self.load_granules(files)
-
-
-
-class A(object):
-    @property
-    def b(self):
-        print 'hello'
-class B(A):
-    pass
-
