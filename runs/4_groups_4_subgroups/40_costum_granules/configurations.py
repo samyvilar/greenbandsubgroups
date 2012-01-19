@@ -2,7 +2,7 @@ __author__ = 'Samy Vilar'
 
 import numpy
 
-from ..GranuleLoader import GranuleLoader
+from GranuleLoader import GranuleLoader
 from MeanCalculator import MeanCalculator, MeanShift
 
 
