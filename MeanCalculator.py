@@ -135,49 +135,75 @@ def calc_means(values, threaded):
         results = multithreading_pool_map(values, getMean)
 
 
+class MeanShift(object):
+    def __init__(self, number_of_points = None, number_of_dimensions = None, number_of_neighbors = None):
+        self._number_of_points      = number_of_points
+        self._number_of_dimensions  = number_of_dimensions
+        self._number_of_neighbors   = number_of_neighbors
+
+    @property
+    def number_of_points(self):
+        return self._number_of_points
+    @property
+    def number_of_dimensions(self):
+        return self._number_of_dimensions
+    @property
+    def number_of_neighbors(self):
+        return self._number_of_neighbors
+
 
 class MeanCalculator(object):
     def __init__(self):
+        self._granules                              = None
+        self._number_of_groups                      = None
+        self._number_of_subgroups                   = None
+        self._number_of_runs                        = None
+        self._number_of_random_unique_sub_samples   = None
+        self._number_of_observations                = None
+        self._threshold                             = None
+        self._labels                                = None
+        self._mean_shift                            = None
+        self._means                                 = None
+
         self.enable_multithreading()
 
-    def set_granules(self, granules):
-        self._granules = granules
-    def get_granules(self):
+        self._required_properties = ['number_of_groups', 'number_of_subgroups', 'number_of_runs', 'number_of_random_unique_sub_samples',
+                                     'number_of_observations', 'threshold', 'mean_shift']
+
+
+    @property
+    def granules(self):
         return self._granules
-
-    def set_number_of_groups(self, number_of_groups):
-        self._number_of_groups = number_of_groups
-    def get_number_of_groups(self):
+    @property
+    def number_of_groups(self):
         return self._number_of_groups
-    def set_number_of_subgroups(self, number_of_subgroups):
-        self._number_of_subgroups = number_of_subgroups
-    def get_number_of_subgroups(self):
+    @property
+    def number_of_subgroups(self):
         return self._number_of_subgroups
-
-    def set_number_of_runs(self, number_of_runs):
-        self._number_of_runs = number_of_runs
-    def get_number_of_runs(self):
+    @property
+    def number_of_runs(self):
         return self._number_of_runs
-
-    def set_number_of_random_unique_subsamples(self, number_of_random_unique_subsamples):
-        self._number_of_random_unique_subsamples = number_of_random_unique_subsamples
-    def get_number_of_random_unique_subsamples(self):
-        return self._number_of_random_unique_subsamples
-
-    def set_number_of_observations(self, number_of_observations):
-        self._number_of_observations = number_of_observations
-    def get_number_of_observations(self):
+    @property
+    def number_of_random_unique_sub_samples(self):
+        return self._number_of_random_unique_sub_samples
+    @property
+    def number_of_observations(self):
         return self._number_of_observations
-
-    def set_threshold(self, threshold):
-        self._threshold = threshold
-    def get_threshold(self):
+    @property
+    def threshold(self):
         return self._threshold
 
-    def set_labels(self, labels):
-        self._labels = labels
-    def get_labels(self):
+    @property
+    def labels(self):
         return self._labels
+
+    @property
+    def mean_shift(self):
+        return self._mean_shift
+    @property
+    def means(self):
+        return self._means
+
 
     def enable_multithreading(self):
         self._multithreading = True
@@ -186,57 +212,27 @@ class MeanCalculator(object):
     def is_multithreading(self):
         return self._multithreading
 
-    def set_number_of_points_mean_shift(self, number_of_points):
-        self._number_of_points = number_of_points
-    def get_number_of_points_mean_shift(self):
-        return self._number_of_points
-
-    def set_number_of_dimensions_mean_shift(self, number_of_dimensions):
-        self._number_of_dimensions = number_of_dimensions
-    def get_number_of_dimensions_mean_shift(self):
-        return self._number_of_dimensions
-
-    def set_number_of_neighbors_mean_shift(self, number_of_neighbors):
-        self._number_of_neighbors = number_of_neighbors
-    def get_number_of_neighbors_mean_shift(self):
-        return self._number_of_neighbors
-
-    def check_all_stats(self):
-        assert self.get_number_of_random_unique_subsamples() and \
-               self.get_number_of_groups() and \
-               self.get_number_of_subgroups() and \
-               self.get_number_of_runs() and \
-               self.get_number_of_observations() and \
-               self.get_granules() and \
-               self.get_threshold() and \
-               self.get_number_of_points_mean_shift() and \
-               self.get_number_of_dimensions_mean_shift() and\
-               self.get_number_of_neighbors_mean_shift()
 
 
-    def set_means(self, means):
-        self._means = means
-    def get_means(self):
-        return self._means
+    def check_all_properties(self):
+        for property in self._required_properties:
+            assert getattr(self, property)
+
+
 
     def get_properties_as_array_dict(self):
         values = []
-        for file in self.get_granules():
+        for file in self.granules:
             values.append({})
             values[-1]['hdf_file'] = file
-            values[-1]['number_of_runs'] = self.get_number_of_runs()
-            values[-1]['number_of_observations'] = self.get_number_of_observations()
-            values[-1]['number_of_random_unique_subsamples'] = self.get_number_of_random_unique_subsamples()
-            values[-1]['threshold'] = self.get_threshold()
+            for property in self._required_properties:
+                values[-1][property] = getattr(self, property)
 
-            values[-1]['number_of_points'] = self.get_number_of_points_mean_shift()
-            values[-1]['number_of_dimensions'] = self.get_number_of_dimensions_mean_shift()
-            values[-1]['number_of_neighbors'] = self.get_number_of_neighbors_mean_shift()
         return values
 
     def calculate_labels(self, temp_folder):
         self.check_all_properties()
-        self.set_means(load_cached_or_calculate_and_cached('initial_means.obj', calc_means, self.get_properties_as_array_dict(), self.is_multithreading()))
+        self.means = load_cached_or_calculate_and_cached('initial_means.obj', calc_means, self.get_properties_as_array_dict(), self.is_multithreading())
 
 
 

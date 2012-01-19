@@ -2,6 +2,27 @@ __author__ = 'Samy Vilar'
 
 import multiprocessing, pickle, os, time
 
+
+class GranuleProperties(object):
+    def __init__(self):
+        self._bands     = None
+        self._param     = None
+        self._crop_size = None
+        self._crop_orig = None
+
+    @property
+    def param(self):
+        return self._param
+    @property
+    def bands(self):
+        return self._bands
+    @property
+    def crop_size(self):
+        return self._crop_size
+    @property
+    def crop_orig(self):
+        return self._crop_orig
+
 def get_cpu_count():
     return (multiprocessing.cpu_count() / 4) + multiprocessing.cpu_count()
 

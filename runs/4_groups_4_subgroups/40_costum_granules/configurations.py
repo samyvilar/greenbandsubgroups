@@ -1,5 +1,10 @@
 __author__ = 'Samy Vilar'
+
+import numpy
+
 from GreenBandSubGroups import GreenBandSubGroup
+from GranuleLoader import GranuleLoader
+from MeanCalculator import MeanCalculator, MeanShift
 
 
 granules = [
@@ -45,5 +50,27 @@ granules = [
     '/DATA_6/TERRA_1KM/MOD021KM.A2010172.2155.005.2010173072138.hdf',
     '/DATA_6/TERRA_1KM/MOD021KM.A2010172.1025.005.2010172194922.hdf'
 ]
+
+
+
+if __name__ == '__main__':
+    granule_loader = GranuleLoader()
+    granule_loader.bands = numpy.asarray([1,2,3,4])
+    granule_loader.param = 'radiance'
+    granule_loader.disable_caching()
+    granule_loader.load_granules(granules)
+
+    '''
+    mean_calculator = MeanCalculator()
+    mean_calculator.number_of_groups = 4
+    mean_calculator.number_of_subgroups = 4
+    mean_calculator.number_of_runs = 10
+    mean_calculator.number_of_random_unique_sub_samples  = 1000
+    mean_calculator.number_of_observations = 274862
+    mean_calculator.mean_shift = MeanShift(number_of_points = 30, number_of_dimensions = 1, number_of_neighbors = 100)
+    '''
+
+
+
 
 

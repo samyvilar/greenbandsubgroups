@@ -2,6 +2,8 @@ __author__ = 'Samy Vilar'
 
 import glasslab_cluster.io
 import numpy
+import os
+from Utils import GranuleProperties
 
 
 def read_file(file = None, bands = None, param = None, crop_size = None, crop_orig = None):
@@ -34,50 +36,43 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
         crop = data
     return crop.reshape(crop.shape[0] * crop.shape[1], len(bands)).astype(numpy.dtype('f8')), valid_range
 
-class HDFFile(object):
+class HDFFile(GranuleProperties):
     def __int__(self, file):
-        self.set_file(file)
+        self._file_name     = None
+        self._file_dir      = None
+        self._data          = None
+        self._valid_range   = None
+        self.file = file
 
-    def set_file(self, file):
-        self._file = file
-    def get_file(self):
+    @property
+    def file(self):
         return self._file
+    @file.setter
+    def file(self, value):
+        self._file      = value
+        self.file_name  = os.path.basename(self.file)
+        self.file_dir   = os.path.dirname(self.file)
 
-    def set_param(self, param):
-        self._param = param
-    def get_param(self):
-        return self._param
-
-    def set_crop_size(self, crop_size):
-        self._crop_size = crop_size
-    def get_crop_size(self):
-        return self._crop_size
-
-    def set_crop_orig(self, crop_orig):
-        self._crop_orig = crop_orig
-    def get_crop_orig(self):
-        return self._crop_orig
-
-    def set_bands(self, bands):
-        self._bands = bands
-    def get_bands(self, bands):
-        return self._bands
-
-    def set_data(self, data):
-        self._data = data
-    def get_data(self):
+    @property
+    def file_name(self):
+        return self._file_name
+    @property
+    def file_dir(self):
+        return self._file_dir
+    @property
+    def data(self):
         return self._data
 
-    def set_valid_range(self, valid_range):
-        self._valid_range = valid_range
-    def get_valid_range(self):
+    @property
+    def valid_range(self):
         return self._valid_range
+
 
     def load(self):
         try:
             data, valid_range = read_file(file = self.get_file(), bands = self.get_bands(), param = self.get_param(), crop_size = self.get_crop_size(), crop_orig = self.get_crop_orig())
-            self.set_data(data)
-            self.set_valid_range(valid_range)
+            self.data = data
+            self.valid_range = valid_range
             return self
         except Exception as ex:
             return None
