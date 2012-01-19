@@ -93,7 +93,7 @@ class GranuleLoader(object):
         caching_file = self.calc_granules_cached_file_name(granules = granules)
 
         self.granules = load_cached_or_calculate_and_cached(
-                            caching = self.is_caching(),
+                            caching = self.is_caching() if self.is_caching() else "",
                             file_name = caching_file,
                             function = multithreading_pool_map,
                             arguments =
