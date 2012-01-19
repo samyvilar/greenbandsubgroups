@@ -68,7 +68,7 @@ class GranuleLoader(object):
 
 
     def _verify_properties(self):
-        assert self.param and self.bands and self.crop_orig and self.crop_size
+        assert self.param != None and self.bands != None
 
     @staticmethod
     def get_names_hashed(names):
