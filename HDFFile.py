@@ -38,11 +38,28 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
 
 class HDFFile(GranuleProperties):
     def __int__(self, file):
+        self._bands         = None
+        self._param         = None
+        self._crop_size     = None
+        self._crop_orig     = None
         self._file_name     = None
         self._file_dir      = None
         self._data          = None
         self._valid_range   = None
         self.file = file
+
+    @property
+    def param(self):
+        return self._param
+    @property
+    def bands(self):
+        return self._bands
+    @property
+    def crop_size(self):
+        return self._crop_size
+    @property
+    def crop_orig(self):
+        return self._crop_orig
 
     @property
     def file(self):

@@ -2,8 +2,7 @@ __author__ = 'Samy Vilar'
 
 import numpy
 
-from GreenBandSubGroups import GreenBandSubGroup
-from GranuleLoader import GranuleLoader
+from ..GranuleLoader import GranuleLoader
 from MeanCalculator import MeanCalculator, MeanShift
 
 

@@ -6,8 +6,25 @@ from Utils import multithreading_pool_map, load_cached_or_calculate_and_cached, 
 
 class GranuleLoader(GranuleProperties):
     def __init__(self):
-        self._dir = None
-        self._granules = None
+        self._bands     = None
+        self._param     = None
+        self._crop_size = None
+        self._crop_orig = None
+        self._dir       = None
+        self._granules  = None
+
+    @property
+    def param(self):
+        return self._param
+    @property
+    def bands(self):
+        return self._bands
+    @property
+    def crop_size(self):
+        return self._crop_size
+    @property
+    def crop_orig(self):
+        return self._crop_orig
 
     @property
     def dir(self):
@@ -83,4 +100,10 @@ class GranuleLoader(GranuleProperties):
 
 
 
+class A(object):
+    @property
+    def b(self):
+        print 'hello'
+class B(A):
+    pass
 
