@@ -2,9 +2,9 @@ __author__ = 'Samy Vilar'
 
 import fnmatch, os
 from HDFFile import HDFFile
-from Utils import multithreading_pool_map, load_cached_or_calculate_and_cached, GranuleProperties
+from Utils import multithreading_pool_map, load_cached_or_calculate_and_cached
 
-class GranuleLoader(GranuleProperties):
+class GranuleLoader(object):
     def __init__(self):
         self._bands     = None
         self._param     = None

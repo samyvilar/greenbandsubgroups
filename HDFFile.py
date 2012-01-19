@@ -3,8 +3,6 @@ __author__ = 'Samy Vilar'
 import glasslab_cluster.io
 import numpy
 import os
-from Utils import GranuleProperties
-
 
 def read_file(file = None, bands = None, param = None, crop_size = None, crop_orig = None):
     data = []
@@ -36,7 +34,7 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
         crop = data
     return crop.reshape(crop.shape[0] * crop.shape[1], len(bands)).astype(numpy.dtype('f8')), valid_range
 
-class HDFFile(GranuleProperties):
+class HDFFile(object):
     def __int__(self, file):
         self._bands         = None
         self._param         = None
