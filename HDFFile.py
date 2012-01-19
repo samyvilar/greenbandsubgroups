@@ -4,7 +4,6 @@ import glasslab_cluster.io
 import numpy
 import os
 
-
 def read_file(file = None, bands = None, param = None, crop_size = None, crop_orig = None):
     data = []
     valid_range  = numpy.zeros((len(bands), 2))
