@@ -16,22 +16,41 @@ class GranuleLoader(object):
     @property
     def param(self):
         return self._param
+    @param.setter
+    def param(self, value):
+        self._param = value
     @property
     def bands(self):
         return self._bands
+    @bands.setter
+    def bands(self, value):
+        self._bands = value
     @property
     def crop_size(self):
         return self._crop_size
+    @crop_size.setter
+    def crop_size(self, value):
+        self._crop_size = value
     @property
     def crop_orig(self):
         return self._crop_orig
+    @crop_orig.setter
+    def crop_orig(self, value):
+        self._crop_orig = value
 
     @property
     def dir(self):
         return self._dir
+    @dir.setter
+    def dir(self, value):
+        self._dir = value
+
     @property
     def granules(self):
         return self._granules
+    @granules.setter
+    def granules(self, values):
+        self._granules = values
 
     def enable_caching(self):
         self._caching = True

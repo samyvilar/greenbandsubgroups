@@ -50,15 +50,27 @@ class HDFFile(object):
     @property
     def param(self):
         return self._param
+    @param.setter
+    def param(self, value):
+        self._param = value
     @property
     def bands(self):
         return self._bands
+    @bands.setter
+    def bands(self, values):
+        self._bands = values
     @property
     def crop_size(self):
         return self._crop_size
+    @crop_size.setter
+    def crop_size(self, values):
+        self._crop_size = values
     @property
     def crop_orig(self):
         return self._crop_orig
+    @crop_orig.setter
+    def crop_orig(self, values):
+        self._crop_orig = values
 
     @property
     def file(self):
@@ -72,16 +84,28 @@ class HDFFile(object):
     @property
     def file_name(self):
         return self._file_name
+    @file_name.setter
+    def file_name(self, values):
+        self._file_name = values
     @property
     def file_dir(self):
         return self._file_dir
+    @file_dir.setter
+    def file_dir(self, values):
+        self._file_dir = values
     @property
     def data(self):
         return self._data
+    @data.setter
+    def data(self, values):
+        self._data = values
 
     @property
     def valid_range(self):
         return self._valid_range
+    @valid_range.setter
+    def valid_range(self, values):
+        self._valid_range = values
 
 
     def load(self):
