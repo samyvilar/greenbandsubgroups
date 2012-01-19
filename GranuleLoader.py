@@ -84,7 +84,7 @@ class GranuleLoader(object):
         self._verify_properties()
         for index, granule in enumerate(granules):
             if not isinstance(granule, HDFFile):
-                granule[index] = HDFFile(granule)
+                granules[index] = HDFFile(granule)
             granule.bands       = self.bands
             granule.set_param   = self.param
             granule.crop_size   = self.crop_size
