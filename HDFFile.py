@@ -36,7 +36,7 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
     return crop.reshape(crop.shape[0] * crop.shape[1], len(bands)).astype(numpy.dtype('f8')), valid_range
 
 class HDFFile(object):
-    def __int__(self, file):
+    def __init__(self, file):
         self._bands         = None
         self._param         = None
         self._crop_size     = None
