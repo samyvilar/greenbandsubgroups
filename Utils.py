@@ -11,10 +11,10 @@ def load_cached_or_calculate_and_cached(caching = None, file_name = None, functi
         return function(**arguments)
 
     if os.path.isfile(file_name):
-        return pickle.load(file_name)
+        return pickle.load(open(file_name, 'rb'))
     else:
         values = function(**arguments)
-        pickle.dump(values  , file_name)
+        pickle.dump(values, open(file_name, 'wb'))
         return values
 
 
