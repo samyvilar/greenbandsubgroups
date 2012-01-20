@@ -98,34 +98,16 @@ class GranuleLoader(object):
 
         self.granules = load_cached_or_calculate_and_cached(
                             caching = self.is_caching(),
-                            file_name = self.calc_granules_cached_file_name(granules = granules) if self.is_caching() else "",
+                            file_name = self.calc_granules_cached_file_name(granules = granules) if self.is_caching() else None,
                             function = multithreading_pool_map,
                             arguments =
                             {
-                                'values':self.get_granules(),
+                                'values':granules,
                                 'function':load_granules_threaded,
                                 'multithreaded':self.is_multithreading(),
                             }
                         )
-
-        if self.is_caching():
-            caching_func = load_cached_or_calculate_and_cached
-        else:
-            caching_func = lambda file, func, *args: func(args)
-
-        if self.is_multithreading():
-            def load_granules_threaded(granule):
-                try:
-                    granule.load()
-                except Exception as ex:
-                    print str(ex)
-                    return None
-                return granule
-            self.granules = caching_func(caching_file, multithreading_pool_map, (self.get_granules(), load_granules_threaded))
-        else:
-            self.granules =  caching_func(caching_file,
-                lambda granules: [granule for granule in (lambda granules: [granule.load() for granule in granules])(granules) if granule], self.granules)
-
+        
 
     def load_granules_from_dir(self, dir = None, pattern = None):
         assert dir and pattern
