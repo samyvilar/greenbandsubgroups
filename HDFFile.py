@@ -109,6 +109,7 @@ class HDFFile(object):
 
 
     def load(self):
+        print 'loading %s' % self.file
         try:
             data, valid_range = read_file(file = self.get_file(), bands = self.get_bands(), param = self.get_param(), crop_size = self.get_crop_size(), crop_orig = self.get_crop_orig())
             self.data = data
