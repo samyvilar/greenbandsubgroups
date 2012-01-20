@@ -92,7 +92,7 @@ class GranuleLoader(object):
             if not isinstance(granule, HDFFile):
                 granules[index] = HDFFile(granule)
             granules[index].bands       = self.bands
-            granules[index].set_param   = self.param
+            granules[index].param       = self.param
             granules[index].crop_size   = self.crop_size
             granules[index].crop_orig   = self.crop_orig
 
