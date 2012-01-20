@@ -115,7 +115,7 @@ class GranuleLoader(object):
                                 'multithreaded':self.is_multithreading(),
                             }
                         )
-        
+
 
     def load_granules_from_dir(self, dir = None, pattern = None):
         assert dir and pattern
