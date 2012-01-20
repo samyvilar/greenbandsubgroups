@@ -107,14 +107,8 @@ class HDFFile(object):
     def valid_range(self, values):
         self._valid_range = values
 
-
     def load(self):
-        print 'loading %s' % self.file
-        try:
-            data, valid_range = read_file(file = self.get_file(), bands = self.get_bands(), param = self.get_param(), crop_size = self.get_crop_size(), crop_orig = self.get_crop_orig())
-            self.data = data
-            self.valid_range = valid_range
-            return self
-        except Exception as ex:
-            return None
+        self.data, self.valid_range = read_file(file = self.file, bands = self.bands, param = self.param, crop_size = self.crop_size, crop_orig = self.crop_orig)
+        return self
+
 
