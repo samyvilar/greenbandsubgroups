@@ -37,7 +37,7 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
 
 class HDFFile(object):
     def __init__(self, file):
-        self._bands         = None
+        self._bands         = []
         self._param         = None
         self._crop_size     = None
         self._crop_orig     = None
@@ -108,7 +108,7 @@ class HDFFile(object):
         self._valid_range = values
 
     def _verify_properties(self):
-        assert self.param and self.bands and self.file
+        assert self.param and len(self.bands) > 0 and self.file
 
     def load(self):
         self._verify_properties()
