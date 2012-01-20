@@ -96,14 +96,6 @@ class GranuleLoader(object):
             granules[index].crop_size   = self.crop_size
             granules[index].crop_orig   = self.crop_orig
 
-        def load_granules_threaded(granule):
-            try:
-                granule.load()
-            except Exception as ex:
-                print str(ex)
-                return None
-            return granule
-
         self.granules = load_cached_or_calculate_and_cached(
                             caching = self.is_caching(),
                             file_name = self.calc_granules_cached_file_name(granules = granules) if self.is_caching() else None,
@@ -123,3 +115,12 @@ class GranuleLoader(object):
         self.dir = dir
         files = [dir + '/' + file for file in os.listdir(dir) if fnmatch.fnmatch(file, pattern)]
         self.load_granules(files)
+
+
+def load_granules_threaded(granule):
+    try:
+        granule.load()
+    except Exception as ex:
+        print str(ex)
+        return None
+    return granule
