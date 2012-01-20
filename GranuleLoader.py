@@ -121,6 +121,6 @@ def load_granules_threaded(granule):
     try:
         granule.load()
     except Exception as ex:
-        print str(ex)
+        print "Failed to load granule %s Error: %s" % (str(granule.file), str(ex))
         return None
     return granule
