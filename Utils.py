@@ -8,13 +8,13 @@ def get_cpu_count():
 
 def load_cached_or_calculate_and_cached(caching = None, file_name = None, function = None, arguments = None):
     if not caching:
-        return function(arguments)
+        return function(**arguments)
 
     if os.path.isfile(file_name):
         return pickle.load(file_name)
     else:
         values = function(**arguments)
-        pickle.dump(data, file_name)
+        pickle.dump(values  , file_name)
         return values
 
 
