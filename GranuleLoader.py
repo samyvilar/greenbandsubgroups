@@ -72,11 +72,17 @@ class GranuleLoader(object):
 
     @staticmethod
     def get_names_hashed(names):
-        pass
+        hash = 0
+        for name in names:
+            for ch in name:
+                hash += ord(ch)
+        return hash % 10**8
 
-    def calc_granules_cached_file_name(self):
+
+    def calc_granules_cached_file_name(self, granules = None):
+        assert granules
         return 'number_of_granules:%i_param:%s_bands:%s_crop_size:%s_crop_ori:%s_names_hashed:%s' %\
-               (len(self.get_granules()), str(self.param), str(self.bands), str(self.crop_size), str(self.crop_orig), GranuleLoader.get_names_hashed(self.granules))
+               (len(granules), str(self.param), str(self.bands).strip(' '), str(self.crop_size), str(self.crop_orig), GranuleLoader.get_names_hashed([granule.file_name for granule in granules]))
 
 
 
@@ -90,11 +96,9 @@ class GranuleLoader(object):
             granules[index].crop_size   = self.crop_size
             granules[index].crop_orig   = self.crop_orig
 
-        caching_file = self.calc_granules_cached_file_name(granules = granules)
-
         self.granules = load_cached_or_calculate_and_cached(
-                            caching = self.is_caching() if self.is_caching() else "",
-                            file_name = caching_file,
+                            caching = self.is_caching(),
+                            file_name = self.calc_granules_cached_file_name(granules = granules) if self.is_caching() else "",
                             function = multithreading_pool_map,
                             arguments =
                             {
