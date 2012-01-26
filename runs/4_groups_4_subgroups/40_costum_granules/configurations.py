@@ -53,22 +53,24 @@ granules = [
 
 
 if __name__ == '__main__':
-    granule_loader = GranuleLoader()
+    granule_loader = GranuleLoader()                    # Load Granules
     granule_loader.bands = numpy.asarray([1,2,3,4])
     granule_loader.param = 'radiance'
     granule_loader.enable_caching()
     granule_loader.enable_multithreading()
     granule_loader.load_granules(granules)
 
-    '''
-    mean_calculator = MeanCalculator()
+
+    mean_calculator = MeanCalculator()                  # Calculate or load initial means ...
+    mean_calculator.granule_loader = granule_loader
     mean_calculator.number_of_groups = 4
     mean_calculator.number_of_subgroups = 4
     mean_calculator.number_of_runs = 10
     mean_calculator.number_of_random_unique_sub_samples  = 1000
     mean_calculator.number_of_observations = 274862
     mean_calculator.mean_shift = MeanShift(number_of_points = 30, number_of_dimensions = 1, number_of_neighbors = 100)
-    '''
+
+
 
 
 

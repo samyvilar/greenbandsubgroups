@@ -38,5 +38,3 @@ def multithreading_pool_map(**kwargs):
     end = time.time()
     print "Done %f" % (end - start)
     return results
-
-

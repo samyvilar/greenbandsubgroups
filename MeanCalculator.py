@@ -27,16 +27,16 @@ def getMean(kwargs):
     data = hdf_file.get_data()
 
     if numpy.any(data.min(axis = 0) == data.max(axis = 0)):
-        print "Skipping %s" % basename(hdf_file.get_file()) # competive learning will crash, so lets skip it
+        print "Skipping %s" % basename(hdf_file.get_file()) # competitive learning will crash, so lets skip it
         return None
 
     assert numpy.all(numpy.isfinite(data))
 
     def clustering_function(data):
         def mean_shift(data):
-            K = number_of_points  #  n is the number of points
-            L = number_of_dimensions   #  d is the number of dimensions.
-            k = number_of_neighbors #  number of neighbors
+            K = number_of_points  # n is the number of points
+            L = number_of_dimensions   # d is the number of dimensions.
+            k = number_of_neighbors # number of neighbors
             f = glasslab_cluster.cluster.FAMS(data, seed = 100) #FAMS Fast Adaptive Mean Shift
 
             pilot = f.RunFAMS(K, L, k)
@@ -104,35 +104,56 @@ def getMean(kwargs):
     return means
 
 
-def calc_means(values, threaded):
-    def save_reducedmeans(means, meansfile):
-        means = numpy.row_stack(means)
-        print "mean:", means.shape, means.min(), means.max()
-        newmeans = self.getmeans(means, glasslab_cluster.cluster.aghc(means, NNewMeans, method='max', metric='cityblock'))
-        print "newmean:", newmeans.shape, newmeans.min(), newmeans.max()
-        plt.figure()
-        for i in xrange(means.shape[0]):
-            plt.plot(means[i,:])
-        plt.grid()
-        plt.savefig("means.png")
-        plt.figure()
-        for i in xrange(newmeans.shape[0]):
-            plt.plot(newmeans[i,:])
-        x = time.time()
-        print "time = %d" % x
-        plt.title("@ %d" % x)
-        plt.grid()
-        plt.savefig("newmeans.png")
-        scipy.io.savemat(meansfile, {'means' : newmeans})
-        self.means = newmeans
-        dist = scipy.spatial.distance.squareform(scipy.spatial.distance.pdist(means))
-        print "dist:", dist.shape
-        plt.figure()
-        plt.imshow(dist, interpolation='nearest')
-        plt.colorbar()
-        plt.savefig('dist.png')
-    if threaded:
-        results = multithreading_pool_map(values, getMean)
+
+def save_reduced_means(means = None, number_of_means = None):
+    means = numpy.row_stack(means)
+    newmeans = getmeans(means, glasslab_cluster.cluster.aghc(means, number_of_means, method = 'max', metric = 'cityblock'))
+    for i in xrange(means.shape[0]):
+        plt.plot(means[i,:])
+    plt.grid()
+    plt.savefig("means.png")
+    plt.figure()
+    for i in xrange(newmeans.shape[0]):
+        plt.plot(newmeans[i,:])
+    x = time.time()
+    print "time = %d" % x
+    plt.title("@ %d" % x)
+    plt.grid()
+    plt.savefig("newmeans.png")
+    scipy.io.savemat(meansfile, {'means' : newmeans})
+    self.means = newmeans
+    dist = scipy.spatial.distance.squareform(scipy.spatial.distance.pdist(means))
+    print "dist:", dist.shape
+    plt.figure()
+    plt.imshow(dist, interpolation='nearest')
+    plt.colorbar()
+    plt.savefig('dist.png')
+
+
+def calc_means(**kwargs):
+    def getmeans(data = None, labels = None):
+        number_clusters = labels.max() + 1
+        mu = numpy.zeros((number_clusters, data.shape[1]))
+        for i in xrange(number_clusters):
+            mu[i,:] = data[labels == i].mean(axis = 0)
+        return mu
+    files_and_clustering_properties  = kwargs.popitem('files_clustering_properties')
+
+    if len(files_and_clustering_properties) == 0:
+        return []
+
+    results   = multithreading_pool_map(values       = files_and_clustering_properties,
+                                       function      = kwargs.popitem('clustering_function'),
+                                       multithreaded = kwargs.popitem('multithreaded'))
+
+    results = numpy.asarrray(results)
+    results.tofile('results.mat')
+
+    return getmeans(data = results,
+                    labels = glasslab_cluster.cluster.aghc(labels, files_and_clustering_properties[0]['number_of_groups'], method = 'max', metric = 'cityblock'))
+
+
+
 
 
 class MeanShift(object):
@@ -167,43 +188,102 @@ class MeanCalculator(object):
 
         self.enable_multithreading()
 
-        self._required_properties = ['number_of_groups', 'number_of_subgroups', 'number_of_runs', 'number_of_random_unique_sub_samples',
-                                     'number_of_observations', 'threshold', 'mean_shift']
-
+        self._required_properties = ['number_of_groups',
+                                     'number_of_subgroups',
+                                     'number_of_runs',
+                                     'number_of_random_unique_sub_samples',
+                                     'number_of_observations',
+                                     'threshold',
+                                     'mean_shift']
 
     @property
     def granules(self):
         return self._granules
+    @granules.setter
+    def granules(self, values):
+        self._granules = values
+
     @property
     def number_of_groups(self):
         return self._number_of_groups
+    @number_of_groups.setter
+    def number_of_groups(self, values):
+        self._number_of_groups = values
+
     @property
     def number_of_subgroups(self):
         return self._number_of_subgroups
+    @number_of_subgroups.setter
+    def number_of_subgroups(self, values):
+        self._number_of_subgroups = values
+
     @property
     def number_of_runs(self):
         return self._number_of_runs
+    @number_of_runs.setter
+    def number_of_runs(self, values):
+        self._number_of_runs = values
+
     @property
     def number_of_random_unique_sub_samples(self):
         return self._number_of_random_unique_sub_samples
+    @number_of_random_unique_sub_samples.setter
+    def number_of_random_unique_sub_samples(self, values):
+        self._number_of_random_unique_sub_samples = values
+
     @property
     def number_of_observations(self):
         return self._number_of_observations
+    @number_of_observations.setter
+    def number_of_observations(self, values):
+        self._number_of_observations = values
+
     @property
     def threshold(self):
         return self._threshold
+    @threshold.setter
+    def threshold(self, values):
+        self._threshold = values
 
     @property
     def labels(self):
         return self._labels
+    @labels.setter
+    def labels(self, values):
+        self._labels = values
 
     @property
     def mean_shift(self):
         return self._mean_shift
+    @mean_shift.setter
+    def mean_shift(self, values):
+        self._mean_shift = values
+
     @property
     def means(self):
         return self._means
+    @means.setter
+    def means(self, values):
+        self._means = values
 
+    @property
+    def granule_loader(self):
+        return self._granule_loader
+    @granule_loader.setter
+    def granule_loader(self, values):
+        self._granule_loader = values
+        if self.granule_loader.state == "LOADED":
+            self.granules = self.granule_loader.granules
+        else:
+            raise Exception("Granule Loader must be set and load the granules!")
+
+
+    def enable_caching(self):
+        self._caching = True
+    def disable_caching(self):
+        self._caching = False
+    def is_caching(self):
+        return self._caching
 
     def enable_multithreading(self):
         self._multithreading = True
@@ -213,14 +293,11 @@ class MeanCalculator(object):
         return self._multithreading
 
 
-
     def check_all_properties(self):
         for property in self._required_properties:
             assert getattr(self, property)
 
-
-
-    def get_properties_as_array_dict(self):
+    def get_clustering_properties_as_array_dict_for_each_file(self):
         values = []
         for file in self.granules:
             values.append({})
@@ -230,9 +307,23 @@ class MeanCalculator(object):
 
         return values
 
-    def calculate_labels(self, temp_folder):
+    def calc_caching_file_name(self):
+        return 'number_of_granules:%i_param:%s_bands:%s_names_hashed:%s_number_of_clusters:%i_number_of_subclusters:%i_initial_means.obj' % \
+            (len(self.granules), self.granules[0].param, str(self.granules[0].bands), GranuleLoader.get_names_hashed([granule.file_name for granule in self.granules]), self.number_of_groups)
+
+
+    def calculate_means(self):
         self.check_all_properties()
-        self.means = load_cached_or_calculate_and_cached('initial_means.obj', calc_means, self.get_properties_as_array_dict(), self.is_multithreading())
+        self.means = load_cached_or_calculate_and_cached(
+            caching     = self.is_caching(),
+            file_name   = self.calc_caching_file_name(),
+            function    = calc_means,
+            arguments   =
+                {
+                    'files_clustering_properties':self.get_clustering_properties_as_array_dict_for_each_file(),
+                    'clustering_function':getMean,
+                    'multithreaded':self.is_multithreading(),
+                })
 
 
 

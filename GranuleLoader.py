@@ -12,6 +12,14 @@ class GranuleLoader(object):
         self._crop_orig = None
         self._dir       = None
         self._granules  = None
+        self.__state    = "INITIAL"
+
+    @property
+    def _state(self):
+        return self.__state
+    @_state.setter
+    def _state(self, values):
+        self.__state = values
 
     @property
     def param(self):
@@ -79,10 +87,11 @@ class GranuleLoader(object):
         return hash % 10**8
 
 
-    def calc_granules_cached_file_name(self, granules = None):
+    @staticmethod
+    def calc_granules_cached_file_name(granules = None):
         assert granules
         return 'number_of_granules:%i_param:%s_bands:%s_crop_size:%s_crop_ori:%s_names_hashed:%s' %\
-               (len(granules), str(self.param), str(self.bands).strip(' '), str(self.crop_size), str(self.crop_orig), GranuleLoader.get_names_hashed([granule.file_name for granule in granules]))
+               (len(granules), str(granules[0].param), str(granules[0].bands).strip(' '), str(granules[0].crop_size), str(granules[0].crop_orig), GranuleLoader.get_names_hashed([granule.file_name for granule in granules]))
 
 
 
@@ -107,6 +116,7 @@ class GranuleLoader(object):
                                 'multithreaded':self.is_multithreading(),
                             }
                         )
+        self._state = "LOADED"
 
 
     def load_granules_from_dir(self, dir = None, pattern = None):
