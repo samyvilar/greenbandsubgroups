@@ -109,9 +109,9 @@ class GranuleLoader(object):
             granules[index].crop_size   = self.crop_size
             granules[index].crop_orig   = self.crop_orig
 
-        self.granules = load_cached_or_calculate_and_cached(
+        granules = load_cached_or_calculate_and_cached(
                             caching = self.is_caching(),
-                            file_name = self.calc_granules_cached_file_name(granules = granules) if self.is_caching() else None,
+                            file_name = self.calc_granules_cached_file_name(granules = granules),
                             function = multithreading_pool_map,
                             arguments =
                             {
@@ -120,6 +120,7 @@ class GranuleLoader(object):
                                 'multithreaded':self.is_multithreading(),
                             }
                         )
+        self.granules = [granule for granule in granules if granule]
         self._state = "LOADED"
 
 
