@@ -8,9 +8,23 @@ import scipy.cluster.vq
 import networkx
 import glasslab_cluster.cluster.consensus as gcons
 import time
+import pickle
+import scipy.cluster.vq.kmeans2
 
 from Utils import load_cached_or_calculate_and_cached, multithreading_pool_map
 from GranuleLoader import GranuleLoader
+
+
+def getMeans(data, labels):
+    assert data.ndim == 2 and labels.ndim == 1 and data.shape[0] == len(labels) and labels.min() >= 0
+    number_of_clusters = labels.max() + 1
+    means = numpy.zeros((number_of_clusters, data.shape[1]), dtype = 'f8')
+    count = numpy.zeros(number_of_clusters, dtype = 'i')
+    for i in xrange(number_of_clusters):
+        indices = numpy.where(labels == i)[0]
+        means[i,:] =  data[indices, :].mean(axis = 0)
+        count[i] = len(indices)
+    return means, count
 
 
 def getMean(kwargs):
@@ -93,17 +107,6 @@ def getMean(kwargs):
 
     mrlabels = gcons.rmajrule(numpy.asarray(run_labels, dtype = 'int64'))
 
-    def getMeans(data, labels):
-        assert data.ndim == 2 and labels.ndim == 1 and data.shape[0] == len(labels) and labels.min() >= 0
-        number_of_clusters = labels.max() + 1
-        means = numpy.zeros((number_of_clusters, data.shape[1]), dtype = 'f8')
-        count = numpy.zeros(number_of_clusters, dtype = 'i')
-        for i in xrange(number_of_clusters):
-            indices = numpy.where(labels == i)[0]
-            means[i,:] =  data[indices, :].mean(axis = 0)
-            count[i] = len(indices)
-        return means, count
-
     means, count = getMeans(data, mrlabels)
     print means
     return means
@@ -116,6 +119,7 @@ def calc_means(**kwargs):
             mu[i,:] = data[labels == i].mean(axis = 0)
         return mu
     files_and_clustering_properties  = kwargs['files_clustering_properties']
+    number_sub_groups                = kwargs['number_of_sub_groups']
 
     if len(files_and_clustering_properties) == 0: return []
 
@@ -123,8 +127,9 @@ def calc_means(**kwargs):
                                        function      = kwargs['clustering_function'],
                                        multithreaded = kwargs['multithreaded'])
 
+    print results
+    pickle.dump(results, open('results.obj', 'wb'))
     results = numpy.asarray(results)
-    results.tofile('results.mat')
 
     means = getmeans(data = results,
                     labels = glasslab_cluster.cluster.aghc(
@@ -132,6 +137,16 @@ def calc_means(**kwargs):
                         files_and_clustering_properties[0]['number_of_groups'],
                         method = 'max',
                         metric = 'cityblock'))
+
+    print means
+    pickle.dump(means, open('means.mat', 'wb'))
+
+    def calc_means_sub_group(**kwargs):
+        return getMeans(kwargs['hdf_file'].data, labels = scipy.cluster.vq.kmeans2(kwargs['hdf_file'].data, kwargs['number_of_sub_groups'], threshold = kwargs['threshold'])[1])
+
+
+
+
     return means
 
 
@@ -193,11 +208,11 @@ class MeanCalculator(object):
         self._number_of_groups = values
 
     @property
-    def number_of_subgroups(self):
-        return self._number_of_subgroups
-    @number_of_subgroups.setter
-    def number_of_subgroups(self, values):
-        self._number_of_subgroups = values
+    def number_of_sub_groups(self):
+        return self._number_of_sub_groups
+    @number_of_sub_groups.setter
+    def number_of_sub_groups(self, values):
+        self._number_of_sub_groups = values
 
     @property
     def number_of_runs(self):
