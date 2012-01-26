@@ -17,7 +17,7 @@ def getMean(kwargs):
     hdf_file                            = kwargs['hdf_file']
     number_of_runs                      = kwargs['number_of_runs']
     number_of_observations              = kwargs['number_of_observations']
-    number_of_random_unique_subsamples  = kwargs['number_of_random_unique_subsamples']
+    number_of_random_unique_sub_samples  = kwargs['number_of_random_unique_sub_samples']
     threshold                           = kwargs['threshold']
 
     number_of_points                    = kwargs['number_of_points']
@@ -87,7 +87,7 @@ def getMean(kwargs):
             cofunc = consensus_function,
             clfunc = clustering_function,
             nco    = number_of_observations,
-            ncl    = number_of_random_unique_subsamples)
+            ncl    = number_of_random_unique_sub_samples)
     mrlabels = gcons.rmajrule(run_labels)
 
     def getMeans(data, labels):
