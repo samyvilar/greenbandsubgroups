@@ -138,14 +138,14 @@ def calc_means(**kwargs):
         for i in xrange(number_clusters):
             mu[i,:] = data[labels == i].mean(axis = 0)
         return mu
-    files_and_clustering_properties  = kwargs.popitem('files_clustering_properties')
+    files_and_clustering_properties  = kwargs['files_clustering_properties']
 
     if len(files_and_clustering_properties) == 0:
         return []
 
     results   = multithreading_pool_map(values       = files_and_clustering_properties,
-                                       function      = kwargs.popitem('clustering_function'),
-                                       multithreaded = kwargs.popitem('multithreaded'))
+                                       function      = kwargs['clustering_function'],
+                                       multithreaded = kwargs['multithreaded'])
 
     results = numpy.asarrray(results)
     results.tofile('results.mat')
