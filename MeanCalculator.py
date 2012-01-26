@@ -88,7 +88,8 @@ def getMean(kwargs):
             cofunc = consensus_function,
             clfunc = clustering_function,
             nco    = number_of_observations,
-            ncl    = number_of_random_unique_sub_samples).astype('int64')
+            ncl    = number_of_random_unique_sub_samples)
+    print run_labels
 
     mrlabels = gcons.rmajrule(run_labels)
 
