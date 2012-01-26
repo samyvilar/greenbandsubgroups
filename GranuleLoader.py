@@ -95,7 +95,7 @@ class GranuleLoader(object):
     def calc_granules_cached_file_name(granules = None):
         if granules == None or len(granules) == 0: return "None"
         return '%s/number_of_granules:%i_param:%s_bands:%s_crop_size:%s_crop_ori:%s_names_hashed:%s' %\
-               (granule[0].file_dir + '/cache/granules', len(granules), str(granules[0].param), str(granules[0].bands).strip(' '), str(granules[0].crop_size), str(granules[0].crop_orig), GranuleLoader.get_names_hashed([granule.file_name for granule in granules]))
+               (granules[0].file_dir + '/cache/granules', len(granules), str(granules[0].param), str(granules[0].bands).strip(' '), str(granules[0].crop_size), str(granules[0].crop_orig), GranuleLoader.get_names_hashed([granule.file_name for granule in granules]))
 
 
 
