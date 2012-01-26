@@ -62,6 +62,9 @@ if __name__ == '__main__':
 
 
     mean_calculator = MeanCalculator()                  # Calculate or load initial means ...
+    mean_calculator.enable_multithreading()
+    mean_calculator.enable_caching()
+
     mean_calculator.granule_loader = granule_loader
     mean_calculator.number_of_groups = 4
     mean_calculator.number_of_subgroups = 4
