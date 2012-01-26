@@ -15,15 +15,15 @@ from GranuleLoader import GranuleLoader
 
 def getMean(kwargs):
 
-    hdf_file                            = kwargs['hdf_file']
-    number_of_runs                      = kwargs['number_of_runs']
-    number_of_observations              = kwargs['number_of_observations']
+    hdf_file                             = kwargs['hdf_file']
+    number_of_runs                       = kwargs['number_of_runs']
+    number_of_observations               = kwargs['number_of_observations']
     number_of_random_unique_sub_samples  = kwargs['number_of_random_unique_sub_samples']
-    threshold                           = kwargs['threshold']
+    threshold                            = kwargs['threshold']
 
-    number_of_points                    = kwargs['mean_shift'].number_of_points
-    number_of_dimensions                = kwargs['mean_shift'].number_of_dimensions
-    number_of_neighbors                 = kwargs['mean_shift'].number_of_neighbors
+    number_of_points                     = kwargs['mean_shift'].number_of_points
+    number_of_dimensions                 = kwargs['mean_shift'].number_of_dimensions
+    number_of_neighbors                  = kwargs['mean_shift'].number_of_neighbors
 
 
     data = hdf_file.data
@@ -108,33 +108,6 @@ def getMean(kwargs):
     print means
     return means
 
-
-
-def save_reduced_means(means = None, number_of_means = None):
-    means = numpy.row_stack(means)
-    newmeans = getmeans(means, glasslab_cluster.cluster.aghc(means, number_of_means, method = 'max', metric = 'cityblock'))
-    for i in xrange(means.shape[0]):
-        plt.plot(means[i,:])
-    plt.grid()
-    plt.savefig("means.png")
-    plt.figure()
-    for i in xrange(newmeans.shape[0]):
-        plt.plot(newmeans[i,:])
-    x = time.time()
-    print "time = %d" % x
-    plt.title("@ %d" % x)
-    plt.grid()
-    plt.savefig("newmeans.png")
-    scipy.io.savemat(meansfile, {'means' : newmeans})
-    self.means = newmeans
-    dist = scipy.spatial.distance.squareform(scipy.spatial.distance.pdist(means))
-    print "dist:", dist.shape
-    plt.figure()
-    plt.imshow(dist, interpolation='nearest')
-    plt.colorbar()
-    plt.savefig('dist.png')
-
-
 def calc_means(**kwargs):
     def getmeans(data = None, labels = None):
         number_clusters = labels.max() + 1
@@ -144,18 +117,23 @@ def calc_means(**kwargs):
         return mu
     files_and_clustering_properties  = kwargs['files_clustering_properties']
 
-    if len(files_and_clustering_properties) == 0:
-        return []
+    if len(files_and_clustering_properties) == 0: return []
 
-    results   = multithreading_pool_map(values       = files_and_clustering_properties,
+    results   = multithreading_pool_map(values       = files_and_clustering_properties, # calculate means for each granule
                                        function      = kwargs['clustering_function'],
                                        multithreaded = kwargs['multithreaded'])
 
     results = numpy.asarrray(results)
     results.tofile('results.mat')
 
-    return getmeans(data = results,
-                    labels = glasslab_cluster.cluster.aghc(labels, files_and_clustering_properties[0]['number_of_groups'], method = 'max', metric = 'cityblock'))
+    means = getmeans(data = results,
+                    labels = glasslab_cluster.cluster.aghc(
+                        results,
+                        files_and_clustering_properties[0]['number_of_groups'],
+                        method = 'max',
+                        metric = 'cityblock'))
+
+    return means
 
 
 
