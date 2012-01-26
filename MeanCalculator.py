@@ -123,7 +123,7 @@ def calc_means(**kwargs):
                                        function      = kwargs['clustering_function'],
                                        multithreaded = kwargs['multithreaded'])
 
-    results = numpy.asarrray(results)
+    results = numpy.asarray(results)
     results.tofile('results.mat')
 
     means = getmeans(data = results,
@@ -132,7 +132,6 @@ def calc_means(**kwargs):
                         files_and_clustering_properties[0]['number_of_groups'],
                         method = 'max',
                         metric = 'cityblock'))
-
     return means
 
 
