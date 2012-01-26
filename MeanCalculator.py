@@ -25,7 +25,7 @@ def getMean(kwargs):
     number_of_neighbors                 = kwargs['mean_shift'].number_of_neighbors
 
 
-    data = hdf_file.get_data()
+    data = hdf_file.data
 
     if numpy.any(data.min(axis = 0) == data.max(axis = 0)):
         print "Skipping %s" % basename(hdf_file.get_file()) # competitive learning will crash, so lets skip it
