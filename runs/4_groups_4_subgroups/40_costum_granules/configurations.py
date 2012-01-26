@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
 
     mean_calculator = MeanCalculator()                  # Calculate or load initial means ...
-    mean_calculator.disblable_multithreading()
+    mean_calculator.disable_multithreading()
     mean_calculator.disable_caching()
 
     mean_calculator.granule_loader = granule_loader
