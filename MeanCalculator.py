@@ -4,7 +4,7 @@ import glasslab_cluster.cluster
 import numpy
 from os.path import basename
 import scipy.spatial.distance
-import scipy.cluster.vq.
+import scipy.cluster.vq
 import networkx
 import glasslab_cluster.cluster.consensus as gcons
 import time
