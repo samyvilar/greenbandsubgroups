@@ -89,9 +89,9 @@ def getMean(kwargs):
             clfunc = clustering_function,
             nco    = number_of_observations,
             ncl    = number_of_random_unique_sub_samples)
-    print run_labels
 
-    mrlabels = gcons.rmajrule(run_labels)
+
+    mrlabels = gcons.rmajrule(numpy.asarray(run_labels, dtype = 'int64'))
 
     def getMeans(data, labels):
         assert data.ndim == 2 and labels.ndim == 1 and data.shape[0] == len(labels) and labels.min() >= 0
