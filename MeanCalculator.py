@@ -9,6 +9,7 @@ import glasslab_cluster.cluster.consensus as gcons
 import time
 
 from Utils import load_cached_or_calculate_and_cached, multithreading_pool_map
+from GranuleLoader import GranuleLoader
 
 
 def getMean(kwargs):
