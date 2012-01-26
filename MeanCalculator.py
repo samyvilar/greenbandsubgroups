@@ -20,9 +20,9 @@ def getMean(kwargs):
     number_of_random_unique_sub_samples  = kwargs['number_of_random_unique_sub_samples']
     threshold                           = kwargs['threshold']
 
-    number_of_points                    = kwargs['number_of_points']
-    number_of_dimensions                = kwargs['number_of_dimensions']
-    number_of_neighbors                 = kwargs['number_of_neighbors']
+    number_of_points                    = kwargs['mean_shift'].number_of_points
+    number_of_dimensions                = kwargs['mean_shift'].number_of_dimensions
+    number_of_neighbors                 = kwargs['mean_shift'].number_of_neighbors
 
 
     data = hdf_file.get_data()
