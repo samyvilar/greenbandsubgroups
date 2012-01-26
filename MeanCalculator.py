@@ -295,7 +295,8 @@ class MeanCalculator(object):
 
     def check_all_properties(self):
         for property in self._required_properties:
-            assert getattr(self, property)
+            if getattr(self, property) == None:
+                raise Exception("You must set the following property %s" % property)
 
     def get_clustering_properties_as_array_dict_for_each_file(self):
         values = []
