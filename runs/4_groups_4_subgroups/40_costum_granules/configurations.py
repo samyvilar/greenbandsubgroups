@@ -56,7 +56,7 @@ if __name__ == '__main__':
     granule_loader = GranuleLoader()                    # Load Granules
     granule_loader.bands = numpy.asarray([1,2,3,4])
     granule_loader.param = 'radiance'
-    granule_loader.disable_caching()
+    granule_loader.enable_caching()
     granule_loader.enable_multithreading()
     granule_loader.load_granules(granules)
 

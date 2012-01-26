@@ -308,8 +308,9 @@ class MeanCalculator(object):
         return values
 
     def calc_caching_file_name(self):
-        return 'number_of_granules:%i_param:%s_bands:%s_names_hashed:%s_number_of_clusters:%i_number_of_subclusters:%i_initial_means.obj' % \
-            (len(self.granules), self.granules[0].param, str(self.granules[0].bands), GranuleLoader.get_names_hashed([granule.file_name for granule in self.granules]), self.number_of_groups)
+        if self.granules == None or len(self.granules) == 0: return "None"
+        return '%s/number_of_granules:%i_param:%s_bands:%s_names_hashed:%s_number_of_clusters:%i_number_of_subclusters:%i_initial_means.obj' % \
+            (self.granules[0].file_dir + '/cache/means', len(self.granules), self.granules[0].param, str(self.granules[0].bands), GranuleLoader.get_names_hashed([granule.file_name for granule in self.granules]), self.number_of_groups)
 
 
     def calculate_means(self):

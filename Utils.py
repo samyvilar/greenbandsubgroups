@@ -7,7 +7,6 @@ def get_cpu_count():
 
 
 def load_cached_or_calculate_and_cached(caching = None, file_name = None, function = None, arguments = None):
-    print caching
     if not caching:
         return function(**arguments)
 
