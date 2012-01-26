@@ -105,6 +105,7 @@ def getMean(kwargs):
         return means, count
 
     means, count = getMeans(data, mrlabels)
+    print means
     return means
 
 
