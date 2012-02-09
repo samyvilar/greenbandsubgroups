@@ -9,7 +9,8 @@ import networkx
 import glasslab_cluster.cluster.consensus as gcons
 import time
 import pickle
-import scipy.cluster.vq.kmeans2
+
+from scipy.cluster.vq import kmeans2, kmeans
 
 from Utils import load_cached_or_calculate_and_cached, multithreading_pool_map
 from GranuleLoader import GranuleLoader
@@ -142,8 +143,7 @@ def calc_means(**kwargs):
     pickle.dump(means, open('means.mat', 'wb'))
 
     def calc_means_sub_group(**kwargs):
-        return getMeans(kwargs['hdf_file'].data, labels = scipy.cluster.vq.kmeans2(kwargs['hdf_file'].data, kwargs['number_of_sub_groups'], threshold = kwargs['threshold'])[1])
-
+        return getMeans(kwargs['hdf_file'].data, labels = kmeans2(kwargs['hdf_file'].data, kwargs['number_of_sub_groups'], threshold = kwargs['threshold'])[1])
 
 
 
