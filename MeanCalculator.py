@@ -186,7 +186,7 @@ class MeanCalculator(object):
         self.enable_multithreading()
 
         self._required_properties = ['number_of_groups',
-                                     'number_of_subgroups',
+                                     'number_of_sub_groups',
                                      'number_of_runs',
                                      'number_of_random_unique_sub_samples',
                                      'number_of_observations',
