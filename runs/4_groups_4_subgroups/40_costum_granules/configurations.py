@@ -68,7 +68,7 @@ if __name__ == '__main__':
     mean_calculator.granule_loader = granule_loader
     mean_calculator.threshold = .8
     mean_calculator.number_of_groups = 8
-    mean_calculator.number_of_subgroups = 1
+    mean_calculator.number_of_sub_groups = 1
     mean_calculator.number_of_runs = 10
     mean_calculator.number_of_random_unique_sub_samples  = 1000
     mean_calculator.number_of_observations = 274862
