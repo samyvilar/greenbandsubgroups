@@ -24,7 +24,7 @@ _liblookuptable.lookuptable.argtypes = [int_2d_array,
 
 def build_lookuptable(kwvalues):
     data, size = kwvalues['data'], kwvalues['size']
-    assert data and size
+    assert data != None and size != None
     lut = lookuptable()
     lut.build(data, size)
     return lut
