@@ -13,7 +13,7 @@ void lookuptable(int *data,    /*2D DATA with n by r shape, n-1 used as indices,
                  unsigned int lutsize /* The lookup table size */)
 {
     int *row; unsigned int *lutbaseaddr, *countbaseaddr;
-    unsigned int index, index1, index2, index3, temp;
+    unsigned int index, index1, temp;
             
     int **datap = (int **)malloc(numrows * sizeof(int *)); /*Mapping 1D array to 2D*/
     for (index = 0; index < numrows; index++)
@@ -44,7 +44,7 @@ void lookuptable(int *data,    /*2D DATA with n by r shape, n-1 used as indices,
         lookuptablep[row[0]][row[1]][row[2]] += row[3];
         if (isinf(lookuptablep[row[0]][row[1]][row[2]]))
         {
-           printf("Error, overflow detected! %f\n", lookuptablep[row[0]][row[1]][row[2]]);
+           printf("Error, overflow detected! %i\n", lookuptablep[row[0]][row[1]][row[2]]);
            exit(-1);
         }
 
