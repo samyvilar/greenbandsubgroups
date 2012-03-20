@@ -32,6 +32,8 @@ def build_lookuptable(kwvalues):
 class lookuptable(object):
     def __init__(self, table = None):
         self.table = table
+        self._sums = None
+        self._counts = None
 
     @property
     def table(self):
@@ -47,6 +49,19 @@ class lookuptable(object):
     def size(self, value):
         self._size = value
 
+    @property
+    def sums(self):
+        return self._sums
+    @sums.setter
+    def sums(self, values):
+        self._sums = values
+
+    @property
+    def counts(self):
+        return self._counts
+    @counts.setter
+    def counts(self, values):
+        self._counts = values
 
     def build(self, data = None, size = None):
         assert data and size
@@ -59,7 +74,11 @@ class lookuptable(object):
 
         shape = values.shape.astype('uintc')
         _liblookuptable.lookuptable(values, shape[0],  shape[1], lookuptable, count, numpy.asarray([size,], dtype = 'uintc')[0])
-        return lookuptable, count
+        self.lookuptable = lookuptable
+        self.count = count
+
+        self.sums = lookuptable
+        self.counts = count
 
 
 
