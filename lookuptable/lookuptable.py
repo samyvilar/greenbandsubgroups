@@ -90,7 +90,6 @@ class lookuptable(object):
         non_zero_locations = counts != 0
         self.table[non_zero_locations] = sums[non_zero_locations]/counts[non_zero_locations]
 
-        del sums
         del non_zero_locations
         gc.collect()
 
