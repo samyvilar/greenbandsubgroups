@@ -7,7 +7,9 @@ sys.path.extend('../../..')
 
 from lookuptable.lookuptable import lookuptable, build_lookuptable
 from GranuleLoader import GranuleLoader
-from Utils import multithreading_pool_map
+from progressbar import ProgressBar, Percentage, Bar, RotatingMarker, ETA
+
+
 
 if __name__ == '__main__':
     granule_loader = GranuleLoader()
@@ -23,7 +25,11 @@ if __name__ == '__main__':
 
     gc.collect()
 
-    for granule in granule_loader_chunks.next():
+    widgets = ['Percentage of Granules: ', Percentage(), ' ', Bar(marker = RotatingMarker()), ' ', ETA(), ' ']
+    progress_bar = ProgressBar(widgets = widgets, maxval = len(granule_loader.number_of_granules)).start()
+
+
+    for index, granule in enumerate(granule_loader_chunks):
         new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size})
 
         prev_sum_counts = numpy.copy(all_avg_lut.counts)
@@ -34,6 +40,8 @@ if __name__ == '__main__':
         del new_lut
         del prev_sum_counts
         gc.collect()
+
+        progress_bar.update(index)
 
     all_avg_lut.table.tofile(str(lut_size) + '_lookuptable.numpy')
     all_avg_lut.counts.tofile(str(lut_size) + '_size.numpy')

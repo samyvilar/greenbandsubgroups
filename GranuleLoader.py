@@ -98,6 +98,12 @@ class GranuleLoader(object):
                (granules[0].file_dir + '/cache/granules', len(granules), str(granules[0].param), str(granules[0].bands).strip(' '), str(granules[0].crop_size), str(granules[0].crop_orig), GranuleLoader.get_names_hashed([granule.file_name for granule in granules]))
 
 
+    @property
+    def number_of_granules(self):
+        return self._number_of_granules
+    @number_of_granules.setter
+    def number_of_granules(self, values):
+        self._number_of_granules = values
 
     def load_granules(self, granules):
         self._verify_properties()
@@ -140,6 +146,7 @@ class GranuleLoader(object):
         assert chunks and dir and pattern
         files = GranuleLoader.get_granules_in_dir(dir = dir, pattern = pattern)
         index = 0
+        self.number_of_granules = len(files)
         while index < len(files):
             self.load_granules(files[index:index+chunks])
             index += chunks
