@@ -69,10 +69,12 @@ class lookuptable(object):
         count = numpy.zeros((size, size, size), dtype = 'uintc')
         lookuptable = numpy.zeros((size, size, size), dtype = 'uintc')
 
-        values = (numpy.round((numpy.copy(data) * self.size - 0.5))).astype('uintc') # redefine values to be used properly as indices
+        values = (numpy.round((data.copy() * self.size - 0.5))).astype('intc') # redefine values to be used properly as indices
         values[values >= self.size] = self.size - 1 # make sure none of the values exceed 1, if they do simply set them to the max.
+        values[values < 0] = 0
 
-        shape = numpy.asarray(values.shape).astype('uintc')
+
+        shape = numpy.asarray(data.shape, dtype = 'uintc')
         _liblookuptable.lookuptable(values, shape[0],  shape[1], lookuptable, count, numpy.asarray([size,], dtype = 'uintc')[0])
         self.lookuptable = lookuptable
         self.count = count
