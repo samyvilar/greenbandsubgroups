@@ -53,10 +53,15 @@ class LookUpTable(object):
     def build(self, data = None, size = None, file = None):
         assert data and size
         self.size = size
-        values = (numpy.round((numpy.copy(data) * self.size - 0.5))).astype('uintc') # redefine values to be used properly as indices
-        values[values > self.size] = self.size # make sure none of the values exceed 1, if they do simply set them to the max.
+        count = numpy.zeros((size, size, size), dtype = 'uintc')
+        lookuptable = numpy.zeros((size, size, size), dtype = 'uintc')
 
-        _liblookuptable.lookuptable(values, values.shape[0], values.shape[1], lut, count, lutsize);
+        values = (numpy.round((numpy.copy(data) * self.size - 0.5))).astype('uintc') # redefine values to be used properly as indices
+        values[values >= self.size] = self.size - 1 # make sure none of the values exceed 1, if they do simply set them to the max.
+
+        shape = values.shape.astype('uintc')
+        _liblookuptable.lookuptable(values, shape[0],  shape[1], lookuptable, count, numpy.asarray([size,], dtype = 'uintc')[0])
+        return lookuptable, count
 
 
 
