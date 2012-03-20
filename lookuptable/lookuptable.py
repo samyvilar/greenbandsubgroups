@@ -7,6 +7,8 @@ import ctypes
 
 import os.path
 import inspect
+import gc
+gc.enable()
 
 
 _liblookuptable = numpy.ctypeslib.load_library('liblut', os.path.dirname(inspect.getfile(inspect.currentframe())))
@@ -66,8 +68,8 @@ class lookuptable(object):
     def build(self, data = None, size = None):
         assert data != None and size != None
         self.size = size
-        count = numpy.zeros((size, size, size), dtype = 'float32')
-        lookuptable = numpy.zeros((size, size, size), dtype = 'float32')
+        counts = numpy.zeros((size, size, size), dtype = 'float32')
+        sums = numpy.zeros((size, size, size), dtype = 'float32')
 
         values = (numpy.round((data * self.size - 0.5))).astype('intc') # redefine values to be used properly as indices
         values[values >= self.size] = self.size - 1 # make sure none of the values exceed 1, if they do simply set them to the max.
@@ -78,14 +80,16 @@ class lookuptable(object):
         _liblookuptable.lookuptable(values,
                                     shape[0],
                                     shape[1],
-                                    lookuptable,
-                                    count,
+                                    sums,
+                                    counts,
                                     numpy.asarray([size,], dtype = 'uintc')[0])
-        self.lookuptable = lookuptable
-        self.count = count
 
-        self.sums = lookuptable
-        self.counts = count
+        assert gc.is_tracked(sums) and gc.is_tracked(counts)
+        self.sums = sums
+        self.counts = counts
+
+        self.table = self.sums[self.counts != 0]/self.counts[self.counts != 0]
+
 
 
 

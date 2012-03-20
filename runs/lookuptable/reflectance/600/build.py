@@ -17,10 +17,11 @@ granule_loader.param = 'reflectance'
 granule_loader.disable_caching()
 granule_loader.enable_multithreading()
 
-chunk = granule_loader.load_granules_chunk(dir = '/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 1).next()
-t = build_lookuptable({'data':chunk[0].data, 'size':1000})
+granule_loader_chunks = granule_loader.load_granules_chunk(dir = '/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 1)
 
-tables = multithreading_pool_map(function = build_lookuptable, values = [{'data':c.data, 'size':600} for c in chunk], multithreaded = True)
+lut = build_lookuptable({'data':granule_loader_chunks.next()[0].data, 'size':1000})
+
+#tables = multithreading_pool_map(function = build_lookuptable, values = [{'data':c.data, 'size':600} for c in chunk], multithreaded = True)
 
 
 
