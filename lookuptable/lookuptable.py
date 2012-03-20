@@ -22,7 +22,8 @@ _liblookuptable.lookuptable.argtypes = [int_2d_array,
                                         unsigned_int_3d_array,
                                         ctypes.c_uint]
 
-def build_lookuptable(data = None, size = None):
+def build_lookuptable(**kwargs):
+    data, size = kwargs['data'], kwargs['size']
     assert data and size
     lut = lookuptable()
     lut.build(data, size)
