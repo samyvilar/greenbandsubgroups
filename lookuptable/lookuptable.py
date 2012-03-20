@@ -11,27 +11,19 @@ import inspect
 
 _liblookuptable = numpy.ctypeslib.load_library('liblut', os.path.dirname(inspect.getfile(inspect.currentframe())))
 
-unsigned_int_3d_array    = numpy.ctypeslib.ndpointer(dtype = numpy.uintc,    ndim = 3, flags='CONTIGUOUS')
-unsigned_int_2d_array    = numpy.ctypeslib.ndpointer(dtype = numpy.uintc,    ndim = 2, flags='CONTIGUOUS')
-double_1d_array = numpy.ctypeslib.ndpointer(dtype = numpy.double,  ndim = 1, flags='CONTIGUOUS')
+unsigned_int_3d_array = numpy.ctypeslib.ndpointer(dtype = numpy.uintc, ndim = 3, flags='CONTIGUOUS')
+int_2d_array          = numpy.ctypeslib.ndpointer(dtype = numpy.intc,  ndim = 2, flags='CONTIGUOUS')
 
 
-_liblookuptable.lookuptable.argtypes = [unsigned_int_2d_array,
+_liblookuptable.lookuptable.argtypes = [int_2d_array,
                                         ctypes.c_uint,
                                         ctypes.c_uint,
                                         unsigned_int_3d_array,
                                         unsigned_int_3d_array,
                                         ctypes.c_uint]
-#_liblookuptable.lookuptable.restype = ctypes.c_void_p
 
 
-#void predict(int *data, int numrows, int numcols, double *validrange, int *lookuptable,                     int lutsize, double *results)
-_liblookuptable.predict.argtypes = [int_2d_array, ctypes.c_int, ctypes.c_int, double_1d_array, int_3d_array, ctypes.c_int, double_1d_array, ctypes.c_int]
-#_liblookuptable.predict.restype =
-
-
-
-class LookUpTable(object):
+class lookuptable(object):
     def __ini(self, table = None):
         self.table = table
 
