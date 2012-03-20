@@ -26,13 +26,13 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
 
             data.append(img)
     elif param == 'reflectance':
-        data = glasslab_cluster.io.modis_crefl(file, bands = bands).astype('float32')
+        data = glasslab_cluster.io.modis_crefl(file, bands = bands)
 
     data = numpy.dstack(data)
     if crop_orig and crop_size:
         data = data[crop_orig[0]:crop_orig[0] + crop_size[0], crop_orig[1]:crop_orig[1] + crop_size[1]]
 
-    return data.reshape(data.shape[0] * data.shape[1], len(bands)), valid_range
+    return data.reshape(data.shape[0] * data.shape[1], len(bands)).astype('float32'), valid_range
 
 class HDFFile(object):
     def __init__(self, file):
