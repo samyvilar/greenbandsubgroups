@@ -5,5 +5,5 @@ import subprocess
 
 
 if __name__ == '__main__':
-    subprocess.call('gcc -Wall -fPIC -c *.c && gcc -shared -Wl,-soname,liblut.so -o liblut.so  *.o')
+    subprocess.call('/usr/bin/gcc -Wall -fPIC -c *.c && /usr/bin/gcc -shared -Wl,-soname,liblut.so -o liblut.so  *.o')
 
