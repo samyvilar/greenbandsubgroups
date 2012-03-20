@@ -34,21 +34,8 @@ if __name__ == '__main__':
         all_avg_lut.counts += new_lut.counts
         non_zero_locations = all_avg_lut.counts != 0
 
-        temp_1 = (new_lut.sums[non_zero_locations]/all_avg_lut.counts[non_zero_locations])
-
-        print 'non_zero_locations->' + str(non_zero_locations)
-        print 'non_zero_locations.shape->' + str(non_zero_locations.shape)
-        print 'all_avg_lut.table->' + str(all_avg_lut.table)
-        print 'all_avg_lut.table.shape->' + str(all_avg_lut.table.shape)
-        print all_avg_lut.table[non_zero_locations]
-        print prev_sum_counts[non_zero_locations]
-
-
-        temp_2 = ((prev_sum_counts[non_zero_locations] * all_avg_lut.table[non_zero_locations]))
-        temp_2 /= all_avg_lut.counts[non_zero_locations]
-
-        all_avg_lut.table = temp_1 + temp_2
-
+        all_avg_lut.table[non_zero_locations] = (new_lut.sums[non_zero_locations]/all_avg_lut.counts[non_zero_locations]) + \
+                            ((prev_sum_counts[non_zero_locations] * all_avg_lut.table[non_zero_locations]) / all_avg_lut.counts[non_zero_locations])
         del new_lut
         del prev_sum_counts
         gc.collect()
