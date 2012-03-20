@@ -111,7 +111,11 @@ class HDFFile(object):
 
     def load(self):
         self._verify_properties()
-        self.data, self.valid_range = read_file(file = self.file, bands = self.bands, param = self.param, crop_size = self.crop_size, crop_orig = self.crop_orig)
+        self.data, self.valid_range = read_file(file = self.file,
+                                                bands = self.bands,
+                                                param = self.param,
+                                                crop_size = self.crop_size,
+                                                crop_orig = self.crop_orig)
         return self
 
 
