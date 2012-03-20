@@ -84,7 +84,6 @@ class lookuptable(object):
                                     counts,
                                     numpy.asarray([size,], dtype = 'uintc')[0])
 
-        assert gc.is_tracked(sums) and gc.is_tracked(counts)
         self.sums = sums
         self.counts = counts
 
