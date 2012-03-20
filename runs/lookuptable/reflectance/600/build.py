@@ -26,7 +26,7 @@ if __name__ == '__main__':
     gc.collect()
 
     widgets = ['Percentage of Granules: ', Percentage(), ' ', Bar(marker = RotatingMarker()), ' ', ETA(), ' ']
-    progress_bar = ProgressBar(widgets = widgets, maxval = len(granule_loader.number_of_granules)).start()
+    progress_bar = ProgressBar(widgets = widgets, maxval = granule_loader.number_of_granules).start()
 
 
     for index, granule in enumerate(granule_loader_chunks):
