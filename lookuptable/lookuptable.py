@@ -72,7 +72,7 @@ class lookuptable(object):
         values = (numpy.round((numpy.copy(data) * self.size - 0.5))).astype('uintc') # redefine values to be used properly as indices
         values[values >= self.size] = self.size - 1 # make sure none of the values exceed 1, if they do simply set them to the max.
 
-        shape = values.shape.astype('uintc')
+        shape = numpy.asarray(values.shape).astype('uintc')
         _liblookuptable.lookuptable(values, shape[0],  shape[1], lookuptable, count, numpy.asarray([size,], dtype = 'uintc')[0])
         self.lookuptable = lookuptable
         self.count = count
