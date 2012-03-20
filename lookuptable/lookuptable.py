@@ -85,7 +85,7 @@ class lookuptable(object):
                                     numpy.asarray([size,], dtype = 'uintc')[0])
 
         self.counts = counts
-        self.sums = cums
+        self.sums = sums
         self.table = numpy.zeros((size, size, size), dtype = 'float32')
         non_zero_locations = counts != 0
         self.table[non_zero_locations] = sums[non_zero_locations]/counts[non_zero_locations]
