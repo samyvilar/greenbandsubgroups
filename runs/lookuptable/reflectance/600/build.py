@@ -33,8 +33,13 @@ if __name__ == '__main__':
         prev_sum_counts = numpy.copy(all_avg_lut.counts)
         all_avg_lut.counts += new_lut.counts
         non_zero_locations = all_avg_lut.counts != 0
-        print 'non_zero_locations.shape->' + str(non_zero_locations.shape)
-        all_avg_lut.table = (new_lut.sums[non_zero_locations]/all_avg_lut.counts[non_zero_locations]) + ((prev_sum_counts[non_zero_locations] * all_avg_lut.table[non_zero_locations])/all_avg_lut.counts[non_zero_locations])
+
+        temp_1 = (new_lut.sums[non_zero_locations]/all_avg_lut.counts[non_zero_locations])
+        temp_2 = ((prev_sum_counts[non_zero_locations] * all_avg_lut.table[non_zero_locations]))
+        temp_2 /= all_avg_lut.counts[non_zero_locations]
+
+        all_avg_lut.table = temp_1 + temp_2
+
         del new_lut
         del prev_sum_counts
         gc.collect()
