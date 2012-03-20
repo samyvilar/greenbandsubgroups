@@ -18,16 +18,14 @@ if __name__ == '__main__':
     granule_loader.disable_caching()
     granule_loader.enable_multithreading()
 
+    widgets = ['Percentage of Granules: ', Percentage(), ' ', Bar(marker = RotatingMarker()), ' ', ETA(), ' ']
+    progress_bar = ProgressBar(widgets = widgets, maxval = granule_loader.number_of_granules).start()
+
     granule_loader_chunks = granule_loader.load_granules_chunk(dir = '/home1/FoucaultData/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 1)
     lut_size = 600
 
     all_avg_lut = build_lookuptable({'data':granule_loader_chunks.next()[0].data, 'size':lut_size})
-
     gc.collect()
-
-    widgets = ['Percentage of Granules: ', Percentage(), ' ', Bar(marker = RotatingMarker()), ' ', ETA(), ' ']
-    progress_bar = ProgressBar(widgets = widgets, maxval = granule_loader.number_of_granules).start()
-
 
     for index, granule in enumerate(granule_loader_chunks):
         new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size})
@@ -35,6 +33,7 @@ if __name__ == '__main__':
         prev_sum_counts = numpy.copy(all_avg_lut.counts)
         all_avg_lut.counts += new_lut.counts
         non_zero_locations = all_avg_lut.counts != 0
+        print 'non_zero_locations.shape->' + str(non_zero_locations.shape)
         all_avg_lut.table = (new_lut.sums[non_zero_locations]/all_avg_lut.counts[non_zero_locations]) + \
                     ((prev_sum_counts[non_zero_locations] * all_avg_lut.table[non_zero_locations])/all_avg_lut.counts[non_zero_locations])
         del new_lut
