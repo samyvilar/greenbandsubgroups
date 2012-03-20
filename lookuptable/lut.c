@@ -1,6 +1,7 @@
 #include "lut.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 /* Author: Samy Vilar, create a lookup table on 4 bands, with first 3 being the indexes ...*/
 
