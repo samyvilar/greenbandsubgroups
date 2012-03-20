@@ -24,7 +24,6 @@ if __name__ == '__main__':
     widgets = ['Percentage of Granules: ', Percentage(), ' ', Bar(marker = RotatingMarker()), ' ', ETA(), ' ']
     progress_bar = ProgressBar(widgets = widgets, maxval = granule_loader.number_of_granules).start()
 
-
     all_avg_lut = build_lookuptable({'data':granule_loader_chunks.next()[0].data, 'size':lut_size})
     gc.collect()
 
