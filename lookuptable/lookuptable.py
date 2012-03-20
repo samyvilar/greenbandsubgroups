@@ -72,7 +72,7 @@ class lookuptable(object):
         sums = numpy.zeros((size, size, size), dtype = 'float32')
 
         values = (numpy.round((data * self.size - 0.5))).astype('intc') # redefine values to be used properly as indices
-        values[values >= self.size] = self.size - 1 # make sure none of the values exceed 1, if they do simply set them to the max.
+        values[values >= self.size] = self.size - 1 # make sure none of the values exceed max, if they do simply set them to the max.
         values[values < 0] = 0
 
 
@@ -85,11 +85,13 @@ class lookuptable(object):
                                     numpy.asarray([size,], dtype = 'uintc')[0])
 
         self.counts = counts
-
+        self.sums = cums
         self.table = numpy.zeros((size, size, size), dtype = 'float32')
-        self.table[counts != 0] = sums[counts != 0]/counts[counts != 0]
+        non_zero_locations = counts != 0
+        self.table[non_zero_locations] = sums[non_zero_locations]/counts[non_zero_locations]
 
         del sums
+        del non_zero_locations
 
 
 
