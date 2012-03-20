@@ -115,7 +115,7 @@ class GranuleLoader(object):
                             function = multithreading_pool_map,
                             arguments =
                             {
-                                'values':granules,
+                                'values':[{'granule':granule} for granule in granules],
                                 'function':load_granules_threaded,
                                 'multithreaded':self.is_multithreading(),
                             }
@@ -148,7 +148,8 @@ class GranuleLoader(object):
 
 
 
-def load_granules_threaded(granule):
+def load_granules_threaded(granule = None):
+    assert granule
     try:
         granule.load()
     except Exception as ex:
