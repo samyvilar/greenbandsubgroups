@@ -30,14 +30,14 @@ class lookuptable(object):
     @property
     def table(self):
         return self._table
-    @table.set
+    @table.setter
     def table(self, value):
         self._table = value
 
     @property
     def size(self):
         return self._size
-    @size.set
+    @size.setter
     def size(self, value):
         self._size = value
 
