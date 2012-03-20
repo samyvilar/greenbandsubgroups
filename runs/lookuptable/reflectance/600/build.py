@@ -18,11 +18,12 @@ if __name__ == '__main__':
     granule_loader.disable_caching()
     granule_loader.enable_multithreading()
 
+    granule_loader_chunks = granule_loader.load_granules_chunk(dir = '/home1/FoucaultData/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 1)
+    lut_size = 600
+
     widgets = ['Percentage of Granules: ', Percentage(), ' ', Bar(marker = RotatingMarker()), ' ', ETA(), ' ']
     progress_bar = ProgressBar(widgets = widgets, maxval = granule_loader.number_of_granules).start()
 
-    granule_loader_chunks = granule_loader.load_granules_chunk(dir = '/home1/FoucaultData/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 1)
-    lut_size = 600
 
     all_avg_lut = build_lookuptable({'data':granule_loader_chunks.next()[0].data, 'size':lut_size})
     gc.collect()
