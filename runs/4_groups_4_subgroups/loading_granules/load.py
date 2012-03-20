@@ -13,4 +13,3 @@ granule_loader.disable_caching()
 granule_loader.enable_multithreading()
 granule_loader.load_granules_from_dir(dir = '/home1/FoucaultData/DATA_11/TERRA_1KM', pattern = '*.hdf')
 
- 
