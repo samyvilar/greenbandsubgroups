@@ -13,8 +13,8 @@ def load_cached_or_calculate_and_cached(caching = None, file_name = None, functi
     if os.path.isfile(file_name):
         return pickle.load(open(file_name, 'rb'))
     else:
-        if '/' in file_name and not os.path.exists(file_name.split('/')[:-1]):
-            os.makedirs(''.join(['/' + name for name in file_name.split('/')[:-1]]))
+        if '/' in file_name and not os.path.exists(os.path.dirname(file_name)):
+            os.makedirs(os.path.dirname(file_name))
 
         values = function(**arguments)
         pickle.dump(values, open(file_name, 'wb'))
