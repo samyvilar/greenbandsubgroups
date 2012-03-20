@@ -150,6 +150,7 @@ class GranuleLoader(object):
 
 def load_granules_threaded(granule = None):
     assert granule
+    print granule
     try:
         granule.load()
     except Exception as ex:
