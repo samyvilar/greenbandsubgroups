@@ -124,12 +124,28 @@ class GranuleLoader(object):
         self._state = "LOADED"
 
 
+    @staticmethod
+    def get_granules_in_dir(dir = None, pattern = None):
+        return [dir + '/' + file for file in os.listdir(dir) if fnmatch.fnmatch(file, pattern)]
+
+
     def load_granules_from_dir(self, dir = None, pattern = None):
         assert dir and pattern
         self._verify_properties()
         self.dir = dir
-        files = [dir + '/' + file for file in os.listdir(dir) if fnmatch.fnmatch(file, pattern)]
+        files = GranuleLoader.get_granules_in_dir(dir = dir, pattern = pattern)
         self.load_granules(files)
+
+    def load_granules_chunk(self, dir = None, pattern = None, chunks = None):
+        assert chunks and dir and pattern
+        files = GranuleLoader.get_granules_in_dir(dir = dir, pattern = pattern)
+        index = 0
+        while index < len(files):
+            self.load_granules(files[index:index+chunks])
+            index += chunks
+            yield self.granules
+
+
 
 
 def load_granules_threaded(granule):

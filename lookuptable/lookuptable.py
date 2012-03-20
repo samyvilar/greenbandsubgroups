@@ -22,9 +22,13 @@ _liblookuptable.lookuptable.argtypes = [int_2d_array,
                                         unsigned_int_3d_array,
                                         ctypes.c_uint]
 
+def build_lookuptable(data = None, size = None):
+    lut = lookuptable()
+    lut.build(data, size)
+    return lut
 
 class lookuptable(object):
-    def __ini(self, table = None):
+    def __init__(self, table = None):
         self.table = table
 
     @property
@@ -42,7 +46,7 @@ class lookuptable(object):
         self._size = value
 
 
-    def build(self, data = None, size = None, file = None):
+    def build(self, data = None, size = None):
         assert data and size
         self.size = size
         count = numpy.zeros((size, size, size), dtype = 'uintc')
