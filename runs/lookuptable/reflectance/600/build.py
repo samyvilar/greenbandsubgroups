@@ -14,7 +14,7 @@ if __name__ == '__main__':
     granule_loader.enable_multithreading()
 
     chunk = granule_loader.load_granules_chunk(dir = '/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 10).next()
-    tables = multithreading_pool_map(function = build_lookuptable, values = chunk, multithreaded = True)
+    tables = multithreading_pool_map(function = build_lookuptable, values = [c.data for c in chunk], multithreaded = True)
 
 
 
