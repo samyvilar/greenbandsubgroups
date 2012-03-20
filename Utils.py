@@ -29,7 +29,7 @@ def multithreading_pool_map(**kwargs):
     if multithreaded:
         pools = multiprocessing.Pool(processes = get_cpu_count())
         start = time.time()
-        results = pools.map(function, **values)
+        results = pools.map(function, values)
         pools.close()
         pools.join()
         end = time.time()
