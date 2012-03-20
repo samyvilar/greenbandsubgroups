@@ -11,15 +11,15 @@ import inspect
 
 _liblookuptable = numpy.ctypeslib.load_library('liblut', os.path.dirname(inspect.getfile(inspect.currentframe())))
 
-unsigned_int_3d_array = numpy.ctypeslib.ndpointer(dtype = numpy.uintc, ndim = 3, flags='CONTIGUOUS')
-int_2d_array          = numpy.ctypeslib.ndpointer(dtype = numpy.intc,  ndim = 2, flags='CONTIGUOUS')
+float_3d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float32, ndim = 3, flags='CONTIGUOUS')
+int_2d_array   = numpy.ctypeslib.ndpointer(dtype = numpy.float32,  ndim = 2, flags='CONTIGUOUS')
 
 
 _liblookuptable.lookuptable.argtypes = [int_2d_array,
                                         ctypes.c_uint,
                                         ctypes.c_uint,
-                                        unsigned_int_3d_array,
-                                        unsigned_int_3d_array,
+                                        float_3d_array,
+                                        float_3d_array,
                                         ctypes.c_uint]
 
 def build_lookuptable(kwvalues):
@@ -66,10 +66,10 @@ class lookuptable(object):
     def build(self, data = None, size = None):
         assert data != None and size != None
         self.size = size
-        count = numpy.zeros((size, size, size), dtype = 'uintc')
-        lookuptable = numpy.zeros((size, size, size), dtype = 'uintc')
+        count = numpy.zeros((size, size, size), dtype = 'float32')
+        lookuptable = numpy.zeros((size, size, size), dtype = 'float32')
 
-        values = (numpy.round((data.copy() * self.size - 0.5))).astype('intc') # redefine values to be used properly as indices
+        values = (numpy.round((data * self.size - 0.5))).astype('intc') # redefine values to be used properly as indices
         values[values >= self.size] = self.size - 1 # make sure none of the values exceed 1, if they do simply set them to the max.
         values[values < 0] = 0
 
