@@ -12,7 +12,7 @@ import inspect
 _liblookuptable = numpy.ctypeslib.load_library('liblut', os.path.dirname(inspect.getfile(inspect.currentframe())))
 
 float_3d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float32, ndim = 3, flags='CONTIGUOUS')
-int_2d_array   = numpy.ctypeslib.ndpointer(dtype = numpy.float32,  ndim = 2, flags='CONTIGUOUS')
+int_2d_array   = numpy.ctypeslib.ndpointer(dtype = numpy.intc,  ndim = 2, flags='CONTIGUOUS')
 
 
 _liblookuptable.lookuptable.argtypes = [int_2d_array,
@@ -75,7 +75,12 @@ class lookuptable(object):
 
 
         shape = numpy.asarray(data.shape, dtype = 'uintc')
-        _liblookuptable.lookuptable(values, shape[0],  shape[1], lookuptable, count, numpy.asarray([size,], dtype = 'uintc')[0])
+        _liblookuptable.lookuptable(values,
+                                    shape[0],
+                                    shape[1],
+                                    lookuptable,
+                                    count,
+                                    numpy.asarray([size,], dtype = 'uintc')[0])
         self.lookuptable = lookuptable
         self.count = count
 
