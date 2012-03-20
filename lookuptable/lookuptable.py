@@ -87,7 +87,8 @@ class lookuptable(object):
         self.sums = sums
         self.counts = counts
 
-        self.table = self.sums[self.counts != 0]/self.counts[self.counts != 0]
+        self.table = numpy.zeros((size, size, size), dtype = 'float32')
+        self.table[self.counts != 0] = self.sums[self.counts != 0]/self.counts[self.counts != 0]
 
 
 
