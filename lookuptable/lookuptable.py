@@ -92,6 +92,7 @@ class lookuptable(object):
 
         del sums
         del non_zero_locations
+        gc.collect()
 
 
 

@@ -18,9 +18,11 @@ granule_loader.disable_caching()
 granule_loader.enable_multithreading()
 
 granule_loader_chunks = granule_loader.load_granules_chunk(dir = '/home1/FoucaultData/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 1)
-lut_size = 1000
+lut_size = 5000
 
 lut = build_lookuptable({'data':granule_loader_chunks.next()[0].data, 'size':lut_size})
+
+gc.collect()
 
 granule = granule_loader_chunks.next()[0]
 temp_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size})
