@@ -21,11 +21,11 @@ if __name__ == '__main__':
     granule_loader_chunks = granule_loader.load_granules_chunk(dir = '/home1/FoucaultData/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 1)
     lut_size = 600
 
-    widgets = ['Percentage of Granules: ', Percentage(), ' ', Bar(marker = RotatingMarker()), ' ', ETA(), ' ']
-    progress_bar = ProgressBar(widgets = widgets, maxval = granule_loader.number_of_granules).start()
-
     all_avg_lut = build_lookuptable({'data':granule_loader_chunks.next()[0].data, 'size':lut_size})
     gc.collect()
+
+    widgets = ['Percentage of Granules: ', Percentage(), ' ', Bar(marker = RotatingMarker()), ' ', ETA(), ' ']
+    progress_bar = ProgressBar(widgets = widgets, maxval = granule_loader.number_of_granules).start()
 
     for index, granule in enumerate(granule_loader_chunks):
         new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size})
