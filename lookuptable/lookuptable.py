@@ -64,7 +64,7 @@ class lookuptable(object):
         self._counts = values
 
     def build(self, data = None, size = None):
-        assert data and size
+        assert data != None and size != None
         self.size = size
         count = numpy.zeros((size, size, size), dtype = 'uintc')
         lookuptable = numpy.zeros((size, size, size), dtype = 'uintc')
