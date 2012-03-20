@@ -8,28 +8,24 @@ import os
 def read_file(file = None, bands = None, param = None, crop_size = None, crop_orig = None):
     data = []
     valid_range  = numpy.zeros((len(bands), 2))
-    for index, band in enumerate(bands):
-        mod = glasslab_cluster.io.modis_level1b_read(file, band, param = param, clean = True)
-        if numpy.any(mod['mimage'].mask):
-            print "flags exist in band %d of granule %s" % (band, os.path.basename(file))
-            raise Exception('Bad Granule')
-        img = numpy.asarray(mod['mimage'].data, dtype = 'float').copy()
-        valid_range[index,:] = mod['validrange']
-        n       = numpy.sum((valid_range[index, 0] > img) | (img > valid_range[index, 1]))
-        if n > 0:
-            print "Valid Range:", mod['validrange'], " %d values out of valid range in band %d" % (n, band)
-            raise Exception('Bad Granule')
 
-        '''
-        if param == 'reflectance': #(path, band, mimage, param='radiance', start=None)
-            os.system("cp " + file + " " + "/tmp/")
-            temp_file = "/tmp/" + os.path.basename(file)
-            glasslab_cluster.io.modis_level1b_write(temp_file, band, img, param = param)
-            img = glasslab_cluster.io.modis_crefl(temp_file, bands = [band,])[0]
-            os.system("rm " + "/tmp/" + os.path.basename(file))
-        '''
-        
-        data.append(img)
+    if param == 'radiance':
+        for index, band in enumerate(bands):
+            mod = glasslab_cluster.io.modis_level1b_read(file, band, param = param, clean = True)
+
+            if numpy.any(mod['mimage'].mask):
+                print "flags exist in band %d of granule %s" % (band, os.path.basename(file))
+                raise Exception('Bad Granule')
+            img = numpy.asarray(mod['mimage'].data, dtype = 'float')
+            valid_range[index, :] = mod['validrange']
+            n  = numpy.sum((valid_range[index, 0] > img) | (img > valid_range[index, 1]))
+            if n > 0:
+                print "Valid Range:", mod['validrange'], " %d values out of valid range in band %d" % (n, band)
+                raise Exception('Bad Granule')
+
+            data.append(img)
+    elif param == 'reflectance':
+        data = glasslab_cluster.io.modis_crefl(file, bands = bands)
     data = numpy.dstack(data)
     if crop_orig and crop_size:
         crop = data[crop_orig[0]:crop_orig[0] + crop_size[0], crop_orig[1]:crop_orig[1] + crop_size[1]]
