@@ -42,7 +42,7 @@ void lookuptable(int *data,    /*2D DATA with n by r shape, n-1 used as indices,
         row = datap[index];
 
         lookuptablep[row[0]][row[1]][row[2]] += row[3];
-        if (isinf(lookuptablep[row[0]][row[1]][row[2]])
+        if (isinf(lookuptablep[row[0]][row[1]][row[2]]))
         {
            printf("Error, overflow detected! %f\n", lookuptablep[row[0]][row[1]][row[2]]);
            exit(-1);
