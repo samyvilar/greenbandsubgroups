@@ -64,7 +64,7 @@ class GranuleLoader(object):
     def granules(self, values):
         self._granules = values
 
-    def enable_caching(self):
+    def enable_caching(self, name = None):
         self._caching = True
     def disable_caching(self):
         self._caching = False
