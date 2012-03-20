@@ -11,7 +11,7 @@ void lookuptable(int *data,    /*2D DATA with n by r shape, n-1 used as indices,
                  unsigned int *count,  /* The 3D count table containing all the times an entry was sumed up */
                  unsigned int lutsize /* The lookup table size */)
 {
-    int *row, *lutbaseaddr, *countbaseaddr;
+    unsigned int *row, *lutbaseaddr, *countbaseaddr;
     unsigned int index, index1, index2, index3, temp;
             
     int **datap = (int **)malloc(numrows * sizeof(int *)); /*Mapping 1D array to 2D*/
