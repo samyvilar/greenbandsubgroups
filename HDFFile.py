@@ -20,13 +20,15 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
             print "Valid Range:", mod['validrange'], " %d values out of valid range in band %d" % (n, band)
             raise Exception('Bad Granule')
 
+        '''
         if param == 'reflectance': #(path, band, mimage, param='radiance', start=None)
             os.system("cp " + file + " " + "/tmp/")
             temp_file = "/tmp/" + os.path.basename(file)
             glasslab_cluster.io.modis_level1b_write(temp_file, band, img, param = param)
             img = glasslab_cluster.io.modis_crefl(temp_file, bands = [band,])[0]
             os.system("rm " + "/tmp/" + os.path.basename(file))
-
+        '''
+        
         data.append(img)
     data = numpy.dstack(data)
     if crop_orig and crop_size:
