@@ -148,9 +148,8 @@ class GranuleLoader(object):
 
 
 
-def load_granules_threaded(granule = None):
-    assert granule
-    print granule
+def load_granules_threaded(**kwargs):
+    granule = kwargs['granule']
     try:
         granule.load()
     except Exception as ex:
