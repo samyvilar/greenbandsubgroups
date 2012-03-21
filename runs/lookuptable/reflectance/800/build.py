@@ -21,19 +21,20 @@ if __name__ == '__main__':
     granule_loader_chunks = granule_loader.load_granules_chunk(dir = '/home1/FoucaultData/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 1)
     lut_size = 800
 
-    all_avg_lut = build_lookuptable({'data':granule_loader_chunks.next()[0].data, 'size':lut_size})
-    gc.collect()
+    #lut = build_lookuptable({'data':granule_loader_chunks.next()[0].data, 'size':lut_size})
 
     widgets = ['Percentage of Granules: ', Percentage(), ' ', Bar(marker = RotatingMarker()), ' ', ETA(), ' ']
     progress_bar = ProgressBar(widgets = widgets, maxval = granule_loader.number_of_granules).start()
 
+    sums = numpy.zeros((lut_size, lut_size, lut_size))
+    counts = numpy.zeros((lut_size, lut_size, lut_size))
     for index, granule in enumerate(granule_loader_chunks):
         try:
             new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size})
         except Exception as ex:
-            print "skipping ..."
             continue
 
+        '''
         prev_sum_counts = numpy.copy(all_avg_lut.counts)
         all_avg_lut.counts += new_lut.counts
         non_zero_locations = all_avg_lut.counts != 0
@@ -43,11 +44,17 @@ if __name__ == '__main__':
         del new_lut
         del prev_sum_counts
         gc.collect()
+        '''
 
+        sums += new_lut.sums
+        counts += new_lut.counts
+        del new_lut
+        gc.collect()
         progress_bar.update(index)
 
-    all_avg_lut.table.tofile(str(lut_size) + '_lookuptable.numpy')
-    all_avg_lut.counts.tofile(str(lut_size) + '_size.numpy')
+    lut = sums/counts
+    lut.table.tofile(str(lut_size) + '_lookuptable.numpy')
+    counts.counts.tofile(str(lut_size) + '_size.numpy')
 
 
 

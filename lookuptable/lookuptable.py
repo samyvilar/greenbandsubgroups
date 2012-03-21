@@ -86,11 +86,11 @@ class lookuptable(object):
 
         self.counts = counts
         self.sums = sums
-        self.table = numpy.zeros((size, size, size), dtype = 'float32')
-        non_zero_locations = counts != 0
-        self.table[non_zero_locations] = sums[non_zero_locations]/counts[non_zero_locations]
+        #self.table = numpy.zeros((size, size, size), dtype = 'float32')
+        #non_zero_locations = counts != 0
+        #self.table[non_zero_locations] = sums[non_zero_locations]/counts[non_zero_locations]
 
-        del non_zero_locations
+        #del non_zero_locations
         gc.collect()
 
 
