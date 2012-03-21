@@ -23,8 +23,8 @@ if __name__ == '__main__':
 
     #lut = build_lookuptable({'data':granule_loader_chunks.next()[0].data, 'size':lut_size})
 
-    widgets = ['Percentage of Granules: ', Percentage(), ' ', Bar(marker = RotatingMarker()), ' ', ETA(), ' ']
-    progress_bar = ProgressBar(widgets = widgets, maxval = granule_loader.number_of_granules).start()
+    #widgets = ['Percentage of Granules: ', Percentage(), ' ', Bar(marker = RotatingMarker()), ' ', ETA(), ' ']
+    #progress_bar = ProgressBar(widgets = widgets, maxval = granule_loader.number_of_granules).start()
 
     sums = numpy.zeros((lut_size, lut_size, lut_size))
     counts = numpy.zeros((lut_size, lut_size, lut_size))
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         counts += new_lut.counts
         del new_lut
         gc.collect()
-        progress_bar.update(index)
+        #progress_bar.update(index)
 
     lut = sums/counts
     lut.table.tofile(str(lut_size) + '_lookuptable.numpy')
