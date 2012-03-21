@@ -53,8 +53,9 @@ if __name__ == '__main__':
         #progress_bar.update(index)
 
     lut = sums/counts
-    lut.table.tofile(str(lut_size) + '_lookuptable.numpy')
-    counts.counts.tofile(str(lut_size) + '_counts.numpy')
+    lut.tofile(str(lut_size) + '_lookuptable.numpy')
+    counts.tofile(str(lut_size) + '_counts.numpy')
+    sums.tofile(str(lut_size) + '_sums.numpy')
 
 
 
