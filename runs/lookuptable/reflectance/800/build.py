@@ -19,7 +19,7 @@ if __name__ == '__main__':
     granule_loader.enable_multithreading()
 
     granule_loader_chunks = granule_loader.load_granules_chunk(dir = '/home1/FoucaultData/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 1)
-    lut_size = 800
+    lut_size = 1000
 
     #lut = build_lookuptable({'data':granule_loader_chunks.next()[0].data, 'size':lut_size})
 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
     lut = sums/counts
     lut.table.tofile(str(lut_size) + '_lookuptable.numpy')
-    counts.counts.tofile(str(lut_size) + '_size.numpy')
+    counts.counts.tofile(str(lut_size) + '_counts.numpy')
 
 
 
