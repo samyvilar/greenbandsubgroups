@@ -28,7 +28,11 @@ if __name__ == '__main__':
     progress_bar = ProgressBar(widgets = widgets, maxval = granule_loader.number_of_granules).start()
 
     for index, granule in enumerate(granule_loader_chunks):
-        new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size})
+        try:
+            new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size})
+        except Exception as ex:
+            print "skipping ..."
+            continue
 
         prev_sum_counts = numpy.copy(all_avg_lut.counts)
         all_avg_lut.counts += new_lut.counts
