@@ -1,0 +1,3 @@
+Cannot open file /home1/FoucaultData/DATA_11/TERRA_1KM/MOD021KM.A2010173.0120.005.2010173130626.hdf.
+build.py:55: RuntimeWarning: invalid value encountered in divide
+  lut = sums/counts
