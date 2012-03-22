@@ -62,7 +62,7 @@ def image_show(**kwargs):
     crop_size       = kwargs.pop('crop_size',       None)
 
     if kwargs:
-        raise ValueError('Recieved invalud keyword argument(s) %s' % str(kwargs))
+        raise ValueError('Received invalid keyword argument(s) %s' % str(kwargs))
 
     assert source != None
 
