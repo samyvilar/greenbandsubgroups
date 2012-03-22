@@ -79,6 +79,7 @@ class lookuptable(object):
 
         prediction[:, 3] = self.indices_to_data(prediction)[:, 3]
         prediction[:, 0:3] = granule[0, 0:3]
+        return prediction
 
 
 
