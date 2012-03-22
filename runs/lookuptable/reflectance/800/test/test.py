@@ -51,7 +51,8 @@ if __name__ == '__main__':
         title = 'Absolute Error of Green Values Predicted vs True')
 
 
-    image_show(source = granule_loader.granules[0].data,
+    image_show(
+       source = granule_loader.granules[0].data,
        reshape = granule_loader.granules[0].original_shape,
        vmin = 0, vmax = 1, min = 0, max = 1,
        interpolation = 'nearest',
