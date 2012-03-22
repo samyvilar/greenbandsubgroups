@@ -30,21 +30,31 @@ if __name__ == '__main__':
     original = original[:, 3].reshape(original_shape)
     predicted = predicted[:, 3].reshape(original_shape)
 
+
     plt.figure()
-    plt.imshow(original)
+    plt.imshow(original, vmin = 0, vmax = 1, interpolation = 'nearest')
     plt.colorbar()
     plt.savefig('original.png')
 
     plt.figure()
-    plt.imshow(predicted)
+    plt.imshow(predicted, vmin = 0, vmax = 1, interpolation = 'nearest')
     plt.colorbar()
     plt.savefig('predicted.png')
 
 
     plt.figure()
-    plt.imshow(numpy.fabs(original - predicted))
+    plt.imshow(numpy.fabs(original - predicted), vmin = 0, vmax = 1, interpolation = 'nearest')
     plt.colorbar()
     plt.savefig('error.png')
 
+    plt.figure()
+    original_r = granule_loader.granules[0].reshape(granule_loader.granules[0].original_shape)[:,:,0]
+    original_g = granule_loader.granules[0].reshape(granule_loader.granules[0].original_shape)[:,:,3]
+    original_b = granule_loader.granules[0].reshape(granule_loader.granules[0].original_shape)[:,:,2]
+    plt.imshow(numpy.dstack(original_r, original_g, original_b), vmin = 0, vmax = 1)
+
+# red is 1, green = 4, blue = 3
+# 1, 4, 3
+# 0, 3, 2
 
 

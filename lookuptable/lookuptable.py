@@ -11,7 +11,8 @@ import gc
 gc.enable()
 
 from os.path import basename
-
+from Utils import multithreading_pool_map
+import numpy
 
 _liblookuptable = numpy.ctypeslib.load_library('liblut', os.path.dirname(inspect.getfile(inspect.currentframe())))
 
@@ -32,6 +33,21 @@ def build_lookuptable(kwvalues):
     lut = lookuptable()
     lut.build(data, size)
     return lut
+
+def find_max(granule_loader = None):
+    assert granule_loader
+    max_value = numpy.max(multithreading_pool_map(
+        **{
+            'values':granule_loader.next(),
+            'function':numpy.max,
+            'multithreaded':True
+        }))
+
+    for granule_chunks in granule_loader:
+        temp_max = numpy.max(multithreading_pool_map(
+          **{
+                
+            }))
 
 class lookuptable(object):
     def __init__(self):
