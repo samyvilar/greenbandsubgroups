@@ -88,7 +88,7 @@ class lookuptable(object):
         return values
 
     def indices_to_data(self, indices):
-        return indices/self.size + 0.5
+        return (indices + 0.5)/self.size
 
 
     def build(self, data = None, size = None):
