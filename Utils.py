@@ -64,7 +64,7 @@ def image_show(**kwargs):
     if kwargs:
         raise ValueError('Recieved invalud keyword argument(s) %s' % str(kwargs))
 
-    assert source
+    assert source != None
 
     plt.figure()
     if reshape:
