@@ -16,7 +16,7 @@ from Utils import load_cached_or_calculate_and_cached, multithreading_pool_map
 from GranuleLoader import GranuleLoader
 
 
-def getMeans(data, labels):
+def get_means(data, labels):
     assert data.ndim == 2 and labels.ndim == 1 and data.shape[0] == len(labels) and labels.min() >= 0
     number_of_clusters = labels.max() + 1
     means = numpy.zeros((number_of_clusters, data.shape[1]), dtype = 'f8')
@@ -28,9 +28,8 @@ def getMeans(data, labels):
     return means, count
 
 
-def getMean(kwargs):
-
-    hdf_file                             = kwargs['hdf_file']
+def get_mean(kwargs):
+    data                                 = kwargs['data']
     number_of_runs                       = kwargs['number_of_runs']
     number_of_observations               = kwargs['number_of_observations']
     number_of_random_unique_sub_samples  = kwargs['number_of_random_unique_sub_samples']
@@ -39,13 +38,6 @@ def getMean(kwargs):
     number_of_points                     = kwargs['mean_shift'].number_of_points
     number_of_dimensions                 = kwargs['mean_shift'].number_of_dimensions
     number_of_neighbors                  = kwargs['mean_shift'].number_of_neighbors
-
-
-    data = hdf_file.data
-
-    if numpy.any(data.min(axis = 0) == data.max(axis = 0)):
-        print "Skipping %s" % basename(hdf_file.get_file()) # competitive learning will crash, so lets skip it
-        return None
 
     assert numpy.all(numpy.isfinite(data))
 
@@ -108,8 +100,7 @@ def getMean(kwargs):
 
     mrlabels = gcons.rmajrule(numpy.asarray(run_labels, dtype = 'int64'))
 
-    means, count = getMeans(data, mrlabels)
-    print means
+    means, count = get_means(data, mrlabels)
     return means
 
 def calc_means(**kwargs):
