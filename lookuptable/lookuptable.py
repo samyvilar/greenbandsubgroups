@@ -89,7 +89,7 @@ class lookuptable(object):
 
     def predict(self, granule):
         prediction = numpy.zeros(granule.shape)
-        prediction[:, 0:3] = granule[0, 0:3]
+        prediction[:, 0:3] = granule[:, 0:3]
         indices = self.data_to_indices(granule)
         for index, row in enumerate(prediction):
             prediction[index, 3] = self.table[indices[index, 0], indices[index, 1], indices[index, 2]]

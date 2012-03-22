@@ -66,7 +66,7 @@ if __name__ == '__main__':
     predicted_b = predicted.reshape(granule_loader.granules[0].original_shape)[:,:,2]
     plt.imshow(numpy.dstack((predicted_r, predicted_g, predicted_b)), vmin = 0, vmax = 1)
     plt.colorbar()
-    plt.savefig('predicted_b_rgb_type_casted.png')
+    plt.savefig('predicted_rgb_type_casted.png')
 
 
 
