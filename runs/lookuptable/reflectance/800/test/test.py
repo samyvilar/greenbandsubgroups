@@ -39,7 +39,7 @@ if __name__ == '__main__':
     plt.figure()
     plt.imshow(predicted_green, vmin = 0, vmax = 1, interpolation = 'nearest')
     plt.colorbar()
-    plt.savefig('predicted_r.png')
+    plt.savefig('predicted_g.png')
 
 
     plt.figure()
@@ -65,23 +65,23 @@ if __name__ == '__main__':
     original_type_casted = numpy.copy(granule_loader.granules[0].data)
     original_type_casted[original_type_casted > 1] = 1
     original_type_casted[original_type_casted < 0] = 0
-    original_r = original_type_casted.reshape(granule_loader.granules[0].original_shape)[500:1000,500:1000,0]
-    original_g = original_type_casted.reshape(granule_loader.granules[0].original_shape)[500:1000,500:1000,3]
-    original_b = original_type_casted.reshape(granule_loader.granules[0].original_shape)[500:1000,500:1000,2]
+    original_r = original_type_casted.reshape(granule_loader.granules[0].original_shape)[500:1250,0:600,0]
+    original_g = original_type_casted.reshape(granule_loader.granules[0].original_shape)[500:1250,0:600,3]
+    original_b = original_type_casted.reshape(granule_loader.granules[0].original_shape)[500:1250,0:600,2]
 
     plt.imshow(numpy.dstack((original_r, original_g, original_b)), vmin = 0, vmax = 1)
     plt.colorbar()
-    plt.savefig('original_rgb_type_casted_500:1000.png')
+    plt.savefig('original_rgb_type_casted_500:1250.png')
 
 
     plt.figure()
-    predicted_r = predicted.reshape(granule_loader.granules[0].original_shape)[500:1000,500:1000,0]
-    predicted_g = predicted.reshape(granule_loader.granules[0].original_shape)[500:1000,500:1000,3]
-    predicted_b = predicted.reshape(granule_loader.granules[0].original_shape)[500:1000,500:1000,2]
+    predicted_r = predicted.reshape(granule_loader.granules[0].original_shape)[500:1250,0:600,0]
+    predicted_g = predicted.reshape(granule_loader.granules[0].original_shape)[500:1250,0:600,3]
+    predicted_b = predicted.reshape(granule_loader.granules[0].original_shape)[500:1250,0:600,2]
 
     plt.imshow(numpy.dstack((predicted_r, predicted_g, predicted_b)), vmin = 0, vmax = 1)
     plt.colorbar()
-    plt.savefig('predicted_b_rgb_type_casted_500:1000.png')
+    plt.savefig('predicted_b_rgb_type_casted_500:1250.png')
 
 # red is 1, green = 4, blue = 3
 # 1, 4, 3
