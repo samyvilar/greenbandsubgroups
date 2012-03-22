@@ -7,8 +7,7 @@ import numpy
 
 from lookuptable.lookuptable import lookuptable
 from GranuleLoader import GranuleLoader
-from matplotlib import pyplot as plt
-from Utils import image_show, image_show_rgb
+from Utils import image_show
 from os.path import basename
 
 if __name__ == '__main__':
