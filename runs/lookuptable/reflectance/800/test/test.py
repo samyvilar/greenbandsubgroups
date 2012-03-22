@@ -60,6 +60,15 @@ if __name__ == '__main__':
     plt.savefig('original_rgb_type_casted.png')
 
 
+    plt.figure()
+    predicted_r = predicted.reshape(granule_loader.granules[0].original_shape)[:,:,0]
+    predicted_g = predicted.reshape(granule_loader.granules[0].original_shape)[:,:,3]
+    predicted_b = predicted.reshape(granule_loader.granules[0].original_shape)[:,:,2]
+    plt.imshow(numpy.dstack((predicted_r, predicted_g, predicted_b)), vmin = 0, vmax = 1)
+    plt.colorbar()
+    plt.savefig('predicted_b_rgb_type_casted.png')
+
+
 
     plt.figure()
     original_type_casted = numpy.copy(granule_loader.granules[0].data)
@@ -81,7 +90,7 @@ if __name__ == '__main__':
 
     plt.imshow(numpy.dstack((predicted_r, predicted_g, predicted_b)), vmin = 0, vmax = 1)
     plt.colorbar()
-    plt.savefig('predicted_b_rgb_type_casted_500:1250.png')
+    plt.savefig('predicted_rgb_type_casted_500:1250.png')
 
 # red is 1, green = 4, blue = 3
 # 1, 4, 3
