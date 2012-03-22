@@ -83,7 +83,7 @@ def image_show(**kwargs):
                                source[crop_origin[0]:crop_origin[0] + crop_size[0], crop_origin[1]:crop_origin[1] + crop_size[1], blue_index],
                                source[crop_origin[0]:crop_origin[0] + crop_size[0], crop_origin[1]:crop_origin[1] + crop_size[1], green_index]))
     else:
-        source = source[crop_origin[0]:crop_origin[0] + crop_size[0], crop_origin[1] + crop_size[1]]
+        source = source[crop_origin[0]:crop_origin[0] + crop_size[0], crop_origin[1]:crop_origin[1] + crop_size[1]]
 
     plt.imshow(source, vmin = vmin, vmax = vmax, interpolation = interpolation)
     if color_bar:
