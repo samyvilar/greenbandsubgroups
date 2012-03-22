@@ -19,7 +19,7 @@ if __name__ == '__main__':
     granule_loader.disable_caching()
     granule_loader.enable_multithreading()
 
-    granule_loader.load_granules(granules = ['/home1/FoucaultData/DATA_11/TERRA_1KM/MOD021KM.A2010172.1200.005.2010172204449.hdf',])
+    granule_loader.load_granules(granules = ['/home1/FoucaultData/DATA_11/TERRA_1KM/MOD021KM.A2010172.1535.005.2010173015009.hdf',])
     original = granule_loader.granules[0].data
     predicted = lut.predict(original)
 
