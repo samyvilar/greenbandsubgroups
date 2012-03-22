@@ -32,18 +32,20 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
     if crop_orig and crop_size:
         data = data[crop_orig[0]:crop_orig[0] + crop_size[0], crop_orig[1]:crop_orig[1] + crop_size[1]]
 
-    return data.reshape(data.shape[0] * data.shape[1], len(bands)).astype('float32'), valid_range
+    original_shape = data.shape
+    return data.reshape(data.shape[0] * data.shape[1], len(bands)).astype('float32'), valid_range, original_shape
 
 class HDFFile(object):
     def __init__(self, file):
-        self._bands         = []
-        self._param         = None
-        self._crop_size     = None
-        self._crop_orig     = None
-        self._file_name     = None
-        self._file_dir      = None
-        self._data          = None
-        self._valid_range   = None
+        self._bands          = []
+        self._param          = None
+        self._crop_size      = None
+        self._crop_orig      = None
+        self._file_name      = None
+        self._file_dir       = None
+        self._data           = None
+        self._valid_range    = None
+        self._original_shape = None
         self.file = file
 
     @property
@@ -100,6 +102,13 @@ class HDFFile(object):
         self._data = values
 
     @property
+    def original_shape(self):
+        return self._original_shape
+    @original_shape.setter
+    def original_shape(self, shape):
+        self._original_shape = shape
+
+    @property
     def valid_range(self):
         return self._valid_range
     @valid_range.setter
@@ -111,7 +120,7 @@ class HDFFile(object):
 
     def load(self):
         self._verify_properties()
-        self.data, self.valid_range = read_file(file = self.file,
+        self.data, self.valid_range, self.original_shape = read_file(file = self.file,
                                                 bands = self.bands,
                                                 param = self.param,
                                                 crop_size = self.crop_size,
