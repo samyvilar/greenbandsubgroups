@@ -51,7 +51,7 @@ if __name__ == '__main__':
     original_r = granule_loader.granules[0].data.reshape(granule_loader.granules[0].original_shape)[:,:,0]
     original_g = granule_loader.granules[0].data.reshape(granule_loader.granules[0].original_shape)[:,:,3]
     original_b = granule_loader.granules[0].data.reshape(granule_loader.granules[0].original_shape)[:,:,2]
-    plt.imshow(numpy.dstack(original_r, original_g, original_b), vmin = 0, vmax = 1)
+    plt.imshow(numpy.dstack((original_r, original_g, original_b)), vmin = 0, vmax = 1)
 
 # red is 1, green = 4, blue = 3
 # 1, 4, 3
