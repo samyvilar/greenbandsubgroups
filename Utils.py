@@ -78,6 +78,7 @@ def image_show(**kwargs):
         crop_size = source.shape
 
 
+    print red_index and blue_index and green_index
     if red_index and blue_index and green_index:
         source = numpy.dstack((source[crop_origin[0]:(crop_origin[0] + crop_size[0]), crop_origin[1]:(crop_origin[1] + crop_size[1]), red_index],
                                source[crop_origin[0]:(crop_origin[0] + crop_size[0]), crop_origin[1]:(crop_origin[1] + crop_size[1]), green_index],
