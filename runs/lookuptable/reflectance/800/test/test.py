@@ -27,33 +27,37 @@ if __name__ == '__main__':
     print std/numpy.mean(original[:,3]) * 100
 
     original_shape = granule_loader.granules[0].original_shape[0:2]
-    original = original[:, 3].reshape(original_shape)
-    predicted = predicted[:, 3].reshape(original_shape)
+    original_green = original[:, 3].reshape(original_shape)
+    predicted_green = predicted[:, 3].reshape(original_shape)
 
 
     plt.figure()
-    plt.imshow(original, vmin = 0, vmax = 1, interpolation = 'nearest')
+    plt.imshow(original_green, vmin = 0, vmax = 1, interpolation = 'nearest')
     plt.colorbar()
-    plt.savefig('original.png')
+    plt.savefig('original_g.png')
 
     plt.figure()
-    plt.imshow(predicted, vmin = 0, vmax = 1, interpolation = 'nearest')
+    plt.imshow(predicted_green, vmin = 0, vmax = 1, interpolation = 'nearest')
     plt.colorbar()
-    plt.savefig('predicted.png')
+    plt.savefig('predicted_r.png')
 
 
     plt.figure()
-    plt.imshow(numpy.fabs(original - predicted), vmin = 0, vmax = 1, interpolation = 'nearest')
+    plt.imshow(numpy.fabs(original_green - predicted_green), vmin = 0, vmax = 1, interpolation = 'nearest')
     plt.colorbar()
     plt.savefig('error.png')
 
     plt.figure()
-    original_r = granule_loader.granules[0].data.reshape(granule_loader.granules[0].original_shape)[:,:,0]
-    original_g = granule_loader.granules[0].data.reshape(granule_loader.granules[0].original_shape)[:,:,3]
-    original_b = granule_loader.granules[0].data.reshape(granule_loader.granules[0].original_shape)[:,:,2]
+    original_type_casted = numpy.copy(granule_loader.granules[0].data)
+    original_type_casted[original_type_casted > 1] = 1
+    original_type_casted[original_type_casted < 0] = 0
+    original_r = original_type_casted.reshape(granule_loader.granules[0].original_shape)[:,:,0]
+    original_g = original_type_casted.data.reshape(granule_loader.granules[0].original_shape)[:,:,3]
+    original_b = original_type_casted.data.reshape(granule_loader.granules[0].original_shape)[:,:,2]
+
     plt.imshow(numpy.dstack((original_r, original_g, original_b)), vmin = 0, vmax = 1)
-    plt.colorbar
-    plt.savefig('original_rgb.png')
+    plt.colorbar()
+    plt.savefig('original_rgb_type_casted.png')
 
 # red is 1, green = 4, blue = 3
 # 1, 4, 3
