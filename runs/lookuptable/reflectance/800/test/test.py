@@ -52,8 +52,8 @@ if __name__ == '__main__':
     original_type_casted[original_type_casted > 1] = 1
     original_type_casted[original_type_casted < 0] = 0
     original_r = original_type_casted.reshape(granule_loader.granules[0].original_shape)[:,:,0]
-    original_g = original_type_casted.data.reshape(granule_loader.granules[0].original_shape)[:,:,3]
-    original_b = original_type_casted.data.reshape(granule_loader.granules[0].original_shape)[:,:,2]
+    original_g = original_type_casted.reshape(granule_loader.granules[0].original_shape)[:,:,3]
+    original_b = original_type_casted.reshape(granule_loader.granules[0].original_shape)[:,:,2]
 
     plt.imshow(numpy.dstack((original_r, original_g, original_b)), vmin = 0, vmax = 1)
     plt.colorbar()
