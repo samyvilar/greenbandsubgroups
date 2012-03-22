@@ -46,7 +46,7 @@ def find_max(granule_loader = None):
     for granule_chunks in granule_loader:
         temp_max = numpy.max(multithreading_pool_map(
           **{
-                
+
             }))
 
 class lookuptable(object):
