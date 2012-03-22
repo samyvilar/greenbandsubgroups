@@ -92,7 +92,7 @@ if __name__ == '__main__':
     plt.colorbar()
     plt.savefig('predicted_rgb_type_casted_500:1250.png')
 
-# red is 1, green = 4, blue = 3
+# red is 1, green = 4, blue = 3, NIR = 2
 # 1, 4, 3
 # 0, 3, 2
 
