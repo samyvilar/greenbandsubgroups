@@ -10,6 +10,8 @@ import inspect
 import gc
 gc.enable()
 
+from os.path import basename
+
 
 _liblookuptable = numpy.ctypeslib.load_library('liblut', os.path.dirname(inspect.getfile(inspect.currentframe())))
 
@@ -38,7 +40,7 @@ class lookuptable(object):
 
     def load_table(self, lookuptable_path):
         self.table = numpy.fromfile(lookuptable_path)
-        self.size = int(lookuptable_path.split('_')[0])
+        self.size = int(basename(lookuptable_path).split('_')[0])
         self.table = self.table.reshape((self.size, self.size, self.size))
 
     @property
