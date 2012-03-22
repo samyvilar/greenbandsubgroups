@@ -62,3 +62,4 @@ void lookuptable(int *data,    /*2D DATA with n by r shape, n-1 used as indices,
     free(countp);
 }
 
+

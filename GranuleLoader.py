@@ -105,7 +105,7 @@ class GranuleLoader(object):
     def number_of_granules(self, values):
         self._number_of_granules = values
 
-    def load_granules(self, granules):
+    def load_granules(self, granules = []):
         self._verify_properties()
         for index, granule in enumerate(granules):
             if not isinstance(granule, HDFFile):
@@ -140,7 +140,7 @@ class GranuleLoader(object):
         self._verify_properties()
         self.dir = dir
         files = GranuleLoader.get_granules_in_dir(dir = dir, pattern = pattern)
-        self.load_granules(files)
+        self.load_granules(granules = files)
 
     def load_granules_chunk(self, dir = None, pattern = None, chunks = None):
         assert chunks and dir and pattern
@@ -148,7 +148,7 @@ class GranuleLoader(object):
         index = 0
         self.number_of_granules = len(files)
         while index < len(files):
-            self.load_granules(files[index:index+chunks])
+            self.load_granules(granlules = files[index:index+chunks])
             index += chunks
             yield self.granules
 

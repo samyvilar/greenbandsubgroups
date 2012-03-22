@@ -32,10 +32,14 @@ def build_lookuptable(kwvalues):
     return lut
 
 class lookuptable(object):
-    def __init__(self, table = None):
-        self.table = table
+    def __init__(self):
         self._sums = None
         self._counts = None
+
+    def load_table(self, lookuptable_path):
+        self.table = numpy.fromfile(lookuptable_path)
+        self.size = int(lookuptable_path.split('_')[0])
+        self.table = self.table.reshape((self.size, self.size, self.size))
 
     @property
     def table(self):
@@ -65,16 +69,33 @@ class lookuptable(object):
     def counts(self, values):
         self._counts = values
 
+    def predict(self, granule):
+        prediction = numpy.zeros(granule.shape)
+        indices = self.data_to_indices(granule)
+        prediction[:, 0:3] = granule[:, 0:3]
+        for index, row in enumerate(prediction):
+            prediction[index][3] = self.table[indices[index][0]][indices[index][1]][indices[index][2]]
+        return self.indices_to_data(prediction)
+
+
+    def data_to_indices(self, data):
+        values = (numpy.round((data * self.size - 0.5))).astype('intc') # redefine values to be used properly as indices
+        values[values >= self.size] = self.size - 1 # make sure none of the values exceed max, if they do simply set them to the max.
+        values[values < 0] = 0
+
+        return values
+
+    def indices_to_data(self, indices):
+        return indices/self.size + 0.5
+
+
     def build(self, data = None, size = None):
         assert data != None and size != None
         self.size = size
         counts = numpy.zeros((size, size, size), dtype = 'float32')
         sums = numpy.zeros((size, size, size), dtype = 'float32')
 
-        values = (numpy.round((data * self.size - 0.5))).astype('intc') # redefine values to be used properly as indices
-        values[values >= self.size] = self.size - 1 # make sure none of the values exceed max, if they do simply set them to the max.
-        values[values < 0] = 0
-
+        values = self.data_to_indices(data)
 
         shape = numpy.asarray(data.shape, dtype = 'uintc')
         _liblookuptable.lookuptable(values,
