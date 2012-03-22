@@ -75,7 +75,7 @@ def image_show(**kwargs):
         source[source > max] = max
 
     if not crop_size:
-        crop_size = source.shape()
+        crop_size = source.shape
 
 
     if red_index and blue_index and green_index:
