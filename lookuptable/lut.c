@@ -104,11 +104,10 @@ void flatten_lookuptable(double         *lookuptable,
                         unsigned int    lutsize,
                         double          *lookuptable_flatten)
 {
-    unsigned int index, index1, index2;
+    unsigned int index, index1, index2, numrows = lutsize*lutsize*lutsize;
+    double *lutbaseaddr;
     double ***lookuptablep = (double ***)malloc(lutsize * sizeof(double **)); /*Mapping 1D arrays to 3D*/
 
-    double *lutbaseaddr;
-    unsigned int numrows = lutsize*lutsize*lutsize/4;
     double **lookuptable_flattenp = (double **)malloc(numrows * sizeof(double *)); /*Mapping 1D array to 2D*/
     for (index = 0; index < numrows; index++)
         lookuptable_flattenp[index] = lookuptable_flatten + index*4;
@@ -127,9 +126,9 @@ void flatten_lookuptable(double         *lookuptable,
         for (index1 = 0; index1 < lutsize; index1++)
             for (index2 = 0; index2 < lutsize; index2++)
             {
-                lookuptable_flattenp[row][0] = index;
-                lookuptable_flattenp[row][1] = index1;
-                lookuptable_flattenp[row][2] = index2;
+                lookuptable_flattenp[row][0] = (double)index;
+                lookuptable_flattenp[row][1] = (double)index1;
+                lookuptable_flattenp[row][2] = (double)index2;
                 lookuptable_flattenp[row][3] = lookuptablep[index][index1][index2];
                 row++;
             }

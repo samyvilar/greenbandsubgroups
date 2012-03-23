@@ -132,7 +132,7 @@ class lookuptable(object):
 
     def flatten_2d(self):
         assert self.table != None
-        lookuptable_flatten = numpy.zeros(((self.size * self.size * self.size)/4, 4))
+        lookuptable_flatten = numpy.zeros(((self.size * self.size * self.size), 4))
 
         _liblookuptable.flatten_lookuptable(self.table,
                                             numpy.asarray([self.size,], dtype = 'uintc')[0],
