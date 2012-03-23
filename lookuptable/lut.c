@@ -100,3 +100,37 @@ void predict_double(int             *data,
     }
 }
 
+void flatten_lookuptable(double         *lookuptable,
+                        unsigned int    lutsize,
+                        double          *lookuptable_flatten)
+{
+    unsigned int index, index1, index2;
+    double ***lookuptablep = (double ***)malloc(lutsize * sizeof(double **)); /*Mapping 1D arrays to 3D*/
+
+    double **lookuptable_flatten = (double **)malloc(numrows * sizeof(double *)); /*Mapping 1D array to 2D*/
+    unsigned int numrows = lutsize*lutsize*lutsize/4;
+    for (index = 0; index < numrows; index++)
+        lookuptablep[index] = lookuptable_flatten + index*4;
+
+    for (index = 0; index < lutsize; index++)
+    {
+        lookuptablep[index] = (double **)malloc(lutsize * sizeof(double *));
+        lutbaseaddr = (lookuptable + index*lutsize*lutsize);
+
+        for (index1 = 0; index1 < lutsize; index1++)
+            lookuptablep[index][index1] = lutbaseaddr + index1*lutsize;
+    }
+
+    unsigned int row = 0;
+    for (index = 0; index < lutsize; index++)
+        for (index1 = 0; index1 < lutsize; index1++)
+            for (index2 = 0; index2 < lutsize; index2++)
+            {
+                lookuptable_flatten[row][0] = index;
+                lookuptable_flatten[row][1] = index1;
+                lookuptable_flatten[row][2] = index2;
+                lookuptable_flatten[row][3] = lookuptablep[index][index1][index2];
+                row++;
+            }
+}
+

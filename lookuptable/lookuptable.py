@@ -17,9 +17,10 @@ import numpy
 _liblookuptable = numpy.ctypeslib.load_library('liblut', os.path.dirname(inspect.getfile(inspect.currentframe())))
 
 float_3d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float32, ndim = 3, flags = 'CONTIGUOUS')
-int_2d_array   = numpy.ctypeslib.ndpointer(dtype = numpy.intc,  ndim = 2, flags = 'CONTIGUOUS')
+int_2d_array   = numpy.ctypeslib.ndpointer(dtype = numpy.intc,    ndim = 2, flags = 'CONTIGUOUS')
 
 double_3d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float64, ndim = 3, flags = 'CONTIGUOUS')
+double_2d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float64, ndim = 2, flags = 'CONTIGUOUS')
 double_1d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float64, ndim = 1, flags = 'CONTIGUOUS')
 
 _liblookuptable.lookuptable.argtypes = [int_2d_array,
@@ -35,6 +36,10 @@ _liblookuptable.predict_double.argtypes = [int_2d_array,
                                            double_3d_array,
                                            ctypes.c_uint,
                                            double_1d_array]
+
+_liblookuptable.flatten_lookuptable.argtypes = [double_3d_array,
+                                                ctypes.c_uint,
+                                                double_2d_array]
 
 def build_lookuptable(kwvalues):
     data, size = kwvalues['data'], kwvalues['size']
@@ -100,16 +105,6 @@ class lookuptable(object):
         prediction_green = numpy.zeros(granule.shape[0], dtype = 'float64')
         indices = self.data_to_indices(granule)
 
-        '''
-        void predict_double(int             *data,
-                            unsigned int    numrows,
-                            unsigned int    numcols,
-                            double          *lookuptable,
-                            unsigned int    lutsize,
-                            double          *results)
-
-        '''
-
         shape = numpy.asarray(indices.shape, dtype = 'uintc')
         _liblookuptable.predict_double(indices,
                                        shape[0],
@@ -118,10 +113,6 @@ class lookuptable(object):
                                        numpy.asarray([self.size,], dtype = 'uintc')[0],
                                        prediction_green)
 
-        '''
-        for index, row in enumerate(prediction):
-            prediction[index, 3] = self.table[indices[index, 0], indices[index, 1], indices[index, 2]]
-        '''
         prediction = numpy.zeros(granule.shape)
         prediction[:, 0:3] = granule[:, 0:3]
         prediction[:, 3] = self.indices_to_data(prediction_green)
@@ -140,7 +131,14 @@ class lookuptable(object):
         return (indices + 0.5)/self.size
 
     def flatten_2d(self):
-        pass
+        assert self.table != None
+        lookuptable_flatten = numpy.zeros(((self.size * self.size * self.size)/4, 4))
+
+        _liblookuptable.flatten_lookuptable(self.table,
+                                            numpy.asarray([self.size,], dtype = 'uintc')[0],
+                                            lookuptable_flatten)
+        return lookuptable_flatten
+
 
 
     def build(self, data = None, size = None):
