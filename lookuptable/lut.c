@@ -91,7 +91,7 @@ void predict_double(int             *data,
     for (index = 0; index < numrows; index++)
     {
         row    = datap[index];
-        if (row[0] > lutsize || row[1] > lutsize || row[2])
+        if (row[0] > lutsize || row[1] > lutsize || row[2] > lutsize)
         {
             printf("Error: Index exceeding look up table size %i\n", lutsize);
             exit(-1);
