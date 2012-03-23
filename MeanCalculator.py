@@ -291,16 +291,25 @@ class MeanCalculator(object):
         for file in self.granules:
             values.append({})
             values[-1]['hdf_file'] = file
-            for property in self._required_properties:
-                values[-1][property] = getattr(self, property)
+            values[-1].update(self.get_properties_as_dict())
 
         return values
+
+    def get_properties_as_dict(self):
+        props = {}
+        for property in self._required_properties:
+            props[property] = getattr(self, property)
+        return props
+
 
     def calc_caching_file_name(self):
         if self.granules == None or len(self.granules) == 0: return "None"
         return '%s/number_of_granules:%i_param:%s_bands:%s_names_hashed:%s_number_of_groups:%s_number_of_subgroups:%i_initial_means.obj' % \
             (self.granules[0].file_dir + '/cache/means', len(self.granules), self.granules[0].param, str(self.granules[0].bands), GranuleLoader.get_names_hashed([granule.file_name for granule in self.granules]), self.number_of_groups, self.number_of_subgroups)
 
+    def calculate_mean(self, data):
+        props = self.get_properties_as_dict()
+        return get_mean(**props)
 
     def calculate_means(self):
         self.check_all_properties()
@@ -311,7 +320,7 @@ class MeanCalculator(object):
             arguments   =
                 {
                     'files_clustering_properties':self.get_clustering_properties_as_array_dict_for_each_file(),
-                    'clustering_function':getMean,
+                    'clustering_function':get_mean,
                     'multithreaded':self.is_multithreading(),
                 })
 
