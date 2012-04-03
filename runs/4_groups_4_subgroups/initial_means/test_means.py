@@ -9,7 +9,8 @@ from MeanCalculator import MeanCalculator, MeanShift
 
 lut = lookuptable()
 lut.load_table('../../lookuptable/reflectance/800/800_lookuptable.numpy')
-flatten = lut.flatten_2d_non_zero()
+lut.load_or_calulate_flatten_table('../../lookuptable/reflectance/800/800_lookuptable_flatten.numpy')
+
 
 mean_calculator = MeanCalculator()                  # Calculate or load initial means ...
 mean_calculator.enable_multithreading()

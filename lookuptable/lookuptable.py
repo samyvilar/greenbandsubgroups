@@ -69,6 +69,17 @@ class lookuptable(object):
         self._sums = None
         self._counts = None
 
+    def enable_multithreading(self):
+        self._multithreading = True
+    def disable_multithreading(self):
+        self._multithreading = False
+
+    def enable_caching(self):
+        self._caching = True
+    def disable_caching(self):
+        self._caching = False
+
+
     def load_table(self, lookuptable_path):
         self.table = numpy.fromfile(lookuptable_path)
         self.size = int(basename(lookuptable_path).split('_')[0])
@@ -141,6 +152,16 @@ class lookuptable(object):
                                             lookuptable_flatten,
                                             ctypes.c_uint(non_zero_count))
         return lookuptable_flatten
+
+    def load_or_calculate_flatten_table(self, table_path):
+        assert self.table != None
+        if (os.path.isfile(table_path)):
+            flatten_table = numpy.fromfile(table_path)
+            self._flatten_table = flatten_table.reshape((flatten_table.shape[0]/4, 4))
+        else:
+            self._flatten_table = self.flatten_2d_non_zero()
+
+
 
 
 

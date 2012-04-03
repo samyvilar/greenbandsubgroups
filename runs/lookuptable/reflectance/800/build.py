@@ -5,10 +5,8 @@ import sys
 import numpy
 sys.path.extend('../../..')
 
-from lookuptable.lookuptable import build_lookuptable
+from lookuptable.lookuptable import build_lookuptable, lookuptable
 from GranuleLoader import GranuleLoader
-from progressbar import ProgressBar, Percentage, Bar, RotatingMarker, ETA
-
 
 
 if __name__ == '__main__':
@@ -40,6 +38,12 @@ if __name__ == '__main__':
     table.tofile(str(lut_size) + '_lookuptable.numpy')
     counts.tofile(str(lut_size) + '_counts.numpy')
     sums.tofile(str(lut_size) + '_sums.numpy')
+
+    lut = lookuptable()
+    lut.table = table
+    flatten_table = lut.flatten_2d_non_zero()
+    flatten_table.tofile(str(lut_size) + '_lookuptable_flatten.numpy')
+
 
 
 
