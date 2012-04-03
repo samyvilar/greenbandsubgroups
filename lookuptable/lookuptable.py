@@ -85,12 +85,24 @@ class lookuptable(object):
         self.size = int(basename(lookuptable_path).split('_')[0])
         self.table = self.table.reshape((self.size, self.size, self.size))
 
+    def load_flatten_table(self, lookuptable_flatten_path):
+        self.flatten_table = numpy.fromfile(lookuptable_flatten_path)
+        self.flatten_table = self.flatten_table.reshape((self.flatten_table.shape[0], 4))
+        self.size = int(basename(lookuptable_flatten_path).split('_')[0])
+
     @property
     def table(self):
         return self._table
     @table.setter
     def table(self, value):
         self._table = value
+
+    @property
+    def flatten_table(self):
+        return self._flatten_table
+    @flatten_table.setter
+    def flatten_table(self, flatten_table):
+        self._flatten_table = flatten_table
 
     @property
     def size(self):
