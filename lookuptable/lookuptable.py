@@ -139,7 +139,7 @@ class lookuptable(object):
         _liblookuptable.flatten_lookuptable(self.table,
                                             numpy.asarray([self.size,], dtype = 'uintc')[0],
                                             lookuptable_flatten,
-                                            ctypes.c_uint(lookuptable_flatten))
+                                            ctypes.c_uint(non_zero_count))
         return lookuptable_flatten
 
 
