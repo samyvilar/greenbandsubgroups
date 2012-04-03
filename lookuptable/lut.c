@@ -102,7 +102,7 @@ void predict_double(int             *data,
 
 void flatten_lookuptable(double         *lookuptable,
                         unsigned int    lutsize,
-                        double          *lookuptable_flatten
+                        double          *lookuptable_flatten,
                         unsigned int    numrows)
 {
     unsigned int index, index1, index2;
