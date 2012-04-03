@@ -102,9 +102,10 @@ void predict_double(int             *data,
 
 void flatten_lookuptable(double         *lookuptable,
                         unsigned int    lutsize,
-                        double          *lookuptable_flatten)
+                        double          *lookuptable_flatten
+                        unsigned int    numrows)
 {
-    unsigned int index, index1, index2, numrows = lutsize*lutsize*lutsize;
+    unsigned int index, index1, index2;
     double *lutbaseaddr;
     double ***lookuptablep = (double ***)malloc(lutsize * sizeof(double **)); /*Mapping 1D arrays to 3D*/
 
@@ -125,12 +126,19 @@ void flatten_lookuptable(double         *lookuptable,
     for (index = 0; index < lutsize; index++)
         for (index1 = 0; index1 < lutsize; index1++)
             for (index2 = 0; index2 < lutsize; index2++)
-            {
-                lookuptable_flattenp[row][0] = (double)index;
-                lookuptable_flattenp[row][1] = (double)index1;
-                lookuptable_flattenp[row][2] = (double)index2;
-                lookuptable_flattenp[row][3] = lookuptablep[index][index1][index2];
-                row++;
-            }
+                if (lookuptable[index][index1][index2])
+                {
+                    if (row > numrows)
+                    {
+                        printf("Error: Number of rows exceeded set max %i\n", numrows);
+                        exit(-1);
+                    }
+                    lookuptable_flattenp[row][0] = (double)index;
+                    lookuptable_flattenp[row][1] = (double)index1;
+                    lookuptable_flattenp[row][2] = (double)index2;
+                    lookuptable_flattenp[row][3] = lookuptablep[index][index1][index2];
+                    row++;
+                }
+
 }
 

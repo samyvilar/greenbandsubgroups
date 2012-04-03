@@ -39,7 +39,8 @@ _liblookuptable.predict_double.argtypes = [int_2d_array,
 
 _liblookuptable.flatten_lookuptable.argtypes = [double_3d_array,
                                                 ctypes.c_uint,
-                                                double_2d_array]
+                                                double_2d_array,
+                                                ctypes.c_uint]
 
 def build_lookuptable(kwvalues):
     data, size = kwvalues['data'], kwvalues['size']
@@ -130,13 +131,15 @@ class lookuptable(object):
     def indices_to_data(self, indices):
         return (indices + 0.5)/self.size
 
-    def flatten_2d(self):
+    def flatten_2d_non_zero(self):
         assert self.table != None
-        lookuptable_flatten = numpy.zeros(((self.size * self.size * self.size), 4))
+        non_zero_count = numpy.sum(self.table != 0)
+        lookuptable_flatten = numpy.zeros((non_zero_count, 4))
 
         _liblookuptable.flatten_lookuptable(self.table,
                                             numpy.asarray([self.size,], dtype = 'uintc')[0],
-                                            lookuptable_flatten)
+                                            lookuptable_flatten,
+                                            ctypes.c_uint(lookuptable_flatten))
         return lookuptable_flatten
 
 

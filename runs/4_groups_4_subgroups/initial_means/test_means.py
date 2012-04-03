@@ -27,5 +27,3 @@ mean_calculator.calculate_means()
 
 mean = get_mean(**{'data':lut.table,
                    'number_of_runs':''})
-
-
