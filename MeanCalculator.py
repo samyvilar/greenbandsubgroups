@@ -309,7 +309,7 @@ class MeanCalculator(object):
 
     def calculate_mean(self, data):
         props = self.get_properties_as_dict()
-        return get_mean(**props)
+        return get_mean(props)
 
     def calculate_means(self):
         self.check_all_properties()
