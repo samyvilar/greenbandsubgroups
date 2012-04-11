@@ -20,7 +20,7 @@ if __name__ == '__main__':
     granule_loader.disable_caching()
     granule_loader.enable_multithreading()
 
-    granule_path = '/home1/FoucaultData/DATA_11/TERRA_1KM/MOD021KM.A2010172.1535.005.2010173015009.hdf'
+    granule_path = '/home1/fhs/results/modgreen/e7/MOD021KM.A2002179.1640.005.2010085164818'
     granule_loader.load_granules(granules = [granule_path,])
     original = granule_loader.granules[0].data
     predicted = lut.predict(original)
@@ -49,6 +49,12 @@ if __name__ == '__main__':
         interpolation = 'nearest',
         color_bar = True, file_name = 'error.png',
         title = 'Absolute Error of Green Values Predicted vs True')
+
+    image_show(source = numpy.fabs(original_green - predicted_green)/original_green,
+        vmin = 0, vmac = 1, min = 0, max = 1,
+        interpolation = 'nearest',
+        color_bar = True, file_Name = 'relatibe_error.png',
+        title = 'Relative Error of Green Values Predicted vs True')
 
 
     image_show(

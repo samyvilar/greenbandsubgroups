@@ -312,6 +312,8 @@ class MeanCalculator(object):
         props['data'] = data
         return get_mean(props)
 
+
+
     def calculate_means(self):
         self.check_all_properties()
         self.means = load_cached_or_calculate_and_cached(
