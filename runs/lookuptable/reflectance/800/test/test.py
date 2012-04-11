@@ -53,7 +53,7 @@ if __name__ == '__main__':
     image_show(source = numpy.fabs(original_green - predicted_green)/original_green,
         vmin = 0, vmax = 1, min = 0, max = 1,
         interpolation = 'nearest',
-        color_bar = True, file_Name = 'relatibe_error.png',
+        color_bar = True, file_name = 'relative_error.png',
         title = 'Relative Error of Green Values Predicted vs True')
 
 
