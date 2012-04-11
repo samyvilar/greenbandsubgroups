@@ -15,6 +15,8 @@ from scipy.cluster.vq import kmeans2, kmeans
 from Utils import load_cached_or_calculate_and_cached, multithreading_pool_map
 from GranuleLoader import GranuleLoader
 
+import scipy.cluster.vq
+
 
 def get_means(data, labels):
     assert data.ndim == 2 and labels.ndim == 1 and data.shape[0] == len(labels) and labels.min() >= 0
@@ -39,15 +41,23 @@ def get_mean(kwargs):
     number_of_dimensions                 = kwargs['mean_shift'].number_of_dimensions
     number_of_neighbors                  = kwargs['mean_shift'].number_of_neighbors
 
+    number_of_groups                     = kwargs['number_of_groups']
+
+    clustering_function                  = kwargs['clustering_function']
+
+
     assert numpy.all(numpy.isfinite(data))
 
-    def clustering_function(data):
+    def clustering_function_kmeans2(data):
+        results = scipy.cluster.vq.kmeans2(data, number_of_groups, thresh = threshold)
+        return results[1], results[0]
+
+    def clustering_function_mean_shift(data):
         def mean_shift(data):
             K = number_of_points  # n is the number of points
             L = number_of_dimensions   # d is the number of dimensions.
             k = number_of_neighbors # number of neighbors
             f = glasslab_cluster.cluster.FAMS(data, seed = 100) #FAMS Fast Adaptive Mean Shift
-
             pilot = f.RunFAMS(K, L, k)
             modes = f.GetModes()
             umodes = glasslab_cluster.utils.uniquerows(modes)
@@ -55,8 +65,6 @@ def get_mean(kwargs):
             for i, m in enumerate(umodes):
                 labels[numpy.all(modes == m, axis = 1)] = i
             return umodes, labels, pilot
-
-
         means, sub_labels, pilot = mean_shift(data)
         print 'means.shape' + str(means.shape)
         distance_matrix = scipy.spatial.distance.pdist(means)
@@ -64,9 +72,7 @@ def get_mean(kwargs):
         distance_matrix[distance_matrix > threshold] = 0
         H = networkx.from_numpy_matrix(scipy.spatial.distance.squareform(distance_matrix))
         connected_components = networkx.connected_components(H)
-
         print len(connected_components), "components:", map(len, connected_components)
-
         def merge_cluster(pattern, lbl_composites):
             try:
                 pattern.shape #test if pattern is a NUMPY array, convert if list
@@ -88,20 +94,26 @@ def get_mean(kwargs):
         time.sleep(1)
         return scipy.cluster.vq.whiten(data - data.mean(axis = 0))
 
-    run_labels, _ = gcons.subsampled(
+    if clustering_function == 'mean_shift':
+        run_labels, _ = gcons.subsampled(
             data,
             number_of_runs,
             clproc = pre_processing_function,
             cofunc = consensus_function,
-            clfunc = clustering_function,
+            clfunc = clustering_function_mean_shift,
             nco    = number_of_observations,
             ncl    = number_of_random_unique_sub_samples)
+        mrlabels = gcons.rmajrule(numpy.asarray(run_labels, dtype = 'int64'))
+
+        means, count = get_means(data, mrlabels)
+        return means
+
+    if clustering_function == 'kmeans2':
+        return get_means(data, clustering_function_kmeans2(data)[0])
+
+    raise Exception("Need to specify a clustering function!")
 
 
-    mrlabels = gcons.rmajrule(numpy.asarray(run_labels, dtype = 'int64'))
-
-    means, count = get_means(data, mrlabels)
-    return means
 
 def calc_means(**kwargs):
     def getmeans(data = None, labels = None):
@@ -182,7 +194,15 @@ class MeanCalculator(object):
                                      'number_of_random_unique_sub_samples',
                                      'number_of_observations',
                                      'threshold',
-                                     'mean_shift']
+                                     'mean_shift',
+                                     'clustering_function']
+
+    @property
+    def clustering_function(self):
+        return self._clustering_function
+    @clustering_function.setter
+    def clustering_function(self, value):
+        self._clustering_function = value
 
     @property
     def granules(self):
@@ -307,10 +327,11 @@ class MeanCalculator(object):
         return '%s/number_of_granules:%i_param:%s_bands:%s_names_hashed:%s_number_of_groups:%s_number_of_subgroups:%i_initial_means.obj' % \
             (self.granules[0].file_dir + '/cache/means', len(self.granules), self.granules[0].param, str(self.granules[0].bands), GranuleLoader.get_names_hashed([granule.file_name for granule in self.granules]), self.number_of_groups, self.number_of_subgroups)
 
-    def calculate_mean(self, data):
+    def calculate_mean(self, data, function = get_mean):
         props = self.get_properties_as_dict()
         props['data'] = data
         return get_mean(props)
+
 
 
 
@@ -326,9 +347,3 @@ class MeanCalculator(object):
                     'clustering_function':get_mean,
                     'multithreaded':self.is_multithreading(),
                 })
-
-
-
-
-
-
