@@ -57,6 +57,14 @@ if __name__ == '__main__':
         title = 'Relative Error of Green Values Predicted vs True')
 
 
+    image_show(source = numpy.fabs(original_green - predicted_green)/original_green,
+        vmin = 0, vmax = .25, min = 0, max = 1,
+        interpolation = 'nearest',
+        color_bar = True, file_name = 'relative_error_cropped.png',
+        crop_origin = (0, 0), crop_size = (1000, 1000),
+        title = 'LUT Relative Error of Green Values Predicted vs True CROPPED')
+
+
     image_show(
        source = granule_loader.granules[0].data,
        reshape = granule_loader.granules[0].original_shape,
