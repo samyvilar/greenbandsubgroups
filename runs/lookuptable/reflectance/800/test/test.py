@@ -20,7 +20,7 @@ if __name__ == '__main__':
     granule_loader.disable_caching()
     granule_loader.enable_multithreading()
 
-    granule_path = '/home1/fhs/results/modgreen/e7/MOD021KM.A2002179.1640.005.2010085164818'
+    granule_path = '/home1/FermiData/DATA_5/SNOW_CLOUD_MODIS/data/MOD021KM.A2002179.1640.005.2010085164818.hdf'
     granule_loader.load_granules(granules = [granule_path,])
     original = granule_loader.granules[0].data
     predicted = lut.predict(original)
