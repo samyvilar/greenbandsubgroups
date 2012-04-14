@@ -42,8 +42,8 @@ def get_predicted(**kwargs):
     for index, value in enumerate(predictions):
         predicted[labels == index] = value
     pred = numpy.zeros(data.shape)
-    pred[training_band] = data[training_band]
-    pred[predicting_band] = predicted
+    pred[:, training_band] = data[training_band]
+    pred[:, predicting_band] = predicted
     return pred
 
 def get_alphas(**kwargs):
