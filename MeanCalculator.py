@@ -108,7 +108,7 @@ def get_mean(kwargs):
         return means
 
     if clustering_function == 'kmeans2':
-        return get_means(data, clustering_function_kmeans2(data)[0])[0]
+        return clustering_function_kmeans2(data)
 
     raise Exception("Need to specify a clustering function!")
 
