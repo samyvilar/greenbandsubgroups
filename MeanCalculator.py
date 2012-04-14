@@ -62,18 +62,18 @@ def get_alphas(**kwargs):
     labels          = kwargs['labels']
     training_band   = kwargs['training_band']
     predictive_band = kwargs['predictive_band']
-    values = [dict(kwargs) for index in xrange(means.shape)]
-    for index, value in enumerate(values): value.update(group = index)
-    alphas = multithreading_pool_map(values = values, function = calc_alpha, multithreaded = True)
-    '''
-    alphas = []
-    for group in xrange(means.shape[0]):
-        c = data[labels == group, :]
-        W = append_ones(c[:, training_band])
-        G = c[:,predictive_band]
-        alphas.append(
-            numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G)) )
-    '''
+    if kwargs['multithreading']:
+        values = [dict(kwargs) for index in xrange(means.shape[0])]
+        for index, value in enumerate(values): value.update(group = index)
+        alphas = multithreading_pool_map(values = values, function = calc_alpha, multithreaded = True)
+    else:
+        alphas = []
+        for group in xrange(means.shape[0]):
+            c = data[labels == group, :]
+            W = append_ones(c[:, training_band])
+            G = c[:,predictive_band]
+            alphas.append(
+                numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G)) )
     return numpy.column_stack(alphas).transpose()
 
 
