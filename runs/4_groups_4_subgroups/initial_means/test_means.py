@@ -13,8 +13,6 @@ lut = lookuptable()
 lut.load_flatten_table('../../lookuptable/reflectance/800/800_lookuptable_flatten.numpy')
 data = lut.indices_to_data(lut.flatten_table)
 
-
-
 granule_loader = GranuleLoader()
 granule_loader.bands = [1,2,3,4]
 granule_loader.param = 'reflectance'

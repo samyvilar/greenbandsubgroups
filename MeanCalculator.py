@@ -45,12 +45,28 @@ def get_predicted(**kwargs):
     pred[:, predicting_band[0] if len(predicting_band) == 1 else predicting_band] = predicted
     return pred
 
+def calc_alpha(kwargs):
+    data = kwargs['data']
+    labels = kwargs['labels']
+    group = kwargs['group']
+    training_band = kwargs['training_band']
+    predictive_band = kwargs['predictive_band']
+    c = data[labels == group, :]
+    W = append_ones(c[:, training_band])
+    G = c[:,predictive_band]
+    return numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G))
+
 def get_alphas(**kwargs):
+    '''
     data            = kwargs['data']
     means           = kwargs['means']
     labels          = kwargs['labels']
     training_band   = kwargs['training_band']
     predictive_band = kwargs['predictive_band']
+    '''
+    alphas = multithreading_pool_map(values = [dict(group = group, kwargs) for group in xrange(means.shape)],
+                                                function = calc_alpha, multithreaded = True)
+    '''
     alphas = []
     for group in xrange(means.shape[0]):
         c = data[labels == group, :]
@@ -58,6 +74,7 @@ def get_alphas(**kwargs):
         G = c[:,predictive_band]
         alphas.append(
             numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G)) )
+    '''
     return numpy.column_stack(alphas).transpose()
 
 
