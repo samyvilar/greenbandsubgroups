@@ -5,9 +5,8 @@ import sys
 sys.path.extend('../../..')
 
 from lookuptable.lookuptable import  lookuptable
-from MeanCalculator import MeanCalculator, MeanShift
+from MeanCalculator import MeanCalculator, MeanShift, get_alphas, get_predicted
 from GranuleLoader import GranuleLoader
-import numpy
 
 lut = lookuptable()
 lut.load_flatten_table('../../lookuptable/reflectance/800/800_lookuptable_flatten.numpy')
@@ -40,11 +39,11 @@ mean_calculator.mean_shift = MeanShift(number_of_points = 30, number_of_dimensio
 mean_calculator.clustering_function = "kmeans2"
 
 means, labels = mean_calculator.calculate_means_data(data)
+alphas = get_alphas(data = data, means = means, labels = labels, training_band = [0,1,2], predictive_band = [3])
+predicted = get_predicted(data = original, means = means, alphas = alphas, training_band = [0,1,2])
 
 
-alphas = numpy.dot(
-    numpy.dot(numpy.linalg.inv(numpy.dot(data[:, 0:3].transpose(), data[:, 0:3])),
-        data[:, 0:3].transpose()), data[:, 3])
+
 
 
 

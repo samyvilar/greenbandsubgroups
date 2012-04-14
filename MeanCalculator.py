@@ -17,6 +17,47 @@ from GranuleLoader import GranuleLoader
 
 import scipy.cluster.vq
 
+def append_ones(matrix, axis = 1):
+    return numpy.append(matrix, numpy.ones((matrix.shape[0], 1)), axis = axis)
+
+def get_predicted(**kwargs):
+    data            = kwargs['data']
+    alphas          = kwargs['alphas']
+    means           = kwargs['means']
+    training_band   = kwargs['training_band']
+    def get_labels(data, means):
+        dist = numpy.zeros((data.shape[0], means.shape[0]))
+        for i in xrange(means.shape[0]):
+            dist[:,i] = numpy.sum((data - means[i,:])**2, axis=1)
+        return dist.argmin(axis=1)
+    labels  = get_labels(data, means)
+
+    predictions = []
+    for cluster in xrange(means.shape[0]):
+        predictions.append(
+            numpy.dot(append_ones(data[labels == cluster, :][:, training_band]), alphas[cluster,:].reshape((-1,1)))
+        )
+    predicted = numpy.zeros(data.shape[0])
+    for index, value in enumerate(predictions):
+        predicted[labels == index] = value
+    return predicted
+
+def get_alphas(**kwargs):
+    data            = kwargs['data']
+    means           = kwargs['means']
+    labels          = kwargs['labels']
+    training_band   = kwargs['training_band']
+    predictive_band = kwargs['predictive_band']
+    alphas = []
+    for group in xrange(means.shape[0]):
+        c = data[labels == group, :]
+        W = append_ones(c[:, training_band])
+        G = c[:,predictive_band]
+        alphas.append(
+            numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G)) )
+    return numpy.column_stack(alphas).transpose()
+
+
 def get_means(data, labels):
     assert data.ndim == 2 and labels.ndim == 1 and data.shape[0] == len(labels) and labels.min() >= 0
     number_of_clusters = labels.max() + 1
@@ -49,7 +90,7 @@ def get_mean(kwargs):
 
     def clustering_function_kmeans2(data):
         results = scipy.cluster.vq.kmeans2(data, number_of_groups, thresh = threshold, iter = number_of_runs)
-        return results[1], results[0]
+        return results[0], results[1]
 
     def clustering_function_mean_shift(data):
         def mean_shift(data):
@@ -150,87 +191,6 @@ def calc_means(**kwargs):
 
 
     return means
-
-
-
-
-
-
-def nnlabel(data, means):
-    dist = numpy.zeros((data.shape[0], means.shape[0]))
-    for i in xrange(means.shape[0]):
-        dist[:,i] = numpy.sum((data - means[i,:])**2, axis=1)
-    return dist.argmin(axis=1)
-
-class Lstsq(object):
-    def __init__(self):
-        self.Ag     = 0
-        self.AA     = 0
-        self.Nold   = 0
-        self.Nnew   = 0
-    def update(self, A, g):
-        if len(A) == 0 and len(g) == 0:
-            return
-        self.Nnew   = self.Nold + A.shape[0]
-        self.AA     = (1 / float(self.Nnew)) * (numpy.dot(A.T, A) + self.Nold * self.AA)
-        self.Ag     = (1 / float(self.Nnew)) * (numpy.dot(A.T, g) + self.Nold * self.Ag)
-        self.Nold   = self.Nnew
-    def result(self):
-        return numpy.dot(numpy.linalg.inv(self.AA), self.Ag)
-
-def appendones(matrix, axis = 1):
-    return numpy.append(matrix, numpy.ones((matrix.shape[0], 1)), axis = axis)
-
-def calcAlpha(nc):
-    predictind  = numpy.where(GreenBand.bands == PredictBand)[0]
-    trainind    = numpy.where(GreenBand.bands != PredictBand)[0]
-    ls          = Lstsq()
-    for file in greenband.hdffiles:
-        c = file.data[file.labels == nc, :]
-        ls.update(appendones(c[:,trainind]), c[:,predictind])
-    return ls.result()
-
-
-def get_alphas(**kwargs):
-    data    = kwargs['data']
-    means   = kwargs['means']
-    labels  = kwargs['labels'] if 'labels' in kwargs else nnlabel(data, means)
-
-
-
-    ############################################################################
-    for hdffile in greenband.hdffiles:
-        hdffile.means = means
-    pool   = multiprocessing.Pool(processes = ncpus)
-    labels = pool.map(calcLabel, greenband.hdffiles)
-    pool.close()
-    pool.join()
-    index = 0
-    for label in labels:
-        greenband.hdffiles[index].labels = label
-        index = index + 1
-        ############################################################################
-    try:
-        pool   = multiprocessing.Pool(processes = ncpus)
-        alphas = pool.map(calcAlpha, xrange(means.shape[0]))
-        pool.close()
-        pool.join()
-    except:
-        global allmeans
-        global deltas
-        global allalphas
-        scipy.io.savemat("meanopt_" + str(len(deltas)) + ".mat",
-                {
-                "means"  : allmeans,
-                "deltas" : deltas,
-                "alphas" : allalphas,
-                })
-        print "There was an error ... current mean is " + str(means)
-
-    pool.close()
-    pool.join()
-    return numpy.column_stack(alphas).T
-
 
 class MeanShift(object):
     def __init__(self, number_of_points = None, number_of_dimensions = None, number_of_neighbors = None):
