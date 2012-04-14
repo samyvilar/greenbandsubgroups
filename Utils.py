@@ -8,7 +8,6 @@ from os.path import basename
 def get_cpu_count():
     return (multiprocessing.cpu_count() / 4) + multiprocessing.cpu_count()
 
-
 def load_cached_or_calculate_and_cached(caching = None, file_name = None, function = None, arguments = None):
     if not caching:
         return function(**arguments)
@@ -95,14 +94,17 @@ def image_show(**kwargs):
         plt.savefig(file_name)
 
 
+def get_root_mean_square(original = None, predicted = None):
+    assert original != None and predicted != None
+    std = numpy.sqrt(numpy.sum((predicted - original)**2)/original.shape[0])
+    return std/numpy.mean(original) * 100
 
 def save_images(**kwargs):
     original        = kwargs['original']
     predicted       = kwargs['predicted']
     granule_path    = kwargs['granule_path']
     original_shape  = kwargs['original_shape']
-    std = numpy.sqrt(numpy.sum((predicted[:, 3] - original[:, 3])**2)/original[:, 3].shape[0])
-    print std/numpy.mean(original[:,3]) * 100
+
     original_green = original[:, 3].reshape(original_shape[0:2])
     predicted_green = predicted[:, 3].reshape(original_shape[0:2])
     image_show(source = original_green,

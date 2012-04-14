@@ -20,23 +20,39 @@ import scipy.cluster.vq
 def append_ones(matrix, axis = 1):
     return numpy.append(matrix, numpy.ones((matrix.shape[0], 1)), axis = axis)
 
+def calc_label(kwargs):
+    data = kwargs['data']
+    means = kwargs['means']
+    group = kwargs['group']
+    return numpy.sum((data - means[group, :])**2, axis = 1)
+
+def get_labels(**kwargs):
+    data = kwargs['data']
+    means = kwargs['means']
+    enable_multithreading = kwargs['enable_multithreading']
+    values = [dict(kwargs, group = group) for group in xrange(means.shape[0])]
+    dist = enable_multithreading(values = values, function = calc_label, enable_multithreading = enable_multithreading)
+    return numpy.asarray(dist).argmin(axis = 1)
+
+def calc_predicted(**kwargs):
+    data                    = kwargs['data']
+    training_band           = kwargs['training_band']
+    alphas                  = kwargs['alphas']
+    cluster                 = kwargs['cluster']
+    labels                  = kwargs['labels']
+    return numpy.dot(append_ones(data[:, training_band][labels == cluster]), alphas[cluster, :].reshape((-1,1)))
+
 def get_predicted(**kwargs):
-    data            = kwargs['data']
-    alphas          = kwargs['alphas']
-    means           = kwargs['means']
-    training_band   = kwargs['training_band']
-    predicting_band = kwargs['predicting_band']
-    def get_labels(data, means):
-        dist = numpy.zeros((data.shape[0], means.shape[0]))
-        for i in xrange(means.shape[0]):
-            dist[:,i] = numpy.sum((data - means[i,:])**2, axis=1)
-        return dist.argmin(axis=1)
-    labels  = get_labels(data, means)
-    predictions = []
-    for cluster in xrange(means.shape[0]):
-        predictions.append(
-            numpy.dot(append_ones(data[:, training_band][labels == cluster]), alphas[cluster, :].reshape((-1,1)))
-        )
+    data                    = kwargs['data']
+    means                   = kwargs['means']
+    training_band           = kwargs['training_band']
+    predicting_band         = kwargs['predicting_band']
+    enable_multithreading   = kwargs['enable_multithreading']
+
+    labels  = get_labels(data = data, means = means, enable_multithreading = enable_multithreading)
+    values = [dict(kwargs, group = group) for group in xrange(means.shape[0])]
+    predictions = multithreading_pool_map(values = values, function = get_predicted, multithreaded = enable_multithreading)
+
     predicted = numpy.zeros(data.shape[0])
     for index, value in enumerate(predictions):
         predicted[labels == index] = value
@@ -57,24 +73,13 @@ def calc_alpha(kwargs):
     return numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G))
 
 def get_alphas(**kwargs):
-    means           = kwargs['means']
-    data            = kwargs['data']
-    labels          = kwargs['labels']
-    training_band   = kwargs['training_band']
-    predictive_band = kwargs['predictive_band']
-    if kwargs['multithreading']:
-        values = [dict(kwargs) for index in xrange(means.shape[0])]
-        for index, value in enumerate(values): value.update(group = index)
-        alphas = multithreading_pool_map(values = values, function = calc_alpha, multithreaded = True)
-    else:
-        alphas = []
-        for group in xrange(means.shape[0]):
-            c = data[labels == group, :]
-            W = append_ones(c[:, training_band])
-            G = c[:,predictive_band]
-            alphas.append(
-                numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G)) )
-    return numpy.column_stack(alphas).transpose()
+    means = kwargs['means']
+    enable_multithreading = kwargs['enable_multithreading']
+    values = [dict(kwargs, group = group) for group in xrange(means.shape[0])]
+    return numpy.column_stack(
+            multithreading_pool_map(
+                values = values, function = calc_alpha, multithreaded = enable_multithreading )
+            ).transpose()
 
 
 def get_means(data, labels):
