@@ -10,13 +10,12 @@ import glasslab_cluster.cluster.consensus as gcons
 import time
 import pickle
 
-from scipy.cluster.vq import kmeans2, kmeans
+from scipy.cluster.vq import kmeans2
 
 from Utils import load_cached_or_calculate_and_cached, multithreading_pool_map
 from GranuleLoader import GranuleLoader
 
 import scipy.cluster.vq
-
 
 def get_means(data, labels):
     assert data.ndim == 2 and labels.ndim == 1 and data.shape[0] == len(labels) and labels.min() >= 0
@@ -49,7 +48,7 @@ def get_mean(kwargs):
     assert numpy.all(numpy.isfinite(data))
 
     def clustering_function_kmeans2(data):
-        results = scipy.cluster.vq.kmeans2(data, number_of_groups, thresh = threshold)
+        results = scipy.cluster.vq.kmeans2(data, number_of_groups, thresh = threshold, iter = number_of_runs)
         return results[1], results[0]
 
     def clustering_function_mean_shift(data):
@@ -109,7 +108,7 @@ def get_mean(kwargs):
         return means
 
     if clustering_function == 'kmeans2':
-        return get_means(data, clustering_function_kmeans2(data)[0])
+        return get_means(data, clustering_function_kmeans2(data)[0])[0]
 
     raise Exception("Need to specify a clustering function!")
 
@@ -154,6 +153,83 @@ def calc_means(**kwargs):
 
 
 
+
+
+
+def nnlabel(data, means):
+    dist = numpy.zeros((data.shape[0], means.shape[0]))
+    for i in xrange(means.shape[0]):
+        dist[:,i] = numpy.sum((data - means[i,:])**2, axis=1)
+    return dist.argmin(axis=1)
+
+class Lstsq(object):
+    def __init__(self):
+        self.Ag     = 0
+        self.AA     = 0
+        self.Nold   = 0
+        self.Nnew   = 0
+    def update(self, A, g):
+        if len(A) == 0 and len(g) == 0:
+            return
+        self.Nnew   = self.Nold + A.shape[0]
+        self.AA     = (1 / float(self.Nnew)) * (numpy.dot(A.T, A) + self.Nold * self.AA)
+        self.Ag     = (1 / float(self.Nnew)) * (numpy.dot(A.T, g) + self.Nold * self.Ag)
+        self.Nold   = self.Nnew
+    def result(self):
+        return numpy.dot(numpy.linalg.inv(self.AA), self.Ag)
+
+def appendones(matrix, axis = 1):
+    return numpy.append(matrix, numpy.ones((matrix.shape[0], 1)), axis = axis)
+
+def calcAlpha(nc):
+    predictind  = numpy.where(GreenBand.bands == PredictBand)[0]
+    trainind    = numpy.where(GreenBand.bands != PredictBand)[0]
+    ls          = Lstsq()
+    for file in greenband.hdffiles:
+        c = file.data[file.labels == nc, :]
+        ls.update(appendones(c[:,trainind]), c[:,predictind])
+    return ls.result()
+
+
+def get_alphas(**kwargs):
+    data    = kwargs['data']
+    means   = kwargs['means']
+    labels  = kwargs['labels'] if 'labels' in kwargs else nnlabel(data, means)
+
+
+
+    ############################################################################
+    for hdffile in greenband.hdffiles:
+        hdffile.means = means
+    pool   = multiprocessing.Pool(processes = ncpus)
+    labels = pool.map(calcLabel, greenband.hdffiles)
+    pool.close()
+    pool.join()
+    index = 0
+    for label in labels:
+        greenband.hdffiles[index].labels = label
+        index = index + 1
+        ############################################################################
+    try:
+        pool   = multiprocessing.Pool(processes = ncpus)
+        alphas = pool.map(calcAlpha, xrange(means.shape[0]))
+        pool.close()
+        pool.join()
+    except:
+        global allmeans
+        global deltas
+        global allalphas
+        scipy.io.savemat("meanopt_" + str(len(deltas)) + ".mat",
+                {
+                "means"  : allmeans,
+                "deltas" : deltas,
+                "alphas" : allalphas,
+                })
+        print "There was an error ... current mean is " + str(means)
+
+    pool.close()
+    pool.join()
+    return numpy.column_stack(alphas).T
 
 
 class MeanShift(object):
@@ -275,6 +351,13 @@ class MeanCalculator(object):
         self._means = values
 
     @property
+    def labels(self):
+        return self._labels
+    @labels.setter
+    def labels(self, values):
+        self._labels = values
+
+    @property
     def granule_loader(self):
         return self._granule_loader
     @granule_loader.setter
@@ -327,11 +410,15 @@ class MeanCalculator(object):
         return '%s/number_of_granules:%i_param:%s_bands:%s_names_hashed:%s_number_of_groups:%s_number_of_subgroups:%i_initial_means.obj' % \
             (self.granules[0].file_dir + '/cache/means', len(self.granules), self.granules[0].param, str(self.granules[0].bands), GranuleLoader.get_names_hashed([granule.file_name for granule in self.granules]), self.number_of_groups, self.number_of_subgroups)
 
-    def calculate_mean(self, data, function = get_mean):
+    def calculate_means(self, data, function = get_mean):
         props = self.get_properties_as_dict()
         props['data'] = data
-        return get_mean(props)
 
+        self.means, self.labels = get_mean(props)
+        return self.means, self.labels
+
+    def predict(self, original):
+        assert self.means
 
 
 

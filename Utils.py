@@ -3,6 +3,7 @@ __author__ = 'Samy Vilar'
 import multiprocessing, pickle, os, time
 from matplotlib import pyplot as plt
 import numpy
+import scipy
 
 def get_cpu_count():
     return (multiprocessing.cpu_count() / 4) + multiprocessing.cpu_count()
@@ -92,7 +93,6 @@ def image_show(**kwargs):
 
     if file_name:
         plt.savefig(file_name)
-
 
 
 
