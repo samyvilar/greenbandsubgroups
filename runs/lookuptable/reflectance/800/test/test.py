@@ -24,9 +24,11 @@ if __name__ == '__main__':
     original = granule_loader.granules[0].data
     predicted = lut.predict(original)
 
-    save_images(original = original, predicted = predicted, granule_path = granule_path, original_shape = granule_loader.granules[0].original_shape[0:2])
     error = get_root_mean_square(original = original[:, 3], predicted = predicted[:, 3])
     print "RMSE: %f%%" % error
+
+    save_images(original = original, predicted = predicted, granule_path = granule_path, original_shape = granule_loader.granules[0].original_shape)
+
 
 # red is 1, green = 4, blue = 3, NIR = 2
 # 1, 4, 3
