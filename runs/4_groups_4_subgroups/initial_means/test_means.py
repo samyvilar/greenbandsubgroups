@@ -7,6 +7,7 @@ sys.path.extend('../../..')
 from lookuptable.lookuptable import  lookuptable
 from MeanCalculator import MeanCalculator, MeanShift, get_alphas, get_predicted
 from GranuleLoader import GranuleLoader
+from Utils import save_images
 
 lut = lookuptable()
 lut.load_flatten_table('../../lookuptable/reflectance/800/800_lookuptable_flatten.numpy')
@@ -40,7 +41,9 @@ mean_calculator.clustering_function = "kmeans2"
 
 means, labels = mean_calculator.calculate_means_data(data)
 alphas = get_alphas(data = data, means = means, labels = labels, training_band = [0,1,2], predictive_band = [3])
-predicted = get_predicted(data = original, means = means, alphas = alphas, training_band = [0,1,2])
+predicted = get_predicted(data = original, means = means, alphas = alphas, training_band = [0,1,2], predicting_band = [3])
+save_images(original = original, predicted = predicted, granule_path = granule_path, original_shape = granule_loader.granules[0].original_shape)
+
 
 
 

@@ -25,6 +25,7 @@ def get_predicted(**kwargs):
     alphas          = kwargs['alphas']
     means           = kwargs['means']
     training_band   = kwargs['training_band']
+    predicting_band = kwargs['predicting_band']
     def get_labels(data, means):
         dist = numpy.zeros((data.shape[0], means.shape[0]))
         for i in xrange(means.shape[0]):
@@ -40,7 +41,10 @@ def get_predicted(**kwargs):
     predicted = numpy.zeros(data.shape[0])
     for index, value in enumerate(predictions):
         predicted[labels == index] = value
-    return predicted
+    pred = numpy.zeros(data.shape)
+    pred[training_band] = data[training_band]
+    pred[predicting_band] = predicted
+    return pred
 
 def get_alphas(**kwargs):
     data            = kwargs['data']

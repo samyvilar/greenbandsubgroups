@@ -3,7 +3,7 @@ __author__ = 'Samy Vilar'
 import multiprocessing, pickle, os, time
 from matplotlib import pyplot as plt
 import numpy
-import scipy
+from os.path import basename
 
 def get_cpu_count():
     return (multiprocessing.cpu_count() / 4) + multiprocessing.cpu_count()
@@ -96,5 +96,85 @@ def image_show(**kwargs):
 
 
 
+def save_images(**kwargs):
+    original        = kwargs['original']
+    predicted       = kwargs['predicted']
+    granule_path    = kwargs['granule_path']
+    original_shape  = kwargs['original_shape']
+
+    std = numpy.sqrt(numpy.sum((predicted[:, 3] - original[:, 3])**2)/original[:, 3].shape[0])
+    print std/numpy.mean(original[:,3]) * 100
+
+    original_green = original[:, 3].reshape(original_shape)
+    predicted_green = predicted[:, 3].reshape(original_shape)
+
+    image_show(source = original_green,
+        vmin = 0, vmax = 1, min = 0, max = 1,
+        interpolation = 'nearest',
+        color_bar = True, file_name = 'original_green.png',
+        title = 'True Green Values granule %s' % basename(granule_path))
+
+    image_show(source = predicted_green,
+        vmin = 0, vmax = 1, min = 0, max = 1,
+        interpolation = 'nearest',
+        color_bar = True, file_name = 'predicted_green.png',
+        title = 'Predicted Green Values granule %s' % basename(granule_path))
+
+    image_show(source = numpy.fabs(original_green - predicted_green),
+        vmin = 0, vmax = 1, min = 0, max = 1,
+        interpolation = 'nearest',
+        color_bar = True, file_name = 'error.png',
+        title = 'Absolute Error of Green Values Predicted vs True')
+
+    image_show(source = numpy.fabs(original_green - predicted_green)/original_green,
+        vmin = 0, vmax = 1, min = 0, max = 1,
+        interpolation = 'nearest',
+        color_bar = True, file_name = 'relative_error.png',
+        title = 'Relative Error of Green Values Predicted vs True')
+
+
+    image_show(source = numpy.fabs(original_green - predicted_green)/original_green,
+        vmin = 0, vmax = .25, min = 0, max = 1,
+        interpolation = 'nearest',
+        color_bar = True, file_name = 'relative_error_cropped.png',
+        crop_origin = (0, 0), crop_size = (1000, 1000),
+        title = 'LUT Relative Error of Green Values Predicted vs True CROPPED')
+
+
+    image_show(
+        source = granule_loader.granules[0].data,
+        reshape = granule_loader.granules[0].original_shape,
+        vmin = 0, vmax = 1, min = 0, max = 1,
+        interpolation = 'nearest',
+        color_bar = True, file_name = 'original_rgb_type_casted.png',
+        title = 'True RGB granule %s' % basename(granule_path),
+        red_index = 0, green_index = 3, blue_index = 2)
+
+    image_show(source = predicted,
+        reshape = granule_loader.granules[0].original_shape,
+        vmin = 0, vmax = 1,
+        interpolation = 'nearest',
+        color_bar = True, file_name = 'predicted_rgb_type_casted',
+        title = 'Predicted RGB granule %s' % basename(granule_path),
+        red_index = 0, green_index = 3, blue_index = 2)
+
+    image_show(source = granule_loader.granules[0].data,
+        reshape = granule_loader.granules[0].original_shape,
+        vmin = 0, vmax = 1, min = 0, max = 1,
+        interpolation = 'nearest',
+        crop_origin = (500, 0), crop_size = (750, 600),
+        color_bar = True, file_name = 'original_rgb_type_casted_500-1250_0-600.png',
+        title = 'True RGB type casted and cropped granule %s' % basename(granule_path),
+        red_index = 0, green_index = 3, blue_index = 2)
+
+
+    image_show(source = predicted,
+        reshape = granule_loader.granules[0].original_shape,
+        vmin = 0, vmax = 1,
+        interpolation = 'nearest',
+        crop_origin = (500, 0), crop_size = (750, 600),
+        color_bar = True, file_name = 'predicted_rgb_type_casted_500-1250_0-600.png',
+        title = 'Predicted RGB type casted and cropped granule %s' % basename(granule_path),
+        red_index = 0, green_index = 3, blue_index = 2)
 
 
