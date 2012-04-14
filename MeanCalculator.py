@@ -32,18 +32,17 @@ def get_predicted(**kwargs):
             dist[:,i] = numpy.sum((data - means[i,:])**2, axis=1)
         return dist.argmin(axis=1)
     labels  = get_labels(data, means)
-
     predictions = []
     for cluster in xrange(means.shape[0]):
         predictions.append(
-            numpy.dot(append_ones(data[labels == cluster, :][:, training_band]), alphas[cluster,:].reshape((-1,1)))
+            numpy.dot(append_ones(data[:, training_band][labels == cluster]), alphas[cluster, :].reshape((-1,1)))
         )
     predicted = numpy.zeros(data.shape[0])
     for index, value in enumerate(predictions):
         predicted[labels == index] = value
     pred = numpy.zeros(data.shape)
-    pred[:, training_band] = data[training_band]
-    pred[:, predicting_band] = predicted
+    pred[:, training_band] = data[:, training_band]
+    pred[:, predicting_band[0] if len(predicting_band) == 1 else predicting_band] = predicted
     return pred
 
 def get_alphas(**kwargs):
