@@ -39,7 +39,7 @@ mean_calculator.number_of_observations = data.shape[0]*data.shape[1]
 mean_calculator.mean_shift = MeanShift(number_of_points = 30, number_of_dimensions = 1, number_of_neighbors = 100)
 mean_calculator.clustering_function = "kmeans2"
 
-means, labels = mean_calculator.calculate_means(data)
+means, labels = mean_calculator.calculate_means_data(data)
 
 
 alphas = numpy.dot(

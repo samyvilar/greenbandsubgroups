@@ -410,7 +410,7 @@ class MeanCalculator(object):
         return '%s/number_of_granules:%i_param:%s_bands:%s_names_hashed:%s_number_of_groups:%s_number_of_subgroups:%i_initial_means.obj' % \
             (self.granules[0].file_dir + '/cache/means', len(self.granules), self.granules[0].param, str(self.granules[0].bands), GranuleLoader.get_names_hashed([granule.file_name for granule in self.granules]), self.number_of_groups, self.number_of_subgroups)
 
-    def calculate_means(self, data, function = get_mean):
+    def calculate_means_data(self, data, function = get_mean):
         props = self.get_properties_as_dict()
         props['data'] = data
 
