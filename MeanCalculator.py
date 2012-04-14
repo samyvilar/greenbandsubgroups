@@ -57,15 +57,14 @@ def calc_alpha(kwargs):
     return numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G))
 
 def get_alphas(**kwargs):
-    '''
-    data            = kwargs['data']
     means           = kwargs['means']
+    data            = kwargs['data']
     labels          = kwargs['labels']
     training_band   = kwargs['training_band']
     predictive_band = kwargs['predictive_band']
-    '''
-    alphas = multithreading_pool_map(values = [dict(group = group, kwargs) for group in xrange(means.shape)],
-                                                function = calc_alpha, multithreaded = True)
+    values = [dict(kwargs) for index in xrange(means.shape)]
+    for index, value in enumerate(values): value.update(group = index)
+    alphas = multithreading_pool_map(values = values, function = calc_alpha, multithreaded = True)
     '''
     alphas = []
     for group in xrange(means.shape[0]):
