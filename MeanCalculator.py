@@ -34,7 +34,7 @@ def get_labels(**kwargs):
     dist = multithreading_pool_map(values = values, function = calc_label, multithreaded = enable_multithreading)
     return numpy.asarray(dist).argmin(axis = 1)
 
-def calc_predicted(**kwargs):
+def calc_predicted(kwargs):
     data                    = kwargs['data']
     training_band           = kwargs['training_band']
     alphas                  = kwargs['alphas']
