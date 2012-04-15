@@ -95,6 +95,13 @@ def get_means(data, labels):
     return means, count
 
 
+def kmeans2_multithreading(kwargs):
+    data = kwargs['data']
+    number_of_groups = kwargs['number_of_groups']
+    threshold = kwargs['threshold']
+    number_of_runs = kwargs['number_of_runs']
+    return scipy.cluster.vq.kmeans2(data, number_of_groups, thresh = threshold, iter = number_of_runs)
+
 def get_mean(kwargs):
     data                                 = kwargs['data']
     number_of_runs                       = kwargs['number_of_runs']
@@ -107,6 +114,7 @@ def get_mean(kwargs):
     number_of_neighbors                  = kwargs['mean_shift'].number_of_neighbors
 
     number_of_groups                     = kwargs['number_of_groups']
+    number_of_subgroups                  = kwargs['number_of_subgroups']
 
     clustering_function                  = kwargs['clustering_function']
 
@@ -114,8 +122,20 @@ def get_mean(kwargs):
     assert numpy.all(numpy.isfinite(data))
 
     def clustering_function_kmeans2(data):
-        results = scipy.cluster.vq.kmeans2(data, number_of_groups, thresh = threshold, iter = number_of_runs)
-        return results[0], results[1]
+        means, labels = scipy.cluster.vq.kmeans2(data, number_of_groups, thresh = threshold, iter = number_of_runs)
+        if number_of_subgroups == 1:
+            return means, labels
+
+        values = [dict(data = data[labels[group]],
+                        number_of_groups = number_of_subgroups,
+                        threshold = threshold,
+                        number_of_runs = number_of_runs) for group in xrange(means.shape[0])]
+        means, sub_labels = multithreading_pool_map(values = values, function = kmeans2_multithreading, multithreaded = True)
+        total_labels = numpy.zeros((labels.shape, 2))
+        for index, label in enumerate(labels):
+            total_labels[index][0] = labels[index]
+            total_labels[index][1] = sub_labels[labels[index]]
+
 
     def clustering_function_mean_shift(data):
         def mean_shift(data):
@@ -175,6 +195,7 @@ def get_mean(kwargs):
 
     if clustering_function == 'kmeans2':
         return clustering_function_kmeans2(data)
+
 
     raise Exception("Need to specify a clustering function!")
 

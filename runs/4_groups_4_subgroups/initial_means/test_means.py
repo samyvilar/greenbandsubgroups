@@ -5,7 +5,7 @@ import sys
 sys.path.extend('../../..')
 
 from lookuptable.lookuptable import  lookuptable
-from MeanCalculator import MeanCalculator, get_alphas, get_predicted
+from MeanCalculator import MeanCalculator, MeanShift, get_alphas, get_predicted
 from GranuleLoader import GranuleLoader
 from Utils import save_images, get_root_mean_square
 
@@ -30,8 +30,8 @@ if __name__ == '__main__':
     mean_calculator.enable_caching()
 
     mean_calculator.threshold = 1e-05
-    mean_calculator.number_of_groups = 8
-    mean_calculator.number_of_sub_groups = 1
+    mean_calculator.number_of_groups = 4
+    mean_calculator.number_of_sub_groups = 4
     mean_calculator.number_of_runs = 10
     mean_calculator.clustering_function = "kmeans2"
 

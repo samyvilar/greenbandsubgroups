@@ -67,6 +67,8 @@ if __name__ == '__main__':
         return sum_of_errors[-1]
 
     opt_means = minimize(initial_values = means, function = minimization_function, max_iterations = 1000)
+    pickle.dump(opt_means, open('opt_means.obj', 'wb'))
+    pickle.dump(sum_of_errors, open('sum_of_errors.obj', 'wb'))
 
     predicted = get_predicted_from_means(data = lut_data_flatten,
                                             means = opt_means,
