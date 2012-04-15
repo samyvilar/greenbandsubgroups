@@ -3,6 +3,7 @@ import sys
 sys.path.extend('../../..')
 
 import os.path
+import pickle
 
 import numpy
 import time
@@ -46,10 +47,11 @@ training_band = [0,1,2]
 predictive_band = [3]
 
 sum_of_errors = []
+all_means = []
 def minimization_function(means):
     start = time.time()
     means  = means.reshape(mean_calculator.number_of_groups, means.shape[0]/mean_calculator.number_of_groups)
-
+    all_means.append(means)
     predicted = get_predicted_from_means(data = lut_data_flatten,
                                          means = means,
                                          original = test_data,
@@ -59,7 +61,7 @@ def minimization_function(means):
 
 
     sum_of_errors.append(numpy.sum((predicted[:, predictive_band[0]] - test_data[:, predictive_band[0]])**2))
-
+    pickle.dump(all_means, open('all_means.obj', 'wb'))
     print "minimization_function iteration: " + str(len(sum_of_errors)) + " time to finnish: " + str(round((time.time() - start), 8)) + "s Sum Of Error: " + str(sum_of_errors[-1])
     return sum_of_errors[-1]
 
