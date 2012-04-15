@@ -40,7 +40,7 @@ def calc_predicted(kwargs):
     alphas                  = kwargs['alphas']
     group                   = kwargs['group']
     labels                  = kwargs['labels']
-    return numpy.dot(append_ones(data[:, training_band][labels == cluster]), alphas[cluster, :].reshape((-1,1)))
+    return numpy.dot(append_ones(data[:, training_band][labels == group]), alphas[group, :].reshape((-1,1)))
 
 def get_predicted(**kwargs):
     data                    = kwargs['data']
