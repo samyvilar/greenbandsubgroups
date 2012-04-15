@@ -10,15 +10,24 @@ import glasslab_cluster.cluster.consensus as gcons
 import time
 import pickle
 
-from scipy.cluster.vq import kmeans2
 
 from Utils import load_cached_or_calculate_and_cached, multithreading_pool_map
 from GranuleLoader import GranuleLoader
 
 import scipy.cluster.vq
+import scipy.optimize.fmin
 
 def append_ones(matrix, axis = 1):
     return numpy.append(matrix, numpy.ones((matrix.shape[0], 1)), axis = axis)
+
+
+def minimize(**kwargs):
+    initial_values  = kwargs['initial_values']
+    function        = kwargs['function']
+    max_iterations  = kwargs['max_iterations']
+
+    return scipy.optimize.fmin(function, initial_values, maxiter = max_iterations, maxfun = max_iterations)[0]
+
 
 def get_labels(data = None, means = None):
     assert data != None and means != None
@@ -170,6 +179,27 @@ def get_mean(kwargs):
     raise Exception("Need to specify a clustering function!")
 
 
+def get_predicted_from_means(**kwargs):
+    data = kwargs['data']
+    means = kwargs['means']
+    original = kwargs['original']
+    training_band = kwargs['training_band']
+    predictive_band = kwargs['predictive_band']
+    enable_multithreading = kwargs['enable_multithreading']
+
+    alphas = get_alphas(data = data,
+                        means = means,
+                        labels = get_labels(data = data, means = means),
+                        training_band = training_band,
+                        predictive_band = predictive_band,
+                        enable_multithreading = enable_multithreading)
+
+    return get_predicted(data = original,
+                        means = means,
+                        alphas = alphas,
+                        training_band = training_band,
+                        predicting_band = predictive_band,
+                        enable_multithreading = enable_multithreading)
 
 def calc_means(**kwargs):
     def getmeans(data = None, labels = None):
@@ -203,8 +233,6 @@ def calc_means(**kwargs):
 
     def calc_means_sub_group(**kwargs):
         return getMeans(kwargs['hdf_file'].data, labels = kmeans2(kwargs['hdf_file'].data, kwargs['number_of_sub_groups'], threshold = kwargs['threshold'])[1])
-
-
 
     return means
 
@@ -243,10 +271,7 @@ class MeanCalculator(object):
         self._required_properties = ['number_of_groups',
                                      'number_of_sub_groups',
                                      'number_of_runs',
-                                     'number_of_random_unique_sub_samples',
-                                     'number_of_observations',
                                      'threshold',
-                                     'mean_shift',
                                      'clustering_function']
 
     @property
