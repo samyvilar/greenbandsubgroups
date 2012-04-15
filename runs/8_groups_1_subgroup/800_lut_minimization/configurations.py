@@ -65,6 +65,7 @@ if __name__ == '__main__':
         sum_of_errors.append(numpy.sum((predicted[:, predictive_band[0]] - test_data[:, predictive_band[0]])**2))
         pickle.dump(all_means, open('all_means.obj', 'wb'))
         output.write("minimization_function iteration: " + str(len(sum_of_errors)) + " time to finnish: " + str(round((time.time() - start), 8)) + "s Sum Of Error: " + str(sum_of_errors[-1]) + '\n')
+        output.flush()
         return sum_of_errors[-1]
 
     opt_means = minimize(initial_values = means, function = minimization_function, max_iterations = 1000)
