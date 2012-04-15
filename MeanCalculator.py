@@ -20,19 +20,12 @@ import scipy.cluster.vq
 def append_ones(matrix, axis = 1):
     return numpy.append(matrix, numpy.ones((matrix.shape[0], 1)), axis = axis)
 
-def calc_label(kwargs):
-    data = kwargs['data']
-    means = kwargs['means']
-    group = kwargs['group']
-    return numpy.sum((data - means[group, :])**2, axis = 1)
-
-def get_labels(**kwargs):
-    data = kwargs['data']
-    means = kwargs['means']
-    enable_multithreading = kwargs['enable_multithreading']
-    values = [dict(kwargs, group = group) for group in xrange(means.shape[0])]
-    dist = multithreading_pool_map(values = values, function = calc_label, multithreaded = enable_multithreading)
-    return numpy.asarray(dist).argmin(axis = 1)
+def get_labels(data = None, means = None):
+    assert data != None and means != None
+    dist = numpy.zeros((data.shape[0], means.shape[0]))
+    for i in xrange(means.shape[0]):
+        dist[:,i] = numpy.sum((data - means[i,:])**2, axis=1)
+    return dist.argmin(axis=1)
 
 def calc_predicted(kwargs):
     data                    = kwargs['data']
@@ -49,7 +42,7 @@ def get_predicted(**kwargs):
     predicting_band         = kwargs['predicting_band']
     enable_multithreading   = kwargs['enable_multithreading']
 
-    labels  = get_labels(data = data, means = means, enable_multithreading = enable_multithreading)
+    labels  = get_labels(data = data, means = means)
     values = [dict(kwargs, group = group, labels = labels) for group in xrange(means.shape[0])]
     predictions = multithreading_pool_map(values = values, function = calc_predicted, multithreaded = enable_multithreading)
 

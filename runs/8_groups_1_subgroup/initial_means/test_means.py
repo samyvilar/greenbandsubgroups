@@ -38,30 +38,9 @@ mean_calculator.mean_shift = MeanShift(number_of_points = 30, number_of_dimensio
 mean_calculator.clustering_function = "kmeans2"
 
 means, labels = mean_calculator.calculate_means_data(data)
-import time
 
-
-start = time.time()
 alphas = get_alphas(data = data, means = means, labels = labels, training_band = [0,1,2], predictive_band = [3], enable_multithreading = False)
-end = time.time()
-print "Done single threading get_alphas %s" % str(end - start)
-start = time.time()
 predicted = get_predicted(data = original, means = means, alphas = alphas, training_band = [0,1,2], predicting_band = [3], enable_multithreading = False)
-end = time.time()
-print "Done single threaded get_predicted %s" % str(end - start)
-save_images(original = original, predicted = predicted, granule_path = granule_path, original_shape = granule_loader.granules[0].original_shape)
-error = get_root_mean_square(original = original[:, 3], predicted = predicted[:, 3])
-print "RMSE: %f%%" % error
-
-
-start = time.time()
-alphas = get_alphas(data = data, means = means, labels = labels, training_band = [0,1,2], predictive_band = [3], enable_multithreading = True)
-end = time.time()
-print "Done multithreading get_alphas %s" % str(end - start)
-start = time.time()
-predicted = get_predicted(data = original, means = means, alphas = alphas, training_band = [0,1,2], predicting_band = [3], enable_multithreading = True)
-end = time.time()
-print "Done multithreading get_predicted %s" % str(end - start)
 save_images(original = original, predicted = predicted, granule_path = granule_path, original_shape = granule_loader.granules[0].original_shape)
 error = get_root_mean_square(original = original[:, 3], predicted = predicted[:, 3])
 print "RMSE: %f%%" % error
