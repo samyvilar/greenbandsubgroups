@@ -31,7 +31,7 @@ def get_labels(**kwargs):
     means = kwargs['means']
     enable_multithreading = kwargs['enable_multithreading']
     values = [dict(kwargs, group = group) for group in xrange(means.shape[0])]
-    dist = enable_multithreading(values = values, function = calc_label, enable_multithreading = enable_multithreading)
+    dist = multithreading_pool_map(values = values, function = calc_label, enable_multithreading = enable_multithreading)
     return numpy.asarray(dist).argmin(axis = 1)
 
 def calc_predicted(**kwargs):
