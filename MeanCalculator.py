@@ -272,7 +272,10 @@ class MeanCalculator(object):
                                      'number_of_sub_groups',
                                      'number_of_runs',
                                      'threshold',
-                                     'clustering_function']
+                                     'number_of_observations',
+                                     'number_of_random_unique_sub_samples',
+                                     'clustering_function',
+                                     'mean_shift']
 
     @property
     def clustering_function(self):
