@@ -77,8 +77,7 @@ def get_alphas(**kwargs):
     enable_multithreading = kwargs['enable_multithreading']
     values = [dict(kwargs, group = group) for group in xrange(means.shape[0])]
     return numpy.column_stack(
-            multithreading_pool_map(
-                values = values, function = calc_alpha, multithreaded = enable_multithreading )
+            multithreading_pool_map(values = values, function = calc_alpha, multithreaded = enable_multithreading)
             ).transpose()
 
 
