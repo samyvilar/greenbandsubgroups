@@ -61,7 +61,7 @@ def minimization_function(means):
     sum_of_errors.append(numpy.sum((predicted[:, predictive_band[0]] - test_data[:, predictive_band[0]])**2))
 
     print "minimization_function iteration: " + str(len(sum_of_errors)) + " time to finnish: " + str(round((time.time() - start), 8)) + "s Sum Of Error: " + str(sum_of_errors[-1])
-    return sum_of_errors
+    return sum_of_errors[-1]
 
 opt_means = minimize(initial_values = means, function = minimization_function, max_iterations = 2)
 
