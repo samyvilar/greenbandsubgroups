@@ -263,7 +263,7 @@ class MeanCalculator(object):
         self._number_of_observations                = None
         self._threshold                             = None
         self._labels                                = None
-        self._mean_shift                            = None
+        self._mean_shift                            = MeanShift()
         self._means                                 = None
 
         self.enable_multithreading()
