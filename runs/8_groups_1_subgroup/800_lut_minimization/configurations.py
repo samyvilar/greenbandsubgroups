@@ -2,6 +2,8 @@
 import sys
 sys.path.extend('../../..')
 
+import os.path
+
 import numpy
 import time
 from lookuptable.lookuptable import  lookuptable
@@ -34,7 +36,12 @@ mean_calculator.number_of_sub_groups = 1
 mean_calculator.number_of_runs = 10
 mean_calculator.clustering_function = "kmeans2"
 
-means, labels = mean_calculator.calculate_means_data(lut_data_flatten)
+if not os.path.isfile('initial_mean.numpy'):
+    means, labels = mean_calculator.calculate_means_data(lut_data_flatten)
+    means.tofile('initial_mean.numpy')
+else:
+    means = numpy.fromfile('initial_mean.numpy')
+
 training_band = [0,1,2]
 predictive_band = [3]
 
@@ -56,7 +63,7 @@ def minimization_function(means):
     print "minimization_function iteration: " + str(len(sum_of_errors)) + " time to finnish: " + str(round((time.time() - start), 8)) + "s Sum Of Error: " + str(sum_of_errors[-1])
     return sum_of_errors
 
-opt_means = minimize(initial_values = means, function = minimization_function, max_iterations = 1)
+opt_means = minimize(initial_values = means, function = minimization_function, max_iterations = 2)
 
 predicted = get_predicted_from_means(data = lut_data_flatten,
                                         means = opt_means,
