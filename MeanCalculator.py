@@ -15,7 +15,7 @@ from Utils import load_cached_or_calculate_and_cached, multithreading_pool_map
 from GranuleLoader import GranuleLoader
 
 import scipy.cluster.vq
-import scipy.optimize.fmin
+import scipy.optimize
 
 def append_ones(matrix, axis = 1):
     return numpy.append(matrix, numpy.ones((matrix.shape[0], 1)), axis = axis)
