@@ -2,7 +2,6 @@ __author__ = 'Samy Vilar'
 
 import glasslab_cluster.cluster
 import numpy
-from os.path import basename
 import scipy.spatial.distance
 import scipy.cluster.vq
 import networkx
@@ -126,15 +125,18 @@ def get_mean(kwargs):
         if number_of_sub_groups == 1:
             return means, labels
 
-        values = [dict(data = data[labels[group]],
+        values = [dict(data = data[labels == group],
                         number_of_groups = number_of_sub_groups,
                         threshold = threshold,
                         number_of_runs = number_of_runs) for group in xrange(means.shape[0])]
-        means, sub_labels = multithreading_pool_map(values = values, function = kmeans2_multithreading, multithreaded = True)
+        results = multithreading_pool_map(values = values, function = kmeans2_multithreading, multithreaded = True)
+        means = numpy.asarray([result[0] for result in results])
+        sub_labels = numpy.asarray([result[1] for result in results])
         total_labels = numpy.zeros((labels.shape, 2))
-        for index, label in enumerate(labels):
-            total_labels[index][0] = labels[index]
-            total_labels[index][1] = sub_labels[labels[index]]
+        total_labels[:, 0] = labels
+        for group in xrange(means.shape[0]):
+            total_labels[labels == group, 1] = sub_labels[group]
+        return means, total_labels
 
 
     def clustering_function_mean_shift(data):
