@@ -39,17 +39,22 @@ if __name__ == '__main__':
     mean_calculator.clustering_function = "kmeans2"
 
     if not os.path.isfile('initial_mean.numpy'):
-        means, labels = mean_calculator.calculate_means_data(lut_data_flatten)
-        means.tofile('initial_mean.numpy')
+        if not os.path.isfile('all_means.obj'):
+            means, labels = mean_calculator.calculate_means_data(lut_data_flatten)
+            means.tofile('initial_mean.numpy')
+            sum_of_errors = []
+            all_means = []
+        else:
+            all_means = pickle.load(open('all_means.obj', 'rb'))
+            sum_of_errors = pickle.load(open('sum_of_errors.obj', 'rb'))
+            means = numpy.asarray(sum_of_errors).argmin()
     else:
         means = numpy.fromfile('initial_mean.numpy')
 
     training_band = [0,1,2]
     predictive_band = [3]
 
-    sum_of_errors = []
-    all_means = []
-    output = open('minimization.out', 'w')
+    output = open('minimization.out', 'a')
     def minimization_function(means):
         start = time.time()
         means  = means.reshape(mean_calculator.number_of_groups, means.shape[0]/mean_calculator.number_of_groups)
@@ -64,13 +69,14 @@ if __name__ == '__main__':
 
         sum_of_errors.append(numpy.sum((predicted[:, predictive_band[0]] - test_data[:, predictive_band[0]])**2))
         pickle.dump(all_means, open('all_means.obj', 'wb'))
+        pickle.dump(sum_of_errors, open('sum_of_errors.obj', 'wb'))
         output.write("minimization_function iteration: " + str(len(sum_of_errors)) + " time to finnish: " + str(round((time.time() - start), 8)) + "s Sum Of Error: " + str(sum_of_errors[-1]) + '\n')
         output.flush()
         return sum_of_errors[-1]
 
     opt_means = minimize(initial_values = means, function = minimization_function, max_iterations = 1000)
-    pickle.dump(opt_means, open('opt_means.obj', 'wb'))
-    pickle.dump(sum_of_errors, open('sum_of_errors.obj', 'wb'))
+    pickle.dump(opt_means, open('opt_means.obj', 'ab'))
+    pickle.dump(sum_of_errors, open('sum_of_errors.obj', 'ab'))
 
     predicted = get_predicted_from_means(data = lut_data_flatten,
                                             means = opt_means,

@@ -30,10 +30,21 @@ def minimize(**kwargs):
 
 def get_labels(data = None, means = None):
     assert data != None and means != None
-    dist = numpy.zeros((data.shape[0], means.shape[0]))
-    for i in xrange(means.shape[0]):
-        dist[:,i] = numpy.sum((data - means[i,:])**2, axis=1)
-    return dist.argmin(axis=1)
+    if len(means.shape):
+        dist = numpy.zeros((data.shape[0], means.shape[0]))
+    else:
+        dist = numpy.zeros((data.shape[0], means.shape[0], means.shape[1]))
+        for mean_index, mean in enumerate(means):
+            for i in xrange(mean.shape[0]):
+                dist[:, mean_index, i] = numpy.sum((data - mean[i,:])**2, axis = 1)
+        labels = numpy.zeros((data.shape[0], 2), dtype = 'int')
+        labels[:, 0] = dist.sum(axis = 2).argmin(axis = 1)
+        for index in xrange(dist.shape[0]):
+            labels[index, 1] = dist[index][labels[index, 0]].argmin()
+
+
+
+    return dist.argmin(axis = 1)
 
 def calc_predicted(kwargs):
     data                    = kwargs['data']
