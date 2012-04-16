@@ -84,6 +84,7 @@ def calc_alpha(kwargs):
     print 'group: %s' % str(group)
     print 'data:\n' + str(data)
     print numpy.any(labels == group)
+    print 'labels: %s' % str(numpy.sum(labels))
     print data.shape
     print 'c:\n' + str(data)
     print c.shape
