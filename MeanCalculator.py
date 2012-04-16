@@ -291,6 +291,7 @@ class MeanCalculator(object):
 
         self._required_properties = ['number_of_groups',
                                      'number_of_sub_groups',
+                                     'number_of_subgroups',
                                      'number_of_runs',
                                      'threshold',
                                      'number_of_observations',
