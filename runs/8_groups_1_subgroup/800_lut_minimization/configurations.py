@@ -47,7 +47,7 @@ if __name__ == '__main__':
         else:
             all_means = pickle.load(open('all_means.obj', 'rb'))
             sum_of_errors = pickle.load(open('sum_of_errors.obj', 'rb'))
-            means = numpy.asarray(sum_of_errors).argmin()
+            means = all_means[numpy.asarray(sum_of_errors).argmin()]
     else:
         means = numpy.fromfile('initial_mean.numpy')
 
