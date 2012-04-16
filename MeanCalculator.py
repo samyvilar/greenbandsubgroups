@@ -80,7 +80,10 @@ def calc_alpha(kwargs):
     training_band = kwargs['training_band']
     predictive_band = kwargs['predictive_band']
     c = data[labels == group, :]
+    print 'labels: %s' % str(labels)
+    print 'group: %s' % str(group)
     print 'data:\n' + str(data)
+    print numpy.any(labels == group)
     print data.shape
     print 'c:\n' + str(data)
     print c.shape
