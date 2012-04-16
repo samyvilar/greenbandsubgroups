@@ -278,7 +278,7 @@ class MeanCalculator(object):
     def __init__(self):
         self._granules                              = None
         self._number_of_groups                      = None
-        self._number_of_subgroups                   = None
+        self._number_of_sub_groups                   = None
         self._number_of_runs                        = None
         self._number_of_random_unique_sub_samples   = None
         self._number_of_observations                = None
@@ -291,7 +291,6 @@ class MeanCalculator(object):
 
         self._required_properties = ['number_of_groups',
                                      'number_of_sub_groups',
-                                     'number_of_subgroups',
                                      'number_of_runs',
                                      'threshold',
                                      'number_of_observations',
