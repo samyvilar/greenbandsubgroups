@@ -32,7 +32,7 @@ def get_labels(data = None, means = None):
     assert data != None and means != None
     if len(means.shape) == 2:
         dist = numpy.zeros((data.shape[0], means.shape[0]))
-        for i in xrange(mean.shape[0]):
+        for i in xrange(means.shape[0]):
             dist[:, i] = numpy.sum((data - means[i,:])**2, axis = 1)
         return dist.argmin(axis = 1)
     elif len(means.shape) == 3:
