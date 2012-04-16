@@ -75,12 +75,15 @@ def get_predicted(**kwargs):
 
 def calc_alpha(kwargs):
     data = kwargs['data']
-    print 'data:\n' + str(data)
     labels = kwargs['labels']
     group = kwargs['group']
     training_band = kwargs['training_band']
     predictive_band = kwargs['predictive_band']
     c = data[labels == group, :]
+    print 'data:\n' + str(data)
+    print data.shape
+    print 'c:\n' + str(data)
+    print c.shape
     W = append_ones(c[:, training_band])
     G = c[:,predictive_band]
     return numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G))
