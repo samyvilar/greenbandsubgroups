@@ -35,7 +35,7 @@ def get_labels(data = None, means = None):
         for i in xrange(mean.shape[0]):
             dist[:, i] = numpy.sum((data - means[i,:])**2, axis = 1)
         return dist.argmin(axis = 1)
-    else:
+    elif len(means.shape) == 3:
         dist = numpy.zeros((data.shape[0], means.shape[0], means.shape[1]))
         for mean_index, mean in enumerate(means):
             for i in xrange(mean.shape[0]):
@@ -45,6 +45,8 @@ def get_labels(data = None, means = None):
         for index in xrange(dist.shape[0]):
             labels[index, 1] = dist[index][labels[index, 0]].argmin()
         return labels
+    else:
+        raise Exception("Can only handle regular clustering or sub-clustering ...")
 
 def calc_predicted(kwargs):
     data                    = kwargs['data']
