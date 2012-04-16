@@ -38,18 +38,20 @@ if __name__ == '__main__':
     mean_calculator.number_of_runs = 10
     mean_calculator.clustering_function = "kmeans2"
 
-    if not os.path.isfile('initial_mean.numpy'):
-        means, labels = mean_calculator.calculate_means_data(lut_data_flatten)
-        means.tofile('initial_mean.numpy')
-    else:
-        if not os.path.isfile('all_means.obj'):
-            means = numpy.fromfile('initial_mean.numpy')
-            sum_of_errors = []
-            all_means = []
-        else:
+    if os.path.isfile('initial_mean.numpy'):
+        if os.path.isfile('all_means.obj'):
             all_means = pickle.load(open('all_means.obj', 'rb'))
             sum_of_errors = pickle.load(open('sum_of_errors.obj', 'rb'))
             means = all_means[numpy.asarray(sum_of_errors).argmin()]
+        else:
+            means = numpy.fromfile('initial_mean.numpy')
+            all_means = []
+            sum_of_errors = []
+    else:
+        means, labels = mean_calculator.calculate_means_data(lut_data_flatten)
+        means.tofile('initial_mean.numpy')
+        all_means = []
+        sum_of_errors = []
 
 
     training_band = [0,1,2]
