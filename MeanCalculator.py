@@ -30,8 +30,11 @@ def minimize(**kwargs):
 
 def get_labels(data = None, means = None):
     assert data != None and means != None
-    if len(means.shape):
+    if len(means.shape) == 2:
         dist = numpy.zeros((data.shape[0], means.shape[0]))
+        for i in xrange(mean.shape[0]):
+            dist[:, i] = numpy.sum((data - means[i,:])**2, axis = 1)
+        return dist.argmin(axis = 1)
     else:
         dist = numpy.zeros((data.shape[0], means.shape[0], means.shape[1]))
         for mean_index, mean in enumerate(means):
@@ -41,10 +44,7 @@ def get_labels(data = None, means = None):
         labels[:, 0] = dist.sum(axis = 2).argmin(axis = 1)
         for index in xrange(dist.shape[0]):
             labels[index, 1] = dist[index][labels[index, 0]].argmin()
-
-
-
-    return dist.argmin(axis = 1)
+        return labels
 
 def calc_predicted(kwargs):
     data                    = kwargs['data']
@@ -80,14 +80,6 @@ def calc_alpha(kwargs):
     training_band = kwargs['training_band']
     predictive_band = kwargs['predictive_band']
     c = data[labels == group, :]
-    print 'labels: %s' % str(labels)
-    print 'group: %s' % str(group)
-    print 'data:\n' + str(data)
-    print numpy.any(labels == group)
-    print 'labels: %s' % str(numpy.sum(labels))
-    print data.shape
-    print 'c:\n' + str(data)
-    print c.shape
     W = append_ones(c[:, training_band])
     G = c[:,predictive_band]
     return numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G))
