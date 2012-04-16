@@ -4,11 +4,12 @@ sys.path.extend('../../..')
 
 import os.path
 import pickle
+import socket
 
 import numpy
 import time
 from lookuptable.lookuptable import  lookuptable
-from MeanCalculator import MeanCalculator, get_alphas, get_labels, get_predicted, minimize, get_predicted_from_means
+from MeanCalculator import MeanCalculator, minimize, get_predicted_from_means
 from GranuleLoader import GranuleLoader
 from Utils import save_images, get_root_mean_square
 from matplotlib import pyplot as plt
@@ -24,7 +25,12 @@ if __name__ == '__main__':
     granule_loader.disable_caching()
     granule_loader.disable_multithreading()
 
-    granule_path = '/DATA_5/SNOW_CLOUD_MODIS/data/MOD021KM.A2002179.1640.005.2010085164818.hdf'
+
+    if socket.gethostname() == 'fermi.localdomain':
+        granule_path = '/DATA_5/SNOW_CLOUD_MODIS/data/MOD021KM.A2002179.1640.005.2010085164818.hdf'
+    else:
+        granule_path = '/home1/FermiData/DATA_5/SNOW_CLOUD_MODIS/data/MOD021KM.A2002179.1640.005.2010085164818.hdf'
+
     granule_loader.load_granules(granules = [granule_path,])
     test_data = granule_loader.granules[0].data
 
@@ -68,8 +74,6 @@ if __name__ == '__main__':
                                              training_band = training_band,
                                              predictive_band = predictive_band,
                                              enable_multithreading = False)
-
-
         sum_of_errors.append(numpy.sum((predicted[:, predictive_band[0]] - test_data[:, predictive_band[0]])**2))
         pickle.dump(all_means, open('all_means.obj', 'wb'))
         pickle.dump(sum_of_errors, open('sum_of_errors.obj', 'wb'))
