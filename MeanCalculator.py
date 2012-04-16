@@ -82,6 +82,7 @@ def calc_alpha(kwargs):
     c = data[labels == group, :]
     W = append_ones(c[:, training_band])
     G = c[:,predictive_band]
+    print numpy.linalg.det(numpy.dot(W.T, W))
     return numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G))
 
 def get_alphas(**kwargs):
