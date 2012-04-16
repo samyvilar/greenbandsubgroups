@@ -114,7 +114,7 @@ def get_mean(kwargs):
     number_of_neighbors                  = kwargs['mean_shift'].number_of_neighbors
 
     number_of_groups                     = kwargs['number_of_groups']
-    number_of_subgroups                  = kwargs['number_of_subgroups']
+    number_of_sub_groups                  = kwargs['number_of_sub_groups']
 
     clustering_function                  = kwargs['clustering_function']
 
@@ -123,11 +123,11 @@ def get_mean(kwargs):
 
     def clustering_function_kmeans2(data):
         means, labels = scipy.cluster.vq.kmeans2(data, number_of_groups, thresh = threshold, iter = number_of_runs)
-        if number_of_subgroups == 1:
+        if number_of_sub_groups == 1:
             return means, labels
 
         values = [dict(data = data[labels[group]],
-                        number_of_groups = number_of_subgroups,
+                        number_of_groups = number_of_sub_groups,
                         threshold = threshold,
                         number_of_runs = number_of_runs) for group in xrange(means.shape[0])]
         means, sub_labels = multithreading_pool_map(values = values, function = kmeans2_multithreading, multithreaded = True)
@@ -432,8 +432,8 @@ class MeanCalculator(object):
 
     def calc_caching_file_name(self):
         if self.granules == None or len(self.granules) == 0: return "None"
-        return '%s/number_of_granules:%i_param:%s_bands:%s_names_hashed:%s_number_of_groups:%s_number_of_subgroups:%i_initial_means.obj' % \
-            (self.granules[0].file_dir + '/cache/means', len(self.granules), self.granules[0].param, str(self.granules[0].bands), GranuleLoader.get_names_hashed([granule.file_name for granule in self.granules]), self.number_of_groups, self.number_of_subgroups)
+        return '%s/number_of_granules:%i_param:%s_bands:%s_names_hashed:%s_number_of_groups:%s_number_of_sub_groups:%i_initial_means.obj' % \
+            (self.granules[0].file_dir + '/cache/means', len(self.granules), self.granules[0].param, str(self.granules[0].bands), GranuleLoader.get_names_hashed([granule.file_name for granule in self.granules]), self.number_of_groups, self.number_of_sub_groups)
 
     def calculate_means_data(self, data, function = get_mean):
         props = self.get_properties_as_dict()
