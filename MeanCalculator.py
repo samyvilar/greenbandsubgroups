@@ -132,7 +132,7 @@ def get_mean(kwargs):
         results = multithreading_pool_map(values = values, function = kmeans2_multithreading, multithreaded = True)
         means = numpy.asarray([result[0] for result in results])
         sub_labels = numpy.asarray([result[1] for result in results])
-        total_labels = numpy.zeros((labels.shape, 2))
+        total_labels = numpy.zeros((labels.shape[0], 2))
         total_labels[:, 0] = labels
         for group in xrange(means.shape[0]):
             total_labels[labels == group, 1] = sub_labels[group]
