@@ -223,9 +223,18 @@ def get_predicted_from_means(**kwargs):
     predictive_band = kwargs['predictive_band']
     enable_multithreading = kwargs['enable_multithreading']
 
+    labels = get_labels(data = data, means = means)
+
+    unique_labels = numpy.unique(labels)
+    if unique_labels != xrange(means.shape[0]):
+        print "Group emptied, non-empty groups left: %s" % str(labels)
+        exit(0)
+
+
+
     alphas = get_alphas(data = data,
                         means = means,
-                        labels = get_labels(data = data, means = means),
+                        labels = labels,
                         training_band = training_band,
                         predictive_band = predictive_band,
                         enable_multithreading = enable_multithreading)
