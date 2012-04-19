@@ -11,7 +11,7 @@ import time
 from lookuptable.lookuptable import  lookuptable
 from MeanCalculator import MeanCalculator, minimize, get_predicted_from_means
 from GranuleLoader import GranuleLoader
-from Utils import save_images, get_root_mean_square
+from Utils import save_images, get_root_mean_square, get_sum_of_errors_squred
 from matplotlib import pyplot as plt
 
 if __name__ == '__main__':
@@ -74,7 +74,7 @@ if __name__ == '__main__':
                                              training_band = training_band,
                                              predictive_band = predictive_band,
                                              enable_multithreading = False)
-        sum_of_errors.append(numpy.sum((predicted[:, predictive_band[0]] - test_data[:, predictive_band[0]])**2))
+        sum_of_errors.append(get_sum_of_errors_squred(predicted = predicted[:, predictive_band], original = test_data[:, predictive_band[0]]))
         pickle.dump(all_means, open('all_means.obj', 'wb'))
         pickle.dump(sum_of_errors, open('sum_of_errors.obj', 'wb'))
         output.write("minimization_function iteration: " + str(len(sum_of_errors)) + " time to finnish: " + str(round((time.time() - start), 8)) + "s Sum Of Error: " + str(sum_of_errors[-1]) + '\n')

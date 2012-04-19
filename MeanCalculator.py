@@ -226,9 +226,9 @@ def get_predicted_from_means(**kwargs):
     labels = get_labels(data = data, means = means)
 
     unique_labels = numpy.unique(labels)
-    if unique_labels != xrange(means.shape[0]):
+    if len(unique_labels) != means.shape[0] or numpy.all(unique_labels != xrange(means.shape[0])):
         print "Group emptied, non-empty groups left: %s" % str(labels)
-        exit(0)
+        print "Group that was emptied: %s" % str()
 
 
 

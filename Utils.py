@@ -99,6 +99,9 @@ def get_root_mean_square(original = None, predicted = None):
     std = numpy.sqrt(numpy.sum((predicted - original)**2)/original.shape[0])
     return std/numpy.mean(original) * 100
 
+def get_sum_of_errors_squred(original = None, predicted = None):
+    assert original != None and predicted != None
+
 def save_images(**kwargs):
     original        = kwargs['original']
     predicted       = kwargs['predicted']
