@@ -7,7 +7,7 @@ sys.path.extend('../../..')
 from lookuptable.lookuptable import  lookuptable
 from MeanCalculator import MeanCalculator, get_alphas, get_predicted
 from GranuleLoader import GranuleLoader
-from Utils import save_images, get_root_mean_square, get_sum_of_errors_squred
+from Utils import save_images, get_root_mean_square, get_sum_of_errors_squared
 
 if __name__ == '__main__':
     lut = lookuptable()
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     save_images(original = original, predicted = predicted, granule_path = granule_path, original_shape = granule_loader.granules[0].original_shape)
     error = get_root_mean_square(original = original[:, 3], predicted = predicted[:, 3])
     print "RMSE: %f%%" % error
-    print "Sum Of Errors Squared: %f" % get_sum_of_errors_squred(original[:, 3],  predicted[: 3])
+    print "Sum Of Errors Squared: %f" % get_sum_of_errors_squared(original[:, 3],  predicted[: 3])
 
 
 

@@ -7,7 +7,7 @@ import numpy
 
 from lookuptable.lookuptable import lookuptable
 from GranuleLoader import GranuleLoader
-from Utils import save_images, get_root_mean_square
+from Utils import save_images, get_root_mean_square, get_sum_of_errors_squared
 
 if __name__ == '__main__':
     lut = lookuptable()
@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     error = get_root_mean_square(original = original[:, 3], predicted = predicted[:, 3])
     print "RMSE: %f%%" % error
-
+    print "Sum of Squared Errors: %f" % get_sum_of_errors_squared(original = original[:, 3], predicted = predicted[:, 3])
     save_images(original = original, predicted = predicted, granule_path = granule_path, original_shape = granule_loader.granules[0].original_shape)
 
 
