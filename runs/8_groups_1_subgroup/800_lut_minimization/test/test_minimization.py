@@ -10,7 +10,7 @@ sys.path.extend('../../../..')
 
 from MeanCalculator import get_predicted_from_means
 from lookuptable.lookuptable import  lookuptable
-from Utils import save_images
+from Utils import save_images, get_root_mean_square
 from GranuleLoader import GranuleLoader
 
 
@@ -41,17 +41,17 @@ if __name__ == '__main__':
     predicted = get_predicted_from_means(data = lut_data_flatten,
                                          means = means,
                                          original = test_data,
-                                         training_band = [3],
-                                         predictive_band = [0,1,2],
+                                         training_band = [0,1,2],
+                                         predictive_band = [3],
                                          enable_multithreading = False)
 
 
-    save_images(original = original,
+    save_images(original = test_data,
         predicted = predicted,
         granule_path = granule_path,
         original_shape = granule_loader.granules[0].original_shape)
 
-    error = get_root_mean_square(original = original[:, 3], predicted = predicted[:, 3])
+    error = get_root_mean_square(original = test_data[:, 3], predicted = predicted[:, 3])
     print "RMSE: %f%%" % error
     print "Minimized mean index %i" % best_mean_index
 
