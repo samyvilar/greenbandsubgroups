@@ -226,9 +226,12 @@ def get_predicted_from_means(**kwargs):
     labels = get_labels(data = data, means = means)
 
     unique_labels = numpy.unique(labels)
-    if len(unique_labels) != means.shape[0] or numpy.all(unique_labels != xrange(means.shape[0])):
-        print "Group emptied, non-empty groups left: %s" % str(labels)
-        print "Group that was emptied: %s" % str()
+    if len(unique_labels) != means.shape[0]:
+        print "Group emptied, non-empty groups left: %s generating new group! exiting!" % str(labels)
+        exit(0)
+
+
+
 
 
 
@@ -256,7 +259,8 @@ def calc_means(**kwargs):
     files_and_clustering_properties  = kwargs['files_clustering_properties']
     number_sub_groups                = kwargs['number_of_sub_groups']
 
-    if len(files_and_clustering_properties) == 0: return []
+    if len(files_and_clustering_properties) == 0:
+        return []
 
     results   = multithreading_pool_map(values       = files_and_clustering_properties, # calculate means for each granule
                                        function      = kwargs['clustering_function'],
