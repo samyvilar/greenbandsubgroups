@@ -9,6 +9,7 @@ import glasslab_cluster.cluster.consensus as gcons
 import time
 import pickle
 import random
+import gc
 
 from Utils import load_cached_or_calculate_and_cached, multithreading_pool_map
 from GranuleLoader import GranuleLoader
@@ -241,6 +242,7 @@ def get_predicted_from_means(**kwargs):
                         predictive_band = predictive_band,
                         enable_multithreading = enable_multithreading)
 
+    gc.collect()
     return get_predicted(data = original,
                         means = means,
                         alphas = alphas,
