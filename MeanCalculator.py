@@ -224,14 +224,14 @@ def get_predicted_from_means(**kwargs):
     enable_multithreading = kwargs['enable_multithreading']
 
     labels = get_labels(data = data, means = means)
-    empty_groups = numpy.asarray([label in labels for label in xrange(means.shape)])
+    empty_groups = numpy.asarray([label in labels for label in xrange(means.shape[0])])
     while not numpy.all(empty_groups):
         new_group = numpy.asarray([random.sample(data[:, index], 1)[0] for index in xrange(means.shape)])
         min_index = empty_groups.argmin()
         print "Empty label: %s group: %s new_group %s " % (str(min_index), str(means[min_index]), str(min_index))
         means[min_index] = new_group
         labels = get_labels(data = data, means = means)
-        empty_groups = numpy.asarray([label in labels for label in xrange(means.shape)])
+        empty_groups = numpy.asarray([label in labels for label in xrange(means.shape[0])])
 
 
     alphas = get_alphas(data = data,
