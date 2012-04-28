@@ -74,14 +74,18 @@ if __name__ == '__main__':
                                              training_band = training_band,
                                              predictive_band = predictive_band,
                                              enable_multithreading = False)
-        sum_of_errors.append(get_sum_of_errors_squared(predicted = predicted[:, predictive_band], original = test_data[:, predictive_band[0]]))
+        sum_of_errors.append(get_sum_of_errors_squared(
+                predicted = predicted[:, predictive_band[0]],
+                original  = test_data[:, predictive_band[0]]))
         pickle.dump(all_means, open('all_means.obj', 'wb'))
         pickle.dump(sum_of_errors, open('sum_of_errors.obj', 'wb'))
         output.write("minimization_function iteration: " + str(len(sum_of_errors)) + " time to finnish: " + str(round((time.time() - start), 8)) + "s Sum Of Error: " + str(sum_of_errors[-1]) + '\n')
         output.flush()
         return sum_of_errors[-1]
 
-    opt_means = minimize(initial_values = means, function = minimization_function, max_iterations = 1000)
+    opt_means = minimize(initial_values = means,
+                         function = minimization_function,
+                         max_iterations = 1000)
     pickle.dump(opt_means, open('opt_means.obj', 'ab'))
     pickle.dump(sum_of_errors, open('sum_of_errors.obj', 'ab'))
 
