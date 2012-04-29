@@ -234,7 +234,7 @@ def get_predicted_from_means(**kwargs):
         print "Empty label: %s group: %s new_group %s " % (str(min_index), str(means[min_index]), str(min_index))
         means[min_index] = new_group
         labels = get_labels(data = data, means = means)
-        empty_groups = numpy.asarray([label in labels for label in xrange(means.shape[0])])
+        empty_groups = numpy.asarray([label in labels for label in xrange(means.shape[1])])
         sys.stdout.flush()
 
     alphas = get_alphas(data = data,
