@@ -229,7 +229,7 @@ def get_predicted_from_means(**kwargs):
     labels = get_labels(data = data, means = means)
     empty_groups = numpy.asarray([label in labels for label in xrange(means.shape[0])])
     while not numpy.all(empty_groups):
-        new_group = numpy.asarray([random.sample(data[:, index], 1)[0] for index in xrange(means.shape[0])])
+        new_group = numpy.asarray([random.sample(data[:, index], 1)[0] for index in xrange(means.shape[1])])
         min_index = empty_groups.argmin()
         print "Empty label: %s group: %s new_group %s " % (str(min_index), str(means[min_index]), str(min_index))
         means[min_index] = new_group
