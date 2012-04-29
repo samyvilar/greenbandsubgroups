@@ -10,6 +10,7 @@ import time
 import pickle
 import random
 import gc
+import sys
 
 from Utils import load_cached_or_calculate_and_cached, multithreading_pool_map
 from GranuleLoader import GranuleLoader
@@ -224,16 +225,17 @@ def get_predicted_from_means(**kwargs):
     predictive_band = kwargs['predictive_band']
     enable_multithreading = kwargs['enable_multithreading']
 
+    sys.stdout.flush()
     labels = get_labels(data = data, means = means)
     empty_groups = numpy.asarray([label in labels for label in xrange(means.shape[0])])
     while not numpy.all(empty_groups):
-        new_group = numpy.asarray([random.sample(data[:, index], 1)[0] for index in xrange(means.shape)])
+        new_group = numpy.asarray([random.sample(data[:, index], 1)[0] for index in xrange(means.shape[0])])
         min_index = empty_groups.argmin()
         print "Empty label: %s group: %s new_group %s " % (str(min_index), str(means[min_index]), str(min_index))
         means[min_index] = new_group
         labels = get_labels(data = data, means = means)
         empty_groups = numpy.asarray([label in labels for label in xrange(means.shape[0])])
-
+        sys.stdout.flush()
 
     alphas = get_alphas(data = data,
                         means = means,
