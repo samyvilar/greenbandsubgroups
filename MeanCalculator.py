@@ -83,18 +83,31 @@ def calc_alpha(kwargs):
     group = kwargs['group']
     training_band = kwargs['training_band']
     predictive_band = kwargs['predictive_band']
-    c = data[labels == group, :]
-    W = append_ones(c[:, training_band])
-    G = c[:,predictive_band]
-    return numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G))
+    if len(labels.shape) == 1:
+        c = data[labels == group, :]
+        W = append_ones(c[:, training_band])
+        G = c[:, predictive_band]
+        return numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G))
+    elif len(labels.shape) == 2:
+        means = kwargs['means']
+        alphas = numpy.zeros(means.shape[1:])
+        for subgroup in xrange(means.shape[1]):
+            c = data[labels == [group, subgroup]]
+            W = append_ones(c[:, training_band])
+            G = c[:, predictive_band]
+            alphas[subgroup, :] = numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G))
+        return alphas
 
 def get_alphas(**kwargs):
     means = kwargs['means']
     enable_multithreading = kwargs['enable_multithreading']
     values = [dict(kwargs, group = group) for group in xrange(means.shape[0])]
     return numpy.column_stack(
-            multithreading_pool_map(values = values, function = calc_alpha, multithreaded = enable_multithreading)
+            multithreading_pool_map(values = values,
+                                    function = calc_alpha,
+                                    multithreaded = enable_multithreading)
             ).transpose()
+
 
 
 def get_means(data, labels):
@@ -141,9 +154,9 @@ def get_mean(kwargs):
             return means, labels
 
         values = [dict(data = data[labels == group],
-                        number_of_groups = number_of_sub_groups,
-                        threshold = threshold,
-                        number_of_runs = number_of_runs) for group in xrange(means.shape[0])]
+                       number_of_groups = number_of_sub_groups,
+                       threshold = threshold,
+                       number_of_runs = number_of_runs) for group in xrange(means.shape[0])]
         results = multithreading_pool_map(values = values, function = kmeans2_multithreading, multithreaded = True)
         means = numpy.asarray([result[0] for result in results])
         sub_labels = numpy.asarray([result[1] for result in results])
@@ -215,6 +228,18 @@ def get_mean(kwargs):
 
 
     raise Exception("Need to specify a clustering function!")
+
+
+def get_predicted_from_sub_means(**kwargs):
+    data = kwargs['data']
+    means = kwargs['means']
+    original = kwargs['original']
+    training_band = kwargs['training_band']
+    predictive_band = kwargs['predictive_band']
+    enable_multithreading = kwargs['enable_multithreading']
+
+    assert len(means.shape) == 3
+    labels = get_labels(data = data, means = means)
 
 
 def get_predicted_from_means(**kwargs):
