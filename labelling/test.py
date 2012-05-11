@@ -20,6 +20,7 @@ if __name__ == '__main__':
     start = time.time()
     labels2 = get_labels(data = data, means = means)
     end = time.time()
+    print "C time %f" % (end - start)
 
     assert all(labels == labels2)
     print "OK"
