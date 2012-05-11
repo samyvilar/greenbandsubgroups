@@ -38,11 +38,12 @@ mean_calculator.clustering_function = "kmeans2"
 means, labels = mean_calculator.calculate_means_data(data)
 
 predicted = get_predicted_from_means(data = data,
-                                    means = means,
-                                    original = original,
-                                    training_band = [0,1,2],
-                                    predictive_band = [3],
-                                    enable_multithreading = False)
+                                     labels = labels,
+                                     means = means,
+                                     original = original,
+                                     training_band = [0,1,2],
+                                     predictive_band = [3],
+                                     enable_multithreading = False)
 
 save_images(original = original,
                 predicted = predicted,

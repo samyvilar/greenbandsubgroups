@@ -60,9 +60,9 @@ def calc_predicted(kwargs):
     alphas                  = kwargs['alphas']
     group                   = kwargs['group']
     labels                  = kwargs['labels']
-    if len(labels.shape) == 2:
+    if len(alphas.shape) == 2:
         return numpy.dot(append_ones(data[:, training_band][labels == group]), alphas[group, :].reshape((-1,1)))
-    elif len(labels.shape) == 3:
+    elif len(alphas.shape) == 3:
         return numpy.asarray([numpy.dot(append_ones(get_sub_values(data, labels, [group, subgroup])),
                     alphas[group, subgroup, :].reshape((-1,1))) for subgroup in xrange(alphas.shape[1])])
 
