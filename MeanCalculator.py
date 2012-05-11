@@ -14,6 +14,7 @@ import sys
 
 from Utils import load_cached_or_calculate_and_cached, multithreading_pool_map
 from GranuleLoader import GranuleLoader
+from labelling import labelling
 
 import scipy.cluster.vq
 import scipy.optimize
@@ -33,10 +34,7 @@ def minimize(**kwargs):
 def get_labels(data = None, means = None):
     assert data != None and means != None
     if len(means.shape) == 2:
-        dist = numpy.zeros((data.shape[0], means.shape[0]))
-        for i in xrange(means.shape[0]):
-            dist[:, i] = numpy.sum((data - means[i,:])**2, axis = 1)
-        return dist.argmin(axis = 1)
+        return labelling.get_labels(data = data, means = means)
     elif len(means.shape) == 3:
         dist = numpy.zeros((data.shape[0], means.shape[0], means.shape[1]))
         for mean_index, mean in enumerate(means):
