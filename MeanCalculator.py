@@ -90,24 +90,26 @@ def calc_alpha(kwargs):
         return numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G))
     elif len(labels.shape) == 2:
         means = kwargs['means']
-        alphas = numpy.zeros(means.shape[1:] + (1,))
+        alphas = numpy.zeros(means.shape[1:])
         for subgroup in xrange(means.shape[1]):
             sub_labels = labels == [group, subgroup]
             c = data[sub_labels[:,0] & sub_labels[:,1], :]
             W = append_ones(c[:, training_band])
             G = c[:, predictive_band]
-            alphas[:, subgroup, :] = numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G))
+            alphas[subgroup, :] = numpy.column_stack(numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G)))
         return alphas
 
 def get_alphas(**kwargs):
     means = kwargs['means']
     enable_multithreading = kwargs['enable_multithreading']
     values = [dict(kwargs, group = group) for group in xrange(means.shape[0])]
-    return numpy.column_stack(
-            multithreading_pool_map(values = values,
+    results = multithreading_pool_map(values = values,
                                     function = calc_alpha,
                                     multithreaded = enable_multithreading)
-            ).transpose()
+    if len(means.shape) == 2:
+        return numpy.column_stack(results).transpose()
+    elif len(means.shape) == 3:
+        return results
 
 
 
