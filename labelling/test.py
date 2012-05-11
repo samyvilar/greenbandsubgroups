@@ -44,7 +44,7 @@ if __name__ == '__main__':
     end = time.time()
     print "2D time %f" % (end - start)
 
-    assert all(labels == labels2)
+    assert numpy.sum(labels - labels2) == 0
     print "2D OK"
 
 
