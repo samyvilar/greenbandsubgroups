@@ -36,12 +36,6 @@ mean_calculator.number_of_runs = 10
 mean_calculator.clustering_function = "kmeans2"
 
 means, labels = mean_calculator.calculate_means_data(data)
-alphas = get_alphas(data = data,
-    means = means,
-    labels = labels,
-    training_band = [0,1,2],
-    predictive_band = [3],
-    enable_multithreading = False)
 
 predicted = get_predicted_from_means(data = data,
                                     means = means,
