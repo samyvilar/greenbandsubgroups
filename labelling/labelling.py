@@ -40,3 +40,16 @@ def get_labels(**kwargs):
                                  means.shape[1],
                                  labels)
         return labels
+    elif len(means.shape) == 3:
+        labels = numpy.zeros((data.shape[0], 2), dtype = 'uint32')
+        _liblabelling.set_labels(data,
+            data.shape[0],
+            data.shape[1],
+            means,
+            2,
+            means.shape[0],
+            means.shape[1],
+            labels)
+        return labels
+    else:
+        raise Exception("Only Supporting groups and subgroups!")
