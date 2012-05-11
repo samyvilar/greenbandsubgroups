@@ -47,7 +47,7 @@ def get_labels(**kwargs):
         _liblabelling.set_labels.argtypes = [double_2d_array,
                                              ctypes.c_uint,
                                              ctypes.c_uint,
-                                             double_2d_array,
+                                             double_3d_array,
                                              ctypes.c_uint,
                                              ctypes.c_uint,
                                              ctypes.c_uint,
