@@ -5,7 +5,7 @@ import numpy
 import time
 
 if __name__ == '__main__':
-    data = numpy.random.rand(10000, 4)
+    data = numpy.random.rand(10000000, 4)
     means = numpy.random.rand(4, 4)
 
 
