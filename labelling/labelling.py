@@ -11,25 +11,28 @@ double_3d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float64, ndim = 3, fla
 double_2d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float64, ndim = 2, flags = 'CONTIGUOUS')
 double_1d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float64, ndim = 1, flags = 'CONTIGUOUS')
 uint_1d_array   = numpy.ctypeslib.ndpointer(dtype = numpy.uint32,    ndim = 1, flags = 'CONTIGUOUS')
+uint_2d_array   = numpy.ctypeslib.ndpointer(dtype = numpy.uint32,    ndim = 2, flags = 'CONTIGUOUS')
+
 '''
 void set_labels(double *data, unsigned int data_number_of_rows, unsigned int data_number_of_columns,
                double *means, unsigned int number_of_sub_groups, unsigned int means_number_of_rows, unsigned int means_number_or_columns,
                unsigned int *labels)
 '''
-_liblabelling.set_labels.argtypes = [double_2d_array,
-                                     ctypes.c_uint,
-                                     ctypes.c_uint,
-                                     double_2d_array,
-                                     ctypes.c_uint,
-                                     ctypes.c_uint,
-                                     ctypes.c_uint,
-                                     uint_1d_array
-                                     ]
 
 def get_labels(**kwargs):
     data = kwargs['data']
     means = kwargs['means']
     if len(means.shape) == 2:
+        _liblabelling.set_labels.argtypes = [double_2d_array,
+                                             ctypes.c_uint,
+                                             ctypes.c_uint,
+                                             double_2d_array,
+                                             ctypes.c_uint,
+                                             ctypes.c_uint,
+                                             ctypes.c_uint,
+                                             uint_1d_array
+        ]
+
         labels = numpy.zeros(data.shape[0], dtype = 'uint32')
         _liblabelling.set_labels(data,
                                  data.shape[0],
@@ -41,6 +44,16 @@ def get_labels(**kwargs):
                                  labels)
         return labels
     elif len(means.shape) == 3:
+        _liblabelling.set_labels.argtypes = [double_2d_array,
+                                             ctypes.c_uint,
+                                             ctypes.c_uint,
+                                             double_2d_array,
+                                             ctypes.c_uint,
+                                             ctypes.c_uint,
+                                             ctypes.c_uint,
+                                             uint_2d_array
+        ]
+
         labels = numpy.zeros((data.shape[0], 2), dtype = 'uint32')
         _liblabelling.set_labels(data,
             data.shape[0],
