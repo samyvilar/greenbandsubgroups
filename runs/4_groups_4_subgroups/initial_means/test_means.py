@@ -5,7 +5,7 @@ import sys
 sys.path.extend('../../..')
 
 from lookuptable.lookuptable import  lookuptable
-from MeanCalculator import MeanCalculator, get_predicted_from_means, calc_alpha
+from MeanCalculator import MeanCalculator, get_predicted_from_means, get_alphas
 from GranuleLoader import GranuleLoader
 from Utils import save_images, get_root_mean_square
 

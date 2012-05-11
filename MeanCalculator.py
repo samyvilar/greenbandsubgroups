@@ -92,10 +92,11 @@ def calc_alpha(kwargs):
         means = kwargs['means']
         alphas = numpy.zeros(means.shape[1:])
         for subgroup in xrange(means.shape[1]):
-            c = data[labels == [group, subgroup]]
+            sub_labels = labels == [group, subgroup]
+            c = data[sub_labels[:,0] & sub_labels[:,1], :]
             W = append_ones(c[:, training_band])
             G = c[:, predictive_band]
-            alphas[subgroup, :] = numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G))
+            alphas[subgroup, :] = numpy.column_stack(numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G)))
         return alphas
 
 def get_alphas(**kwargs):
