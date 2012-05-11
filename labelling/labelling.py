@@ -59,9 +59,9 @@ def get_labels(**kwargs):
             data.shape[0],
             data.shape[1],
             means,
-            2,
             means.shape[0],
             means.shape[1],
+            means.shape[2],
             labels)
         return labels
     else:
