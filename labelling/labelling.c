@@ -67,7 +67,5 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
 
 
     free(datap);
-
-
 }
 
