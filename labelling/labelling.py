@@ -38,4 +38,4 @@ def get_labels(**kwargs):
                                  means.shape[0],
                                  means.shape[1],
                                  labels)
-        return labels
+        return labels 
