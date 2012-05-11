@@ -82,7 +82,7 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
         }
         double **total_distances = (double **)malloc(data_number_of_rows * sizeof(double *));
         size = number_of_sub_groups * sizeof(double);
-        for (index = 0; index < number_of_sub_groups; index++)
+        for (index = 0; index < data_number_of_rows; index++)
         {
             total_distances[index] = (double *)malloc(size);
             memset(total_distances[index], 0, size);
