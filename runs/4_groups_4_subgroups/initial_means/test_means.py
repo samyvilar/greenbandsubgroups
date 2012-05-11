@@ -27,7 +27,7 @@ original = granule_loader.granules[0].data
 
 mean_calculator = MeanCalculator()
 mean_calculator.enable_multithreading()
-mean_calculator.enable_caching()
+mean_calculator.disable_caching()
 
 mean_calculator.threshold = 1e-05
 mean_calculator.number_of_groups = 4
