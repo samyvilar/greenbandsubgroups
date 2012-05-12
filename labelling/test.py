@@ -25,7 +25,7 @@ if __name__ == '__main__':
     assert all(labels == labels2)
     print "OK"
 
-    data = numpy.random.rand(100000, 4)
+    data = numpy.random.rand(1000000, 4)
     means = numpy.random.rand(4, 4, 4)
     start = time.time()
     dist = numpy.zeros((data.shape[0], means.shape[0], means.shape[1]))
