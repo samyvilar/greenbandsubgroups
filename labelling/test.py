@@ -26,6 +26,11 @@ if __name__ == '__main__':
     print "OK"
 
 
+
+from labelling import get_labels
+import numpy
+import time
+
 data = numpy.random.rand(10, 4)
 means = numpy.random.rand(4, 4, 4)
 start = time.time()
