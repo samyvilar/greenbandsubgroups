@@ -99,9 +99,8 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
                     {
                         diff = (datap[index_2][index_3] - meansp[index][index_1][index_3]);
                         distances[index_2][index][index_1] += (diff * diff);
-                        total_distances[index_2][index] += distances[index_2][index][index_1];
-
                     }
+                    total_distances[index_2][index] += distances[index_2][index][index_1];
                 }
         }
         unsigned int **labelsp = (unsigned int **)malloc(data_number_of_rows * sizeof(unsigned int *));
