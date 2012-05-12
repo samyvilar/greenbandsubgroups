@@ -101,7 +101,7 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
                         total_distances[index_2][index] += distances[index_2][index][index_1];
 
                     }
-                    printf("distances[%i][%i][%i] = %f\n", index_2,index,index_1,distances[index_2][index][index_1]);
+                    printf("total_distances[%i][%i] = %f\n", index_2,index,total_distances[index_2][index] );
                 }
         unsigned int **labelsp = (unsigned int **)malloc(data_number_of_rows * sizeof(unsigned int *));
         for (index = 0; index < data_number_of_rows; index++)
