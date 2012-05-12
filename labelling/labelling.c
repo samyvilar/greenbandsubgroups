@@ -91,7 +91,6 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
 
         double diff = 0;
         for (index = 0; index < number_of_sub_groups; index++)
-        {
             for (index_1 = 0; index_1 < means_number_of_rows; index_1++)
                 for (index_2 = 0; index_2 < data_number_of_rows; index_2++)
                 {
@@ -102,7 +101,7 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
                     }
                     total_distances[index_2][index] += distances[index_2][index][index_1];
                 }
-        }
+
         unsigned int **labelsp = (unsigned int **)malloc(data_number_of_rows * sizeof(unsigned int *));
         for (index = 0; index < data_number_of_rows; index++)
             labelsp[index] = labels + index * 2;
@@ -111,11 +110,8 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
         {
             labelsp[index][0] = 0;
             for (index_1 = 0; index_1 < number_of_sub_groups; index_1++)
-            {
-                //printf("total_distances[%i][%i] = %f\n", index ,index_1, total_distances[index][index_1] );
                 if (total_distances[index][index_1] < total_distances[index][labelsp[index][0]])
                     labelsp[index][0] = index_1;
-            }
 
             labelsp[index][1] = 0;
             for (index_1 = 0; index_1 < means_number_of_rows; index_1++)
