@@ -1,6 +1,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "labelling.h"
 
@@ -40,7 +41,7 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
                 for (index_2 = 0; index_2 < means_number_of_columns; index_2++)
                 {
                     diff = (datap[index_1][index_2] - meansp[index][index_2]);
-                    distances[index_1][index] += diff * diff;
+                    distances[index_1][index] += (diff * diff);
                 }
         for (index = 0; index < data_number_of_rows; index++)
         {
@@ -92,12 +93,16 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
         for (index = 0; index < number_of_sub_groups; index++)
             for (index_1 = 0; index_1 < means_number_of_rows; index_1++)
                 for (index_2 = 0; index_2 < data_number_of_rows; index_2++)
+                {
                     for (index_3 = 0; index_3 < means_number_of_columns; index_3++)
                     {
                         diff = (datap[index_2][index_3] - meansp[index][index_1][index_3]);
-                        distances[index_2][index][index_1] += diff * diff;
+                        distances[index_2][index][index_1] += (diff * diff);
                         total_distances[index_2][index] += distances[index_2][index][index_1];
+
                     }
+                    printf("distances[%i][%i][%i] = %f\n", index_2,index,index_1,distances[index_2][index][index_1]);
+                }
         unsigned int **labelsp = (unsigned int **)malloc(data_number_of_rows * sizeof(unsigned int *));
         for (index = 0; index < data_number_of_rows; index++)
             labelsp[index] = labels + index * 2;
