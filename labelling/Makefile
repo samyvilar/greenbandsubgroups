@@ -1,7 +1,7 @@
 
 
 build:
-	gcc -Wall -fPIC -c labelling.c
+	gcc -Wall -fPIC -c -ggdb labelling.c
 	gcc -shared -Wl -o liblabelling.so labelling.o
 
 clean:
