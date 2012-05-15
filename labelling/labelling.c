@@ -51,6 +51,7 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
                     labels[index] = index_1;
         }
 
+        printf("tying to free\n");
         for (index = 0; index < data_number_of_rows; index++)
             free(distances[index]);
         printf("freeing distances done.\n");
