@@ -3,7 +3,7 @@ __author__ = 'samyvilar'
 from labelling import get_labels
 import numpy
 import time
-
+import scipy.spatial
 
 if __name__ == '__main__':
     data = numpy.random.rand(10000000, 4)
@@ -22,7 +22,12 @@ if __name__ == '__main__':
     end = time.time()
     print "C time %f" % (end - start)
 
-    assert all(labels == labels2)
+    start = time.time()
+    tree = scipy.spatial.cKDTree(means)
+    labels3 = tree.query(data)
+    end = time.time()
+
+    assert all(labels == labels2 == labels3)
     print "OK"
 
     data = numpy.random.rand(1000000, 4)
