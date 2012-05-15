@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     start = time.time()
     tree = scipy.spatial.cKDTree(means)
-    labels3[1] = tree.query(data)
+    labels3 = tree.query(data)[1]
     end = time.time()
     print "ckdtree time %f" % (end - start)
 
