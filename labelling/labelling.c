@@ -36,6 +36,7 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
          /* Calculate the distances to each group for each row by squaring the distance to each center
           * for each group, and taking that sum.
           */
+        printf("calculating distances \n");
         for (index = 0; index < means_number_of_rows; index++)
             for (index_1 = 0; index_1 < data_number_of_rows; index_1++)
                 for (index_2 = 0; index_2 < means_number_of_columns; index_2++)
@@ -43,6 +44,7 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
                     diff = (datap[index_1][index_2] - meansp[index][index_2]);
                     distances[index_1][index] += (diff * diff);
                 }
+        printf("done\nLabelling...\n");
         for (index = 0; index < data_number_of_rows; index++)
         {
             labels[index] = 0;
@@ -50,6 +52,7 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
                 if (distances[index][index_1] < distances[index][labels[index]])
                     labels[index] = index_1;
         }
+        printf("done\n");
 
         printf("tying to free\n");
         for (index = 0; index < data_number_of_rows; index++)
