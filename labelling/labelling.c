@@ -50,10 +50,14 @@ void set_labels(double *data, unsigned int data_number_of_rows, unsigned int dat
                 if (distances[index][index_1] < distances[index][labels[index]])
                     labels[index] = index_1;
         }
+
         for (index = 0; index < data_number_of_rows; index++)
             free(distances[index]);
+        printf("freeing distances done.\n");
         free(distances);
+        printf("free distances dine.\n");
         free(meansp);
+        printf("free meansp done\n");
     }
     else
     {
