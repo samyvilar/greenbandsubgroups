@@ -28,7 +28,8 @@ if __name__ == '__main__':
     end = time.time()
     print "ckdtree time %f" % (end - start)
 
-    assert all(labels == labels2 == labels3)
+    assert all(labels == labels2)
+    assert all(labels == labels3)
     print "OK"
 
     data = numpy.random.rand(1000000, 4)
