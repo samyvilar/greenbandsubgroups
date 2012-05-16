@@ -93,7 +93,7 @@ def get_errors(number_of_groups):
     plt.legend()
     plt.xlabel('Predicting Band')
     plt.ylabel('Root Mean Square')
-    plt.title('Root Errors for %i clusters across different bands.' % index)
+    plt.title('Root Errors for %i clusters across different bands.' % number_of_groups)
     plt.savefig('errors_plot_%i_clusters.png' % number_of_groups)
     return numpy.asarray(errors_cloudy), numpy.asarray(errors_clear)
 
