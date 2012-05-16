@@ -55,6 +55,8 @@ testing_bands = [{'training_bands':range(0, index) + range(index + 1, 7),
                     'predicting_bands':[index]} for index in xrange(7)]
 errors_cloudy = []
 errors_clear = []
+
+
 for testing_band in testing_bands:
     alphas = get_alphas(data = cloudy_bands,
                         means = cloudy_means,
@@ -87,9 +89,9 @@ for testing_band in testing_bands:
 
 
 
-    
+
 cloudy_line = plt.plot(range(1, 8), errors_cloudy, label = 'CLOUDY')
-clear_line = plt.plot(range(1, 8), errors_cloudy, label = 'CLEAR')
+clear_line = plt.plot(range(1, 8), errors_clear, label = 'CLEAR')
 plt.legend()
 plt.xlabel('Root Mean Square')
 plt.ylabel('Root Mean Square')
