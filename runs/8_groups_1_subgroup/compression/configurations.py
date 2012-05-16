@@ -99,7 +99,7 @@ def get_errors(number_of_groups):
 
 
 
-groups = range(4, 25)
+groups = range(4, 10)
 pool = Pool(processes = 10)
 all_errors = numpy.asarray(pool.map(get_errors, groups))
 pool.close()
