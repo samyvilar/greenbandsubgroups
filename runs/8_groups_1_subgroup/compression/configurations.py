@@ -87,13 +87,15 @@ for index in xrange(4, 10):
                         predicted = predicted[:, testing_band['predicting_bands'][0]]))
     all_errors_clear.append(errors_clear)
     all_errors_cloudy.append(errors_cloudy)
-    cloudy_line = plt.plot(range(1, 8), errors_cloudy, label = 'CLOUDY')
-    clear_line = plt.plot(range(1, 8), errors_clear, label = 'CLEAR')
+    plt.figure()
+    cloudy_line = plt.plot(range(1, index), errors_cloudy, label = 'CLOUDY')
+    clear_line = plt.plot(range(1, index), errors_clear, label = 'CLEAR')
     plt.legend()
     plt.xlabel('Root Mean Square')
     plt.ylabel('Root Mean Square')
     plt.title('Root Errors for %i clusters across different bands.' % index)
     plt.savefig('errors_plot_%i_clusters.png' % index)
+
 
 
 
