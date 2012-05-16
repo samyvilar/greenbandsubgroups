@@ -99,7 +99,7 @@ def get_errors(number_of_groups):
 
 
 
-groups = range(4, 10)
+groups = range(4, 25)
 pool = Pool(processes = 10)
 all_errors = numpy.asarray(pool.map(get_errors, groups))
 pool.close()
@@ -116,7 +116,7 @@ plt.savefig('Clusters vs sum of errors.png')
 
 plt.figure()
 for group in groups:
-    plt.plot(range(1, 8), all_errors[group, 0, :], label = 'CLOUDY # groups %i' % group)
+    plt.plot(range(1, 8), all_errors[group - 4, 0, :], label = 'CLOUDY # groups %i' % group)
     plt.xlabel('Predicting Band')
     plt.ylabel('Sum Root Mean Square')
     plt.title('CLOUDY Predicting Band vs root means square')
@@ -125,7 +125,7 @@ plt.savefig('cloudy_groups_errors.png')
 
 plt.figure()
 for group in groups:
-    plt.plot(range(1, 8), all_errors[group, 1, :], label = 'CLEAR # groups %i' % group)
+    plt.plot(range(1, 8), all_errors[group - 4, 1, :], label = 'CLEAR # groups %i' % group)
     plt.xlabel('Predicting Band')
     plt.ylabel('Sum Root Mean Square')
     plt.title('CLEAR Predicting Band vs root means square')
