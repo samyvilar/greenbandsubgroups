@@ -97,14 +97,15 @@ def get_errors(number_of_groups):
     return numpy.sum(numpy.asarray(errors_cloudy)), numpy.sum(numpy.asarray(errors_clear))
 
 
+groups = range(4, 30)
 pool = Pool(processes = 10)
-all_errors = numpy.asarray(pool.map(get_errors, range(4, 11)))
+all_errors = numpy.asarray(pool.map(get_errors, groups))
 pool.close()
 pool.join()
 
 plt.figure()
-plt.plot(range(4, 11), all_errors[:, 0], label = 'CLOUDY')
-plt.plot(range(4, 11), all_errors[:, 1], label = 'CLEAR')
+plt.plot(groups, all_errors[:, 0], label = 'CLOUDY')
+plt.plot(groups, all_errors[:, 1], label = 'CLEAR')
 plt.xlabel('Number of Clusters')
 plt.ylabel('Sum of Root Mean Squares')
 plt.title('Number of clusters vs sum of root mean squares')
