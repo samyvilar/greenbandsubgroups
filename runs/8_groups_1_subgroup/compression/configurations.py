@@ -47,56 +47,53 @@ clear_bands = numpy.asarray(
             for index, file in enumerate(clear_bands_files)]).transpose()
 clear_bands[numpy.isnan(clear_bands)] = 0
 
-cloudy_means, cloudy_labels = kmeans2(cloudy_bands, 7)
-clear_means, clear_labels = kmeans2(clear_bands, 7)
-
-
-testing_bands = [{'training_bands':range(0, index) + range(index + 1, 7),
-                    'predicting_bands':[index]} for index in xrange(7)]
-errors_cloudy = []
-errors_clear = []
-
-
-for testing_band in testing_bands:
-    alphas = get_alphas(data = cloudy_bands,
-                        means = cloudy_means,
-                        labels = cloudy_labels,
-                        training_band = testing_band['training_bands'],
-                        predictive_band = testing_band['predicting_bands'],
-                        enable_multithreading = False)
-    predicted = get_predicted(data = numpy.asarray(cloudy_bands, dtype='float64', order = 'C'),
-                             means = cloudy_means,
-                             alphas = alphas,
-                             training_band = testing_band['training_bands'],
-                             predicting_band = testing_band['predicting_bands'],
-                             enable_multithreading = False)
-    errors_cloudy.append(get_root_mean_square(original = cloudy_bands[:, testing_band['predicting_bands'][0]],
-                            predicted = predicted[:, testing_band['predicting_bands'][0]]))
-    alphas = get_alphas(data = clear_bands,
-                        means = clear_means,
-                        labels = clear_labels,
-                        training_band = testing_band['training_bands'],
-                        predictive_band = testing_band['predicting_bands'],
-                        enable_multithreading = False)
-    predicted = get_predicted(data = numpy.asarray(clear_bands, dtype='float64', order = 'C'),
-                            means = clear_means,
-                            alphas = alphas,
+all_errors_cloudy = []
+all_errors_clear = []
+for index in xrange(4, 10):
+    cloudy_means, cloudy_labels = kmeans2(cloudy_bands, index)
+    clear_means, clear_labels = kmeans2(clear_bands, index)
+    testing_bands = [{'training_bands':range(0, index_1) + range(index_1 + 1, index),
+                        'predicting_bands':[index]} for index_1 in xrange(index)]
+    errors_cloudy = []
+    errors_clear = []
+    for testing_band in testing_bands:
+        alphas = get_alphas(data = cloudy_bands,
+                            means = cloudy_means,
+                            labels = cloudy_labels,
                             training_band = testing_band['training_bands'],
-                            predicting_band = testing_band['predicting_bands'],
+                            predictive_band = testing_band['predicting_bands'],
                             enable_multithreading = False)
-    errors_clear.append(get_root_mean_square(original = clear_bands[:, testing_band['predicting_bands'][0]],
-                    predicted = predicted[:, testing_band['predicting_bands'][0]]))
-
-
-
-
-cloudy_line = plt.plot(range(1, 8), errors_cloudy, label = 'CLOUDY')
-clear_line = plt.plot(range(1, 8), errors_clear, label = 'CLEAR')
-plt.legend()
-plt.xlabel('Root Mean Square')
-plt.ylabel('Root Mean Square')
-plt.title('Root Errors for 7 clusters across different bands.')
-plt.savefig('errors_plot.png')
+        predicted = get_predicted(data = numpy.asarray(cloudy_bands, dtype='float64', order = 'C'),
+                                 means = cloudy_means,
+                                 alphas = alphas,
+                                 training_band = testing_band['training_bands'],
+                                 predicting_band = testing_band['predicting_bands'],
+                                 enable_multithreading = False)
+        errors_cloudy.append(get_root_mean_square(original = cloudy_bands[:, testing_band['predicting_bands'][0]],
+                                predicted = predicted[:, testing_band['predicting_bands'][0]]))
+        alphas = get_alphas(data = clear_bands,
+                            means = clear_means,
+                            labels = clear_labels,
+                            training_band = testing_band['training_bands'],
+                            predictive_band = testing_band['predicting_bands'],
+                            enable_multithreading = False)
+        predicted = get_predicted(data = numpy.asarray(clear_bands, dtype='float64', order = 'C'),
+                                means = clear_means,
+                                alphas = alphas,
+                                training_band = testing_band['training_bands'],
+                                predicting_band = testing_band['predicting_bands'],
+                                enable_multithreading = False)
+        errors_clear.append(get_root_mean_square(original = clear_bands[:, testing_band['predicting_bands'][0]],
+                        predicted = predicted[:, testing_band['predicting_bands'][0]]))
+    all_errors_clear.append(errors_clear)
+    all_errors_cloudy.append(errors_cloudy)
+    cloudy_line = plt.plot(range(1, 8), errors_cloudy, label = 'CLOUDY')
+    clear_line = plt.plot(range(1, 8), errors_clear, label = 'CLEAR')
+    plt.legend()
+    plt.xlabel('Root Mean Square')
+    plt.ylabel('Root Mean Square')
+    plt.title('Root Errors for %i clusters across different bands.' % index)
+    plt.savefig('errors_plot_%i_clusters.png' % index)
 
 
 
