@@ -98,7 +98,8 @@ def get_errors(number_of_groups):
     return numpy.sum(numpy.asarray(errors_cloudy)), numpy.sum(numpy.asarray(errors_clear))
 
 
-groups = range(4, 25)
+
+groups = range(4, 11)
 pool = Pool(processes = 10)
 all_errors = numpy.asarray(pool.map(get_errors, groups))
 pool.close()
