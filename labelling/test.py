@@ -6,8 +6,8 @@ import time
 import scipy.spatial
 
 if __name__ == '__main__':
-    data = numpy.random.rand(10000, 4)
-    means = numpy.random.rand(10, 4)
+    data = numpy.random.rand(100000, 4)
+    means = numpy.random.rand(100, 4)
 
     start = time.time()
     dist = numpy.zeros((data.shape[0], means.shape[0]))
@@ -48,14 +48,14 @@ if __name__ == '__main__':
 
 
     end = time.time()
-    print "2D Numpy time %f" % (end - start)
+    print "Subgroups Numpy time %f" % (end - start)
 
     start = time.time()
     labels2 = get_labels(data = data, means = means)
     end = time.time()
-    print "2D time %f" % (end - start)
+    print "Subgroups C time %f" % (end - start)
 
     assert numpy.sum(labels - labels2) == 0
-    print "2D OK"
+    print "Subgroups OK"
 
 
