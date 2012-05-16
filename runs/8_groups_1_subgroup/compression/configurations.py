@@ -40,63 +40,62 @@ cloudy_bands_files = ['MOD02HKM.A2010278.1745.B1.nc',
 cloudy_bands = numpy.asarray(
         [NetCDFFile(cloudy_bands_dir + file).variables[variable_names[index]].data.reshape((1185336,))
             for index, file in enumerate(cloudy_bands_files)]).transpose()
-clear_bands[numpy.isnan(clear_bands)] = 0
+cloudy_bands[numpy.isnan(cloudy_bands)] = 0
 
 clear_bands = numpy.asarray(
         [NetCDFFile(clear_bands_dir + file).variables[variable_names[index]].data.reshape((1185336,))
             for index, file in enumerate(clear_bands_files)]).transpose()
-cloudy_bands[numpy.isnan(cloudy_bands)] = 0
+clear_bands[numpy.isnan(clear_bands)] = 0
 
-means, labels = kmeans2(cloudy_bands, 7)
+cloudy_means, cloudy_labels = kmeans2(cloudy_bands, 7)
+clear_means, clear_labels = kmeans2(clear_bands, 7)
 
 
 testing_bands = [{'training_bands':range(0, index) + range(index + 1, 7),
                     'predicting_bands':[index]} for index in xrange(7)]
-errors = []
+errors_cloudy = []
+errors_clear = []
 for testing_band in testing_bands:
     alphas = get_alphas(data = cloudy_bands,
-                    means = means,
-                    labels = labels,
-                    training_band = testing_band['training_bands'],
-                    predictive_band = testing_band['predicting_bands'],
-                    enable_multithreading = False)
+                        means = cloudy_means,
+                        labels = cloudy_labels,
+                        training_band = testing_band['training_bands'],
+                        predictive_band = testing_band['predicting_bands'],
+                        enable_multithreading = False)
     predicted = get_predicted(data = numpy.asarray(cloudy_bands, dtype='float64', order = 'C'),
-                         means = means,
-                         alphas = alphas,
-                         training_band = testing_band['training_bands'],
-                         predicting_band = testing_band['predicting_bands'],
-                         enable_multithreading = False)
-    errors.append(get_root_mean_square(original = cloudy_bands[:, 6], predicted = predicted[:, 6]))
+                             means = cloudy_means,
+                             alphas = alphas,
+                             training_band = testing_band['training_bands'],
+                             predicting_band = testing_band['predicting_bands'],
+                             enable_multithreading = False)
+    errors_cloudy.append(get_root_mean_square(original = cloudy_bands[:, testing_band['predicting_bands'][0]],
+                            predicted = predicted[:, testing_band['predicting_bands'][0]]))
+    alphas = get_alphas(data = clear_bands,
+                        means = clear_means,
+                        labels = clear_labels,
+                        training_band = testing_band['training_bands'],
+                        predictive_band = testing_band['predicting_bands'],
+                        enable_multithreading = False)
+    predicted = get_predicted(data = numpy.asarray(clear_bands, dtype='float64', order = 'C'),
+                            means = clear_means,
+                            alphas = alphas,
+                            training_band = testing_band['training_bands'],
+                            predicting_band = testing_band['predicting_bands'],
+                            enable_multithreading = False)
+    errors_clear.append(get_root_mean_square(original = clear_bands[:, testing_band['predicting_bands'][0]],
+                    predicted = predicted[:, testing_band['predicting_bands'][0]]))
 
 
 
-lut = lookuptable()
-lut.load_flatten_table('../../lookuptable/reflectance/800/800_lookuptable_flatten.numpy')
-lut_data_flatten = lut.indices_to_data(lut.flatten_table)
+    
+cloudy_line = plt.plot(range(1, 8), errors_cloudy, label = 'CLOUDY')
+clear_line = plt.plot(range(1, 8), errors_cloudy, label = 'CLEAR')
+plt.legend()
+plt.xlabel('Root Mean Square')
+plt.ylabel('Root Mean Square')
+plt.title('Root Errors for 7 clusters across different bands.')
+plt.savefig('errors_plot.png')
 
-
-
-if os.path.isfile('initial_mean.numpy'):
-    if os.path.isfile('all_means.obj'):
-        all_means = pickle.load(open('all_means.obj', 'rb'))
-        sum_of_errors = pickle.load(open('sum_of_errors.obj', 'rb'))
-        means = all_means[numpy.asarray(sum_of_errors).argmin()]
-    else:
-        means = numpy.fromfile('initial_mean.numpy')
-        all_means = []
-        sum_of_errors = []
-else:
-    means, labels = mean_calculator.calculate_means_data(lut_data_flatten)
-    means.tofile('initial_mean.numpy')
-    all_means = []
-    sum_of_errors = []
-
-
-training_band = [0,1,2]
-predictive_band = [3]
-
-initial_means = all_means[0]
-opt_means = means
 
 
 
