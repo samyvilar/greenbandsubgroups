@@ -94,22 +94,21 @@ def get_errors(number_of_groups):
     plt.ylabel('Root Mean Square')
     plt.title('Root Errors for %i clusters across different bands.' % index)
     plt.savefig('errors_plot_%i_clusters.png' % number_of_groups)
-
-    return errors_cloudy, errors_clear
+    return numpy.sum(numpy.asarray(errors_cloudy)), numpy.sum(numpy.asarray(errors_clear))
 
 
 pool = Pool(processes = 10)
-all_errors = pool.map(get_errors, range(4, 11))
+all_errors = numpy.asarray(pool.map(get_errors, range(4, 11)))
 pool.close()
 pool.join()
 
 plt.figure()
-plt.plot(range(4, 11), numpy.sum(all_errors_cloudy, axis = 1), label = 'CLOUDY')
-plt.plot(range(4, 11), numpy.sum(all_errors_clear, axis = 1), label = 'CLEAR')
+plt.plot(range(4, 11), all_errors[:, 0], label = 'CLOUDY')
+plt.plot(range(4, 11), all_errors[:, 1], label = 'CLEAR')
 plt.xlabel('Number of Clusters')
 plt.ylabel('Sum of Root Mean Squares')
 plt.title('Number of clusters vs sum of root mean squares')
-plt.savefig('Clusters vs sum of errors')
+plt.savefig('Clusters vs sum of errors.png')
 
 
 
