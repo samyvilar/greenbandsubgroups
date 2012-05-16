@@ -52,8 +52,8 @@ all_errors_clear = []
 for index in xrange(4, 10):
     cloudy_means, cloudy_labels = kmeans2(cloudy_bands, index)
     clear_means, clear_labels = kmeans2(clear_bands, index)
-    testing_bands = [{'training_bands':range(0, index_1) + range(index_1 + 1, index),
-                        'predicting_bands':[index]} for index_1 in xrange(index)]
+    testing_bands = [{'training_bands':range(0, index_1) + range(index_1 + 1, 7),
+                      'predicting_bands':[index_1]} for index_1 in xrange(7)]
     errors_cloudy = []
     errors_clear = []
     for testing_band in testing_bands:
@@ -88,13 +88,22 @@ for index in xrange(4, 10):
     all_errors_clear.append(errors_clear)
     all_errors_cloudy.append(errors_cloudy)
     plt.figure()
-    cloudy_line = plt.plot(range(1, index + 1), errors_cloudy, label = 'CLOUDY')
-    clear_line = plt.plot(range(1, index + 1), errors_clear, label = 'CLEAR')
+    cloudy_line = plt.plot(range(1, 8), errors_cloudy, label = 'CLOUDY')
+    clear_line = plt.plot(range(1, 8), errors_clear, label = 'CLEAR')
     plt.legend()
     plt.xlabel('Root Mean Square')
     plt.ylabel('Root Mean Square')
     plt.title('Root Errors for %i clusters across different bands.' % index)
     plt.savefig('errors_plot_%i_clusters.png' % index)
+
+plt.figure()
+plt.plot(range(4, 11), numpy.sum(all_errors_cloudy, axis = 1), label = 'CLOUDY')
+plt.plot(range(4, 11), numpy.sum(all_errors_clear, axis = 1), label = 'CLEAR')
+plt.xlabel('Number of Clusters')
+plt.ylabel('Sum of Root Mean Squares')
+plt.title('Number of clusters vs sum of root mean squares')
+plt.savefig
+
 
 
 
