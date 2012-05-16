@@ -87,6 +87,7 @@ def get_errors(number_of_groups):
             enable_multithreading = False)
         errors_clear.append(get_root_mean_square(original = clear_bands[:, testing_band['predicting_bands'][0]],
             predicted = predicted[:, testing_band['predicting_bands'][0]]))
+    plt.figure()
     plt.plot(range(1, 8), errors_cloudy, label = 'CLOUDY')
     plt.plot(range(1, 8), errors_clear, label = 'CLEAR')
     plt.legend()
@@ -97,7 +98,7 @@ def get_errors(number_of_groups):
     return numpy.sum(numpy.asarray(errors_cloudy)), numpy.sum(numpy.asarray(errors_clear))
 
 
-groups = range(4, 20)
+groups = range(4, 25)
 pool = Pool(processes = 10)
 all_errors = numpy.asarray(pool.map(get_errors, groups))
 pool.close()
@@ -106,10 +107,33 @@ pool.join()
 plt.figure()
 plt.plot(groups, all_errors[:, 0], label = 'CLOUDY')
 plt.plot(groups, all_errors[:, 1], label = 'CLEAR')
+plt.legend()
 plt.xlabel('Number of Clusters')
 plt.ylabel('Sum of Root Mean Squares')
 plt.title('Number of clusters vs sum of root mean squares')
 plt.savefig('Clusters vs sum of errors.png')
+
+plt.figure()
+for group in groups:
+    plt.plot(range(1, 8), all_errors[group, 0], label = 'CLOUDY # groups %i' % group)
+    plt.xlabel('Predicting Band')
+    plt.ylabel('Sum Root Mean Square')
+    plt.title('CLOUDY Predicting Band vs root means square')
+plt.legend()
+plt.savefig('cloudy_groups_errors.png')
+
+plt.figure()
+for group in groups:
+    plt.plot(range(1, 8), all_errors[group, 1], label = 'CLEAR # groups %i' % group)
+    plt.xlabel('Predicting Band')
+    plt.ylabel('Sum Root Mean Square')
+    plt.title('CLEAR Predicting Band vs root means square')
+plt.legend()
+plt.savefig('clear_groups_errors.png')
+
+
+
+
 
 
 
