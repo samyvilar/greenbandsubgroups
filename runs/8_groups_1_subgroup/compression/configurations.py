@@ -48,6 +48,10 @@ clear_bands = numpy.asarray(
             for index, file in enumerate(clear_bands_files)]).transpose()
 clear_bands[numpy.isnan(clear_bands)] = 0
 
+
+def get_entropy(values):
+    pass
+
 all_errors_cloudy = []
 all_errors_clear = []
 
@@ -116,20 +120,20 @@ plt.savefig('Clusters vs sum of errors.png')
 
 plt.figure()
 for group in groups:
-    plt.plot(range(1, 8), all_errors[group - 4, 0, :], label = 'CLOUDY # groups %i' % group)
+    plt.plot(range(1, 8), all_errors[group - 4, 0, :], label = 'groups %i' % group)
     plt.xlabel('Predicting Band')
     plt.ylabel('Sum Root Mean Square')
     plt.title('CLOUDY Predicting Band vs root means square')
-plt.legend()
+plt.legend(loc = (1.03,0.2))
 plt.savefig('cloudy_groups_errors.png')
 
 plt.figure()
 for group in groups:
-    plt.plot(range(1, 8), all_errors[group - 4, 1, :], label = 'CLEAR # groups %i' % group)
+    plt.plot(range(1, 8), all_errors[group - 4, 1, :], label = 'group %i' % group)
     plt.xlabel('Predicting Band')
     plt.ylabel('Sum Root Mean Square')
     plt.title('CLEAR Predicting Band vs root means square')
-plt.legend()
+plt.legend(loc = (1.03,0.2))
 plt.savefig('clear_groups_errors.png')
 
 
