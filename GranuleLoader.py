@@ -148,7 +148,7 @@ class GranuleLoader(object):
         index = 0
         self.number_of_granules = len(files)
         while index < len(files):
-            self.load_granules(granlules = files[index:index+chunks])
+            self.load_granules(granules = files[index:index+chunks])
             index += chunks
             yield self.granules
 

@@ -18,8 +18,8 @@ if __name__ == '__main__':
     granule_loader.enable_multithreading()
 
 
-    granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_granule_path(), pattern = '*.hdf', chunks = 1)
-    max_value = 0
+    granule_loader_chunks = granule_loader.load_granules_chunk(dir = '/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 1)
+    max_value = granule_loader_chunks.next()[0].data.max
     for index, granule in enumerate(granule_loader_chunks):
         if max_value < granule[0].data.max:
             max_value = granule[0].data.max
