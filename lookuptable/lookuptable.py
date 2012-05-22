@@ -44,7 +44,7 @@ _liblookuptable.flatten_lookuptable.argtypes = [double_3d_array,
 
 def build_lookuptable(kwvalues):
     data, size, max_value = kwvalues['data'], kwvalues['size'], kwvalues['max_value']
-    assert data != None and size != None
+    assert data != None and size != None and max_value != None
     lut = lookuptable()
     lut.build(data, size, max_value = max_value)
     return lut
@@ -164,14 +164,14 @@ class lookuptable(object):
 
 
     def data_to_indices(self, data, max_value):
-        values = (numpy.round((data * (self.size/max_value) - 0.5))).astype('intc') # redefine values to be used properly as indices
+        values = (numpy.round( ((data/max_value) * self.size - 0.5) )).astype('intc') # redefine values to be used properly as indices
         values[values >= self.size] = self.size - 1 # make sure none of the values exceed max, if they do simply set them to the max.
         values[values < 0] = 0
 
         return values
 
     def indices_to_data(self, indices):
-        return ((indices + 0.5)*self._max_value)/self.size
+        return ((indices + 0.5)*self.size)*self.max_value
 
     def flatten_2d_non_zero(self):
         assert self.table != None
