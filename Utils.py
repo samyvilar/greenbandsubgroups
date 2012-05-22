@@ -4,6 +4,7 @@ import multiprocessing, pickle, os, time
 from matplotlib import pyplot as plt
 import numpy
 from os.path import basename
+import socket
 
 def get_cpu_count():
     return (multiprocessing.cpu_count() / 4) + multiprocessing.cpu_count()
@@ -170,3 +171,5 @@ def save_images(**kwargs):
         red_index = 0, green_index = 3, blue_index = 2)
 
 
+def get_granule_path():
+    return '/DATA_5/SNOW_CLOUD_MODIS/data/' if socket.gethostname() == 'fermi.localdomain' else '/home1/FermiData/DATA_5/'

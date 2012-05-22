@@ -12,6 +12,7 @@ from MeanCalculator import get_predicted_from_means
 from lookuptable.lookuptable import  lookuptable
 from Utils import save_images, get_root_mean_square
 from GranuleLoader import GranuleLoader
+from Utils import get_granule_path
 
 
 if __name__ == '__main__':
@@ -30,11 +31,7 @@ if __name__ == '__main__':
     granule_loader.disable_caching()
     granule_loader.disable_multithreading()
 
-
-    if socket.gethostname() == 'fermi.localdomain':
-        granule_path = '/DATA_5/SNOW_CLOUD_MODIS/data/MOD021KM.A2002179.1640.005.2010085164818.hdf'
-    else:
-        granule_path = '/home1/FermiData/DATA_5/SNOW_CLOUD_MODIS/data/MOD021KM.A2002179.1640.005.2010085164818.hdf'
+    granule_path = get_granule_path() + 'MOD021KM.A2002179.1640.005.2010085164818.hdf'
 
     granule_loader.load_granules(granules = [granule_path,])
     test_data = granule_loader.granules[0].data

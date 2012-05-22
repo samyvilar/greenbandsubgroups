@@ -7,6 +7,7 @@ sys.path.extend('../../..')
 
 from lookuptable.lookuptable import build_lookuptable, lookuptable
 from GranuleLoader import GranuleLoader
+from Utils import get_granule_path
 
 
 if __name__ == '__main__':
@@ -16,12 +17,13 @@ if __name__ == '__main__':
     granule_loader.disable_caching()
     granule_loader.enable_multithreading()
 
-    granule_loader_chunks = granule_loader.load_granules_chunk(dir = '/home1/FoucaultData/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 1)
+
+    granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_granule_path(), pattern = '*.hdf', chunks = 1)
     max_value = 0
     for index, granule in enumerate(granule_loader_chunks):
         if max_value < granule[0].data.max:
             max_value = granule[0].data.max
-    granule_loader_chunks = granule_loader.load_granules_chunk(dir = '/home1/FoucaultData/DATA_11/TERRA_1KM', pattern = '*.hdf', chunks = 1)
+    granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_granule_path(), pattern = '*.hdf', chunks = 1)
     lut_size = 800
 
     sums = numpy.zeros((lut_size, lut_size, lut_size))
