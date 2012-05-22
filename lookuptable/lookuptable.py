@@ -93,7 +93,7 @@ class lookuptable(object):
                 raise ValueError("Couldn't find the lookuptable withing %s" % lookuptable_path)
             self.table = numpy.fromfile(lookuptable_path + '/' + file[0])
             self.size = int(basename(file[0]).split('_')[0])
-            self.max_value = float(basename(file[0]).split('_')[-1])
+            self.max_value = float(basename(file[0]).split('_')[-2])
         self.table = self.table.reshape((self.size, self.size, self.size))
 
 
