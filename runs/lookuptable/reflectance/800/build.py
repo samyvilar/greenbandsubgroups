@@ -23,15 +23,18 @@ if __name__ == '__main__':
     sums = numpy.zeros((lut_size, lut_size, lut_size))
     counts = numpy.zeros((lut_size, lut_size, lut_size))
     for index, granule in enumerate(granule_loader_chunks):
-        try:
-            new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size})
-        except Exception as ex:
-            continue
+        if granule:
+            try:
+                new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size})
+            except Exception as ex:
+                continue
 
-        sums += new_lut.sums
-        counts += new_lut.counts
-        del new_lut
-        gc.collect()
+            sums += new_lut.sums
+            counts += new_lut.counts
+            del new_lut
+            gc.collect()
+        else:
+            continue
 
     table = numpy.zeros((lut_size, lut_size, lut_size))
     loc = counts != 0

@@ -49,20 +49,6 @@ def build_lookuptable(kwvalues):
     lut.build(data, size, max_value = max_value)
     return lut
 
-def find_max(granule_loader = None):
-    assert granule_loader
-    max_value = numpy.max(multithreading_pool_map(
-        **{
-            'values':granule_loader.next(),
-            'function':numpy.max,
-            'multithreaded':True
-        }))
-
-    for granule_chunks in granule_loader:
-        temp_max = numpy.max(multithreading_pool_map(
-          **{
-
-            }))
 
 class lookuptable(object):
     def __init__(self):
@@ -85,8 +71,7 @@ class lookuptable(object):
         if '.numpy' in lookuptable_path:
             self.table = numpy.fromfile(lookuptable_path)
             self.size = int(basename(lookuptable_path).split('_')[0])
-            self.table = self.table.reshape((self.size, self.size, self.size))
-            self.max_value = 1
+            self.max_value = 1.0
         elif any('_lookuptable_' in file for file in os.listdir(lookuptable_path)):
             file  = [file for file in os.listdir(lookuptable_path) if '_lookuptable_' in file and '_lookuptable_flatten_' not in file]
             if not file:
@@ -94,6 +79,8 @@ class lookuptable(object):
             self.table = numpy.fromfile(lookuptable_path + '/' + file[0])
             self.size = int(basename(file[0]).split('_')[0])
             self.max_value = float(basename(file[0]).split('_')[-2])
+        else:
+            raise Exception("%s is not a proper granule path or directory!" % lookuptable_path)
         self.table = self.table.reshape((self.size, self.size, self.size))
 
 
