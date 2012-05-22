@@ -43,10 +43,10 @@ _liblookuptable.flatten_lookuptable.argtypes = [double_3d_array,
                                                 ctypes.c_uint]
 
 def build_lookuptable(kwvalues):
-    data, size = kwvalues['data'], kwvalues['size']
+    data, size, max_value = kwvalues['data'], kwvalues['size'], kwvalues['max_value']
     assert data != None and size != None
     lut = lookuptable()
-    lut.build(data, size)
+    lut.build(data, size, max_value = max_value)
     return lut
 
 def find_max(granule_loader = None):
@@ -144,8 +144,8 @@ class lookuptable(object):
 
 
 
-    def data_to_indices(self, data):
-        values = (numpy.round((data * self.size - 0.5))).astype('intc') # redefine values to be used properly as indices
+    def data_to_indices(self, data, max_value):
+        values = (numpy.round((data * (self.size/max_value) - 0.5))).astype('intc') # redefine values to be used properly as indices
         values[values >= self.size] = self.size - 1 # make sure none of the values exceed max, if they do simply set them to the max.
         values[values < 0] = 0
 
@@ -177,13 +177,13 @@ class lookuptable(object):
 
 
 
-    def build(self, data = None, size = None):
+    def build(self, data = None, size = None, max_value = 1):
         assert data != None and size != None
         self.size = size
         counts = numpy.zeros((size, size, size), dtype = 'float32')
         sums = numpy.zeros((size, size, size), dtype = 'float32')
 
-        values = self.data_to_indices(data)
+        values = self.data_to_indices(data, max_value = max_value)
 
         shape = numpy.asarray(data.shape, dtype = 'uintc')
         _liblookuptable.lookuptable(values,

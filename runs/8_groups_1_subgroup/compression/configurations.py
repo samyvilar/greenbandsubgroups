@@ -1,23 +1,15 @@
 import sys
 sys.path.extend('../../..')
 
-import os.path
-import pickle
-import socket
-
 import numpy
-import time
-from lookuptable.lookuptable import  lookuptable
-from GranuleLoader import GranuleLoader
-from Utils import save_images, get_root_mean_square, get_sum_of_errors_squared
+from Utils import save_images, get_root_mean_square
 from matplotlib import pyplot as plt
 
 import numpy
 from scipy.io.netcdf import NetCDFFile
 from scipy.cluster.vq import kmeans2
-from scipy.spatial import kdtree
 from MeanCalculator import get_alphas, get_predicted
-from Utils import save_images, get_root_mean_square, get_sum_of_errors_squared
+from Utils import save_images, get_root_mean_square, get_sum_of_errors_squared, image_show, save_images
 from multiprocessing import Pool
 
 clear_bands_dir, cloudy_bands_dir = 'clear_bands/', 'cloudy_bands/'
@@ -39,18 +31,86 @@ cloudy_bands_files = ['MOD02HKM.A2010278.1745.B1.nc',
                       'MOD02HKM.A2010278.1745.B7.nc']
 
 cloudy_bands = numpy.asarray(
-        [NetCDFFile(cloudy_bands_dir + file).variables[variable_names[index]].data.reshape((1185336,))
+        [NetCDFFile(cloudy_bands_dir + file).variables[variable_names[index]].data
             for index, file in enumerate(cloudy_bands_files)]).transpose()
 cloudy_bands[numpy.isnan(cloudy_bands)] = 0
 
+original_shape = cloudy_bands.shape
+cloudy_bands = cloudy_bands.reshape((1185336, 7))
+
 clear_bands = numpy.asarray(
-        [NetCDFFile(clear_bands_dir + file).variables[variable_names[index]].data.reshape((1185336,))
+        [NetCDFFile(clear_bands_dir + file).variables[variable_names[index]].data
             for index, file in enumerate(clear_bands_files)]).transpose()
 clear_bands[numpy.isnan(clear_bands)] = 0
+clear_bands = clear_bands.reshape((1185336, 7))
 
 
-def get_entropy(values):
-    pass
+def get_entropy(values, type = 'uint64'):
+    values = values.copy()
+    values.dtype = type
+    probabilities = {}
+    for value in values:
+        probabilities[value] = 1 if value not in probabilities \
+            else probabilities[value] + 1
+    probabilities = numpy.asarray(probabilities.values())/float(len(values))
+    return -1*numpy.sum(probabilities * numpy.log2(probabilities))
+
+types = [('uint8', 8), ('uint16', 16), ('uint32', 32), ('uint64', 64)]
+cloudy_entropy = numpy.asarray([[get_entropy(cloudy_bands[:, band], type = type[0])
+                             for type in types] for band in range(7)])
+clear_entropy = numpy.asarray([[ get_entropy(clear_bands[:, band], type = type[0])
+                            for type in types] for band in range(7)])
+
+plt.figure()
+for index, type in enumerate(types):
+    plt.plot(range(1, 8), (cloudy_entropy[:, index])/type[1], label = '%s' % type[0])
+plt.xlabel('Band')
+plt.ylabel('entropy/word_size')
+plt.title('CLOUDY')
+plt.legend()
+plt.savefig('cloudy_entropy.png')
+
+
+plt.figure()
+for index, type in enumerate(types):
+    plt.plot(range(1, 8),  ( clear_entropy[:, index])/type[1], label = '%s' % type[0])
+plt.xlabel('Band')
+plt.ylabel('entropy/word_size')
+plt.title('CLEAR')
+plt.legend()
+plt.savefig('clear_entropy.png')
+
+
+def predict(bands, training_bands = [0,1,2,4,5,6], predictive_band = [3], number_of_groups = 20):
+    means, labels = kmeans2(bands, number_of_groups)
+    alphas = get_alphas(data = bands,
+        means = means,
+        labels = labels,
+        training_band = training_bands,
+        predictive_band = predictive_band,
+        enable_multithreading = False)
+    predicted = get_predicted(
+        data = numpy.asarray(bands, dtype='float64', order = 'C'),
+        means = means,
+        alphas = alphas,
+        training_band = training_bands,
+        predicting_band = predictive_band,
+        enable_multithreading = False)
+    return means, predicted, bands[:, predictive_band[0]] - predicted[:, predictive_band[0]]
+
+means, predicted, error = predict(cloudy_bands)
+save_images(original = cloudy_bands,
+    predicted = predicted,
+    granule_path = 'cloudy_bands.nc',
+    original_shape = original_shape)
+
+
+means, predicted, error = predict(clear_bands)
+save_images(original = clear_bands,
+    predicted = predicted,
+    granule_path = 'clear_bands.nc',
+    original_shape = original_shape)
+
 
 all_errors_cloudy = []
 all_errors_clear = []
