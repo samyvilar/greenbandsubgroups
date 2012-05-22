@@ -146,7 +146,7 @@ class lookuptable(object):
 
     def predict(self, granule):
         prediction_green = numpy.zeros(granule.shape[0], dtype = 'float64')
-        indices = self.data_to_indices(granule)
+        indices = self.data_to_indices(granule, self.max_value)
 
         shape = numpy.asarray(indices.shape, dtype = 'uintc')
         _liblookuptable.predict_double(indices,
