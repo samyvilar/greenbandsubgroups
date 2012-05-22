@@ -171,7 +171,7 @@ class lookuptable(object):
         return values
 
     def indices_to_data(self, indices):
-        return ((indices + 0.5)*self.size)*self.max_value
+        return ((indices + 0.5)/self.size)*self.max_value
 
     def flatten_2d_non_zero(self):
         assert self.table != None
