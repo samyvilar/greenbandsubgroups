@@ -17,6 +17,7 @@ if __name__ == '__main__':
     granule_loader.disable_caching()
     granule_loader.enable_multithreading()
 
+    #/DATA_11/TERRA_1KM/
     granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_granule_path(), pattern = '*.hdf', chunks = 1)
     lut_size = 800
 
@@ -35,7 +36,6 @@ if __name__ == '__main__':
             gc.collect()
         else:
             continue
-    print 'done summing and counting ...'
 
     table = numpy.zeros((lut_size, lut_size, lut_size))
     loc = counts != 0
