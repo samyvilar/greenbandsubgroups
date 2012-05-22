@@ -172,4 +172,4 @@ def save_images(**kwargs):
 
 
 def get_granule_path():
-    return '/DATA_5/SNOW_CLOUD_MODIS/data/' if socket.gethostname() == 'fermi.localdomain' else '/home1/FermiData/DATA_5/'
+    return '/DATA_5/SNOW_CLOUD_MODIS/data/' if 'fermi' in socket.gethostname() else '/home1/FermiData/DATA_5/SNOW_CLOUD_MODIS/data/'
