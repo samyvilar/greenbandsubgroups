@@ -68,6 +68,7 @@ class lookuptable(object):
     def __init__(self):
         self._sums = None
         self._counts = None
+        self._max_value = 1
 
     def enable_multithreading(self):
         self._multithreading = True
@@ -81,14 +82,32 @@ class lookuptable(object):
 
 
     def load_table(self, lookuptable_path):
-        self.table = numpy.fromfile(lookuptable_path)
-        self.size = int(basename(lookuptable_path).split('_')[0])
+        if '.numpy' in lookuptable_path:
+            self.table = numpy.fromfile(lookuptable_path)
+            self.size = int(basename(lookuptable_path).split('_')[0])
+            self.table = self.table.reshape((self.size, self.size, self.size))
+            self.max_value = 1
+        elif any('_lookuptable_' in file for file in os.listdir(lookuptable_path)):
+            file  = [file for file in os.listdir(lookuptable_path) if '_lookuptable_' in file and '_lookuptable_flatten_' not in file]
+            if not file:
+                raise ValueError("Couldn't find the lookuptable withing %s" % lookuptable_path)
+            self.table = numpy.fromfile(file[0])
+            self.size = int(basename(file[0]).split('_')[0])
+            self.max_value = float(basename(file[0]).split('_')[-1])
         self.table = self.table.reshape((self.size, self.size, self.size))
+
 
     def load_flatten_table(self, lookuptable_flatten_path):
         self.flatten_table = numpy.fromfile(lookuptable_flatten_path)
         self.flatten_table = self.flatten_table.reshape((self.flatten_table.shape[0]/4, 4))
         self.size = int(basename(lookuptable_flatten_path).split('_')[0])
+
+    @property
+    def max_value(self):
+        return self._max_value
+    @max_value.setter
+    def max_value(self, value):
+        self._max_value = max_value
 
     @property
     def table(self):
@@ -152,7 +171,7 @@ class lookuptable(object):
         return values
 
     def indices_to_data(self, indices):
-        return (indices + 0.5)/self.size
+        return ((indices + 0.5)*self._max_value)/self.size
 
     def flatten_2d_non_zero(self):
         assert self.table != None
