@@ -43,7 +43,8 @@ _liblookuptable.flatten_lookuptable.argtypes = [double_3d_array,
                                                 ctypes.c_uint]
 
 def build_lookuptable(kwvalues):
-    data, size, max_value = kwvalues['data'], kwvalues['size'], kwvalues['max_value']
+    data, size, max_value = kwvalues['data'], kwvalues['size']
+    max_value = kwvalues.get('max_value', 1)
     assert data != None and size != None and max_value != None
     lut = lookuptable()
     lut.build(data, size, max_value = max_value)

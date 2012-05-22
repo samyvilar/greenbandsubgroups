@@ -35,6 +35,7 @@ if __name__ == '__main__':
             gc.collect()
         else:
             continue
+    print 'done summing and counting ...'
 
     table = numpy.zeros((lut_size, lut_size, lut_size))
     loc = counts != 0
