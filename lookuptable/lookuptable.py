@@ -107,7 +107,7 @@ class lookuptable(object):
         return self._max_value
     @max_value.setter
     def max_value(self, value):
-        self._max_value = max_value
+        self._max_value = value
 
     @property
     def table(self):
