@@ -152,6 +152,7 @@ class lookuptable(object):
 
 
     def data_to_indices(self, data, max_value):
+        assert max_value > 0
         values = (numpy.round( ((data/max_value) * self.size - 0.5) )).astype('intc') # redefine values to be used properly as indices
         values[values >= self.size] = self.size - 1 # make sure none of the values exceed max, if they do simply set them to the max.
         values[values < 0] = 0
@@ -187,6 +188,7 @@ class lookuptable(object):
     def build(self, data = None, size = None, max_value = 1):
         assert data != None and size != None
         self.size = size
+        self.max_value = max_value
         counts = numpy.zeros((size, size, size), dtype = 'float32')
         sums = numpy.zeros((size, size, size), dtype = 'float32')
 
