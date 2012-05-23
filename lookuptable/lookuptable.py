@@ -43,9 +43,9 @@ _liblookuptable.flatten_lookuptable.argtypes = [double_3d_array,
                                                 ctypes.c_uint]
 
 def build_lookuptable(kwvalues):
-    data, size, max_value = kwvalues['data'], kwvalues['size']
-    assert data != None and size != None
-    max_value = kwvalues.get('max_value', 1)
+    data = kwvalues['data']
+    size = kwvalues['size']
+    max_value = kwvalues['max_value']
     lut = lookuptable()
     lut.build(data, size, max_value = max_value)
     return lut
@@ -185,8 +185,8 @@ class lookuptable(object):
 
 
 
-    def build(self, data = None, size = None, max_value = 1):
-        assert data != None and size != None
+    def build(self, data = None, size = None, max_value = None):
+        assert data != None and size != None and max_value != None
         self.size = size
         self.max_value = max_value
         counts = numpy.zeros((size, size, size), dtype = 'float32')
