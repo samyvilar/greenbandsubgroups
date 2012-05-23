@@ -36,7 +36,7 @@ if __name__ == '__main__':
     for index, granule in enumerate(granule_loader_chunks):
         if granule:
             try:
-                new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size, 'max_value':max_value}) 
+                new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size, 'max_value':max_value})                  
             except Exception as ex:
                 continue
             sums += new_lut.sums
