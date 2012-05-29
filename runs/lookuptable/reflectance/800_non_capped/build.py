@@ -39,7 +39,7 @@ if __name__ == '__main__':
             try:
                 new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size, 'max_value':max_value})
             except Exception as ex:
-                print str(ex)
+                print "Exception %s" % str(ex)
                 continue
             sums += new_lut.sums
             counts += new_lut.counts
