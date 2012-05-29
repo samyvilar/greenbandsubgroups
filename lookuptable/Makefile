@@ -1,7 +1,7 @@
 
 
 build:
-	gcc -Wall -fPIC -c *.c
+	gcc -O2 -Wall -fPIC -c *.c
 	gcc -shared -Wl -o liblut.so *.o
 
 clean:
