@@ -7,7 +7,7 @@ sys.path.extend('../../..')
 
 from lookuptable.lookuptable import build_lookuptable, lookuptable
 from GranuleLoader import GranuleLoader
-from Utils import get_granule_path
+from Utils import get_all_granules_path
 
 
 if __name__ == '__main__':
@@ -28,7 +28,8 @@ if __name__ == '__main__':
             print "max %f" % granule[0].data.max()
     '''
     max_value = 3.2767000198364257812500000
-    granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_granule_path(), pattern = '*.hdf', chunks = 1)
+    chunk_size = 1
+    granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_all_granules_path(), pattern = '*.hdf', chunks = chunk_size)
     lut_size = 800
 
     sums = numpy.zeros((lut_size, lut_size, lut_size))
@@ -38,6 +39,7 @@ if __name__ == '__main__':
             try:
                 new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size, 'max_value':max_value})
             except Exception as ex:
+                print str(ex)
                 continue
             sums += new_lut.sums
             counts += new_lut.counts
