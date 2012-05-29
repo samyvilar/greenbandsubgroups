@@ -142,12 +142,12 @@ class GranuleLoader(object):
         files = GranuleLoader.get_granules_in_dir(dir = dir, pattern = pattern)
         self.load_granules(granules = files)
 
-    def load_granules_chunk(self, dir = None, pattern = None, chunks = None):
+    def load_granules_chunk(self, dir = None, pattern = None, chunks = None, max = None):
         assert chunks and dir and pattern
         files = GranuleLoader.get_granules_in_dir(dir = dir, pattern = pattern)
         index = 0
-        self.number_of_granules = len(files)
-        while index < len(files):
+        self.number_of_granules = max if max else len(files)
+        while index < self.number_of_granules:
             self.load_granules(granules = files[index:index+chunks])
             index += chunks
             yield self.granules
