@@ -49,7 +49,7 @@ if __name__ == '__main__':
             continue
 
     table = numpy.zeros((lut_size, lut_size, lut_size))
-    loc = counts != 0
+    loc = (counts != 0)
     table[loc] = sums[loc]/counts[loc]
     table.tofile(str(lut_size) + '_lookuptable_max_value_%.25f_.numpy' % max_value)
     counts.tofile(str(lut_size) + '_counts.numpy')
