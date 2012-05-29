@@ -29,7 +29,7 @@ if __name__ == '__main__':
     '''
     max_value = 3.2767000198364257812500000
     chunk_size = 1
-    granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_all_granules_path(), pattern = '*.hdf', chunks = chunk_size)
+    granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_all_granules_path(), pattern = '*.hdf', chunks = chunk_size, max = 10)
     lut_size = 800
 
     sums = numpy.zeros((lut_size, lut_size, lut_size))
