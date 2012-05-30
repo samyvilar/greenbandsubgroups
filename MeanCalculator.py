@@ -62,7 +62,8 @@ def calc_predicted(kwargs):
 def check_for_empty_groups(data = None, labels = None, means = None):
     assert data != None and labels != None and means != None
     if len(labels.shape) == 1:
-        empty_groups = [group in labels for group in xrange(means.shape[0])]
+        groups = xrange(means.shape[0])
+        empty_groups = [group in labels for group in groups]
     elif len(labels.shape) == 2:
         groups = [[group, subgroup] for group in xrange(means.shape[0]) for subgroup in xrange(means.shape[1])]
         empty_groups = [any(( (labels[:, 0] == group[0]) & (labels[:, 1] == group[1]) )) for group in groups]
