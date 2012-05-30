@@ -95,6 +95,8 @@ def get_predicted(**kwargs):
     values  = [dict(kwargs, group = group, labels = labels) for group in xrange(means.shape[0])]
     predictions = multithreading_pool_map(values = values, function = calc_predicted, multithreaded = enable_multithreading)
 
+    print 'predictions.shape %s' % str(predictions.shape)
+    print 'predictions %s' % str(predictions)
     predicted = numpy.zeros(data.shape[0])
     for index, value in enumerate(predictions):
         predicted[labels == index] = value
