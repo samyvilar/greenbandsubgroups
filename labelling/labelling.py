@@ -34,9 +34,6 @@ def get_labels(**kwargs):
         ]
 
         labels = numpy.zeros(data.shape[0], dtype = 'uint32')
-        print 'data.dtype ' + str(data.dtype)
-        print 'data.shape[0] ' + str(data.shape[0])
-        print 'data.shape[1] ' + str(data.shape[1])
         _liblabelling.set_labels(data,
                                  data.shape[0],
                                  data.shape[1],
