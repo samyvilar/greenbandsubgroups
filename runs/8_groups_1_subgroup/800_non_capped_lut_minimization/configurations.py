@@ -4,7 +4,6 @@ sys.path.extend('../../..')
 
 import os.path
 import pickle
-import socket
 
 import numpy
 import time

@@ -92,9 +92,9 @@ class lookuptable(object):
             self.size = int(basename(lookuptable_flatten_path).split('_')[0])
         elif any(['_lookuptable_flatten_' in file for file in os.listdir(lookuptable_flatten_path)]):
             flatten_file = [file for file in os.listdir(lookuptable_flatten_path) if '_lookuptable_flatten_' in file]
-            self.flatten_table = numpy.fromfile(lookuptable_flatten_path + '/' + file[0])
-            self.size = int(basename(file[0]).split('_')[0])
-            self.max_value = float(basename(file[0]).split('_')[-2])
+            self.flatten_table = numpy.fromfile(lookuptable_flatten_path + '/' + flatten_file[0])
+            self.size = int(basename(flatten_file[0]).split('_')[0])
+            self.max_value = float(basename(flatten_file[0]).split('_')[-2])
         else:
             raise Exception('%s is not a proper granule path or directory!' % lookuptable_flatten_path)
 
