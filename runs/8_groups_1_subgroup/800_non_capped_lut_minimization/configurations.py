@@ -100,6 +100,6 @@ if __name__ == '__main__':
 
 
     plt.plot(sum_of_errors)
-    plt.savefigure('sum_of_errors_per_iterations.png')
+    plt.savefig('sum_of_errors_per_iterations.png')
 
     print "RMSE: %f%%" % error
