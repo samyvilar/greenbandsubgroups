@@ -34,8 +34,8 @@ mean_calculator.enable_multithreading()
 mean_calculator.disable_caching()
 
 mean_calculator.threshold = 1e-07
-mean_calculator.number_of_groups = 4
-mean_calculator.number_of_sub_groups = 4
+mean_calculator.number_of_groups = 3
+mean_calculator.number_of_sub_groups = 2
 mean_calculator.number_of_runs = 10
 mean_calculator.clustering_function = "kmeans2"
 
