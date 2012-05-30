@@ -17,7 +17,7 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
             if numpy.any(mod['mimage'].mask):
                 print "flags exist in band %d of granule %s" % (band, os.path.basename(file))
                 raise Exception('Bad Granule')
-            img = numpy.asarray(mod['mimage'].data, dtype = 'float')
+            img = numpy.asarray(mod['mimage'].data, dtype = 'float64')
             valid_range[index, :] = mod['validrange']
             n  = numpy.sum((valid_range[index, 0] > img) | (img > valid_range[index, 1]))
             if n > 0:
@@ -33,7 +33,7 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
         data = data[crop_orig[0]:crop_orig[0] + crop_size[0], crop_orig[1]:crop_orig[1] + crop_size[1]]
 
     original_shape = data.shape
-    return data.reshape(data.shape[0] * data.shape[1], len(bands)).astype('float32'), valid_range, original_shape
+    return data.reshape(data.shape[0] * data.shape[1], len(bands)).astype('float64'), valid_range, original_shape
 
 class HDFFile(object):
     def __init__(self, file):
