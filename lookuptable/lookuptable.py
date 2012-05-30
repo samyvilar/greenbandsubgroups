@@ -73,7 +73,7 @@ class lookuptable(object):
             self.table = numpy.fromfile(lookuptable_path)
             self.size = int(basename(lookuptable_path).split('_')[0])
             self.max_value = 1.0
-        elif any('_lookuptable_' in file for file in os.listdir(lookuptable_path)):
+        elif any(['_lookuptable_' in file for file in os.listdir(lookuptable_path)]):
             file  = [file for file in os.listdir(lookuptable_path) if '_lookuptable_' in file and '_lookuptable_flatten_' not in file]
             if not file:
                 raise ValueError("Couldn't find the lookuptable withing %s" % lookuptable_path)
@@ -86,9 +86,18 @@ class lookuptable(object):
 
 
     def load_flatten_table(self, lookuptable_flatten_path):
-        self.flatten_table = numpy.fromfile(lookuptable_flatten_path)
-        self.flatten_table = self.flatten_table.reshape((self.flatten_table.shape[0]/4, 4))
-        self.size = int(basename(lookuptable_flatten_path).split('_')[0])
+        if '.numpy' in lookuptable_flatten_path:
+            self.flatten_table = numpy.fromfile(lookuptable_flatten_path)
+            self.flatten_table = self.flatten_table.reshape((self.flatten_table.shape[0]/4, 4))
+            self.size = int(basename(lookuptable_flatten_path).split('_')[0])
+        elif any(['_lookuptable_flatten_' in file for file in os.listdir(lookuptable_flatten_path)]):
+            flatten_file = [file for file in os.listdir(lookuptable_flatten_path) if '_lookuptable_flatten_' in file]
+            self.flatten_table = numpy.fromfile(lookuptable_flatten_path + '/' + file[0])
+            self.size = int(basename(file[0]).split('_')[0])
+            self.max_value = float(basename(file[0]).split('_')[-2])
+        else:
+            raise Exception('%s is not a proper granule path or directory!' % lookuptable_flatten_path)
+
 
     @property
     def max_value(self):
