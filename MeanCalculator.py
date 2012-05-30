@@ -68,7 +68,7 @@ def check_for_empty_groups(data = None, labels = None, means = None):
     else:
         raise Exception("Only supporting clustering and sub-clustering ...")
 
-    empty_groups == numpy.asarray([group in labels for group in groups])
+    empty_groups = numpy.asarray([group in labels for group in groups])
     if not numpy.all(empty_groups):
         raise Exception("Empty group %s" % str(groups[empty_groups.argmin()]))
     '''
