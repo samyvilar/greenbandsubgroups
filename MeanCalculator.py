@@ -97,6 +97,9 @@ def calc_alpha(kwargs):
             print 'c ' + str(c)
             print 'W ' + str(W)
             print 'G ' + str(G)
+            print 'Group %i subgroup %i' % (group, subgroup)
+            print 'means %s ' % str(means)
+
             alphas[subgroup, :] = numpy.column_stack(numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G)))
         return alphas
 
