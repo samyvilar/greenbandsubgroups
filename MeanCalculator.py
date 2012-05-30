@@ -59,6 +59,28 @@ def calc_predicted(kwargs):
     else:
         raise Exception("Only supporting clustering and sub-clustering!")
 
+def check_for_empty_groups(data = None, labels = None, means = None):
+    assert data != None and labels != None and means != None
+    if len(labels.shape) == 1:
+        groups = xrange(means.shape[0])
+    elif len(labels.shape) == 2:
+        groups = [[group, subgroup] for group in xrange(means.shape[0]) for subgroup in xrange(means.shape[1])]
+    else:
+        raise Exception("Only supporting clustering and sub-clustering ...")
+
+    empty_groups == numpy.asarray([group in labels for group in groups])
+    if not numpy.all(empty_groups):
+        raise Exception("Empty group %s" % str(groups[empty_groups.argmin()]))
+    '''
+    while not numpy.all(empty_groups):
+        new_group = numpy.asarray([random.sample(data[:, index], 1)[0] for index in xrange(means.shape[1])])
+        min_index = empty_groups.argmin()
+        print "Empty label: %s group: %s new_group %s " % (str(min_index), str(means[min_index]), str(min_index))
+        means[min_index] = new_group
+        labels = get_labels(data = data, means = means)
+        empty_groups = numpy.asarray([label in labels for label in xrange(means.shape[1])])
+        sys.stdout.flush()
+    '''
 
 def get_predicted(**kwargs):
     data                    = kwargs['data']
@@ -68,6 +90,7 @@ def get_predicted(**kwargs):
     enable_multithreading   = kwargs['enable_multithreading']
 
     labels  = get_labels(data = data, means = means)
+    check_for_empty_groups(data = data, labels = labels, means = means)
     values  = [dict(kwargs, group = group, labels = labels) for group in xrange(means.shape[0])]
     predictions = multithreading_pool_map(values = values, function = calc_predicted, multithreaded = enable_multithreading)
 
@@ -246,15 +269,7 @@ def get_predicted_from_means(**kwargs):
 
     labels = get_labels(data = data, means = means)
     sys.stdout.flush()
-    empty_groups = numpy.asarray([label in labels for label in xrange(means.shape[0])])
-    while not numpy.all(empty_groups):
-        new_group = numpy.asarray([random.sample(data[:, index], 1)[0] for index in xrange(means.shape[1])])
-        min_index = empty_groups.argmin()
-        print "Empty label: %s group: %s new_group %s " % (str(min_index), str(means[min_index]), str(min_index))
-        means[min_index] = new_group
-        labels = get_labels(data = data, means = means)
-        empty_groups = numpy.asarray([label in labels for label in xrange(means.shape[1])])
-        sys.stdout.flush()
+    check_for_empty_groups(data = data, labels = labels, means = means)
 
     alphas = get_alphas(data = data,
                         means = means,
