@@ -33,7 +33,7 @@ mean_calculator = MeanCalculator()
 mean_calculator.enable_multithreading()
 mean_calculator.disable_caching()
 
-mean_calculator.threshold = 1e-05
+mean_calculator.threshold = 1e-06
 mean_calculator.number_of_groups = 2
 mean_calculator.number_of_sub_groups = 2
 mean_calculator.number_of_runs = 10
