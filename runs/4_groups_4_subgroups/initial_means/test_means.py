@@ -42,7 +42,6 @@ mean_calculator.clustering_function = "kmeans2"
 means, labels = mean_calculator.calculate_means_data(lut_data_flatten)
 
 predicted = get_predicted_from_means(data = lut_data_flatten,
-                                     labels = labels,
                                      means = means,
                                      original = original,
                                      training_band = [0,1,2],

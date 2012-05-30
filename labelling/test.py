@@ -4,11 +4,10 @@ from labelling import get_labels
 import numpy
 import time
 import scipy.spatial
-import scipy.cluster.vq
 
 if __name__ == '__main__':
     data = numpy.random.rand(100000, 4)
-    means, labels_kmeans = scipy.cluster.vq.kmeans2(data, 5)
+    means = numpy.random(5, 4)
 
     start = time.time()
     dist = numpy.zeros((data.shape[0], means.shape[0]))
@@ -29,22 +28,12 @@ if __name__ == '__main__':
     end = time.time()
     print "ckdtree time %f" % (end - start)
 
-    assert all(labels == labels_kmeans)
     assert all(labels == labels2)
     assert all(labels == labels3)
     print "OK"
 
-
     data = numpy.random.rand(1000000, 4)
-    means, labels_kmeans = scipy.cluster.vq.kmeans2(data, 4)
-    results = [scipy.cluster.vq.kmeans2(data[labels_kmeans == group], 5) for group in xrange(means.shape[0])]
-    means = numpy.asarray([result[0] for result in results])
-    sub_labels = numpy.asarray([result[1] for result in results])
-    total_labels = numpy.zeros((labels.shape[0], 2))
-    total_labels[:, 0] = labels
-    for group in xrange(means.shape[0]):
-        total_labels[labels == group, 1] = sub_labels[group]
-
+    means = numpy.random.rand(5, 6, 4)
     start = time.time()
     dist = numpy.zeros((data.shape[0], means.shape[0], means.shape[1]))
     for mean_index, mean in enumerate(means):
@@ -56,6 +45,8 @@ if __name__ == '__main__':
     labels[:, 0] = dist.sum(axis = 2).argmin(axis = 1)
     for index in xrange(dist.shape[0]):
         labels[index, 1] = dist[index][labels[index, 0]].argmin()
+
+
     end = time.time()
     print "Subgroups Numpy time %f" % (end - start)
 
@@ -64,7 +55,6 @@ if __name__ == '__main__':
     end = time.time()
     print "Subgroups C time %f" % (end - start)
 
-    assert numpy.sum(total_labels - labels) == 0
     assert numpy.sum(labels - labels2) == 0
     print "Subgroups OK"
 
