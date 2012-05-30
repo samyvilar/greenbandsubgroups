@@ -16,7 +16,7 @@ from matplotlib import pyplot as plt
 
 if __name__ == '__main__':
     lut = lookuptable()
-    lut.load_flatten_table('../../lookuptable/reflectance/800_non_capped/')
+    lut.load_flatten_table('../../lookuptable/reflectance/800_non_capped')
     lut_data_flatten = lut.indices_to_data(lut.flatten_table)
 
     granule_loader = GranuleLoader()
