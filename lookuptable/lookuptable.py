@@ -97,7 +97,7 @@ class lookuptable(object):
             self.max_value = float(basename(flatten_file[0]).split('_')[-2])
         else:
             raise Exception('%s is not a proper granule path or directory!' % lookuptable_flatten_path)
-
+        self.flatten_table = self.flatten_table.reshape((self.flatten_table.shape[0]/4, 4))
 
     @property
     def max_value(self):
