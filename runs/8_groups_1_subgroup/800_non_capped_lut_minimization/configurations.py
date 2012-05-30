@@ -32,7 +32,7 @@ if __name__ == '__main__':
     mean_calculator.enable_multithreading()
     mean_calculator.enable_caching()
 
-    mean_calculator.threshold = 1e-05
+    mean_calculator.threshold = 1e-06
     mean_calculator.number_of_groups = 8
     mean_calculator.number_of_sub_groups = 1
     mean_calculator.number_of_runs = 10
