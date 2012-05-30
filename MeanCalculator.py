@@ -53,6 +53,8 @@ def calc_predicted(kwargs):
     elif len(alphas.shape) == 3:
         return numpy.asarray([numpy.dot(append_ones(get_sub_values(data, labels, [group, subgroup])),
                     alphas[group, subgroup, :].reshape((-1,1))) for subgroup in xrange(alphas.shape[1])])
+    else:
+        raise Exception("Only supporting clustering and sub-clustering!")
 
 
 def get_predicted(**kwargs):
@@ -106,6 +108,8 @@ def get_alphas(**kwargs):
         return numpy.column_stack(results).transpose()
     elif len(means.shape) == 3:
         return numpy.asarray(results)
+    else:
+        raise Exception('Only supporting clustering and sub-clustering!')
 
 
 
