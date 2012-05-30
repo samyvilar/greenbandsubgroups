@@ -91,7 +91,7 @@ def get_predicted(**kwargs):
     enable_multithreading   = kwargs['enable_multithreading']
 
     labels  = get_labels(data = data, means = means)
-    check_for_empty_groups(data = data, labels = labels, means = means)
+    #check_for_empty_groups(data = data, labels = labels, means = means)
     values  = [dict(kwargs, group = group, labels = labels) for group in xrange(means.shape[0])]
     predictions = numpy.asarray(multithreading_pool_map(values = values, function = calc_predicted, multithreaded = enable_multithreading))
 
