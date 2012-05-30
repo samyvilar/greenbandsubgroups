@@ -71,7 +71,7 @@ def check_for_empty_groups(data = None, labels = None, means = None):
         raise Exception("Only supporting clustering and sub-clustering ...")
 
     if not numpy.all(empty_groups):
-        raise Exception("Empty group %s" % str(groups[numpy.asarray(empty_groups.argmin(), dtype = 'bool')]))
+        raise Exception("Empty group %s" % str(groups[numpy.asarray(empty_groups, dtype = 'bool').argmin()]))
     '''
     while not numpy.all(empty_groups):
         new_group = numpy.asarray([random.sample(data[:, index], 1)[0] for index in xrange(means.shape[1])])
