@@ -66,7 +66,7 @@ def check_for_empty_groups(data = None, labels = None, means = None):
         empty_groups = numpy.asarray([str(group) in str(labels) for group in groups])
     elif len(labels.shape) == 2:
         groups = [[group, subgroup] for group in xrange(means.shape[0]) for subgroup in xrange(means.shape[1])]
-        empty_groups = [any(labels[:, 0] == group[0] & labels[:, 1] == group[1]) for group in groups]
+        empty_groups = [any(( (labels[:, 0] == group[0]) & (labels[:, 1] == group[1]) )) for group in groups]
     else:
         raise Exception("Only supporting clustering and sub-clustering ...")
 
