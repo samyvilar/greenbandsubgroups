@@ -189,6 +189,7 @@ def get_mean(kwargs):
         if number_of_sub_groups == 1:
             return means, labels
 
+        labels = get_labels(data = data, means = means)
         values = [dict(data = data[labels == group],
                        number_of_groups = number_of_sub_groups,
                        threshold = threshold,
