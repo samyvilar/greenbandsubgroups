@@ -120,6 +120,10 @@ def calc_alpha(kwargs):
             c = get_sub_values(data, labels, [group, subgroup])
             W = append_ones(c[:, training_band])
             G = c[:, predictive_band]
+            print 'c %s' % str(c)
+            print 'W %s' % str(W)
+            print 'G %s' % str(G)
+            print 'gourp %i subgroup %i' % (group, subgroup)
             alphas[subgroup, :] = numpy.column_stack(numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G)))
         return alphas
 
