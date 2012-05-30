@@ -94,12 +94,6 @@ def calc_alpha(kwargs):
             c = get_sub_values(data, labels, [group, subgroup])
             W = append_ones(c[:, training_band])
             G = c[:, predictive_band]
-            print 'c ' + str(c)
-            print 'W ' + str(W)
-            print 'G ' + str(G)
-            print 'Group %i subgroup %i' % (group, subgroup)
-            print 'means %s ' % str(means)
-
             alphas[subgroup, :] = numpy.column_stack(numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G)))
         return alphas
 
@@ -150,7 +144,7 @@ def get_mean(kwargs):
     number_of_neighbors                  = kwargs['mean_shift'].number_of_neighbors
 
     number_of_groups                     = kwargs['number_of_groups']
-    number_of_sub_groups                  = kwargs['number_of_sub_groups']
+    number_of_sub_groups                 = kwargs['number_of_sub_groups']
 
     clustering_function                  = kwargs['clustering_function']
 
