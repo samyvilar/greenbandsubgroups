@@ -99,6 +99,7 @@ if __name__ == '__main__':
                                  predicted = predicted[:, predictive_band[0]])
 
 
+    plt.figure()
     plt.plot(sum_of_errors)
     plt.savefig('sum_of_errors_per_iterations.png')
 

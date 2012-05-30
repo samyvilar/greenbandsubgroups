@@ -59,6 +59,9 @@ def calc_predicted(kwargs):
     else:
         raise Exception("Only supporting clustering and sub-clustering!")
 
+def is_empty_group(data = None, labels = None, group = None):
+    pass
+
 def check_for_empty_groups(data = None, labels = None, means = None):
     assert data != None and labels != None and means != None
     if len(labels.shape) == 1:
@@ -95,8 +98,8 @@ def get_predicted(**kwargs):
     values  = [dict(kwargs, group = group, labels = labels) for group in xrange(means.shape[0])]
     predictions = numpy.asarray(multithreading_pool_map(values = values, function = calc_predicted, multithreaded = enable_multithreading))
 
-    print 'predictions.shape %s' % str(predictions.shape)
-    print 'predictions %s' % str(predictions)
+    #print 'predictions.shape %s' % str(predictions.shape)
+    #print 'predictions %s' % str(predictions)
     predicted = numpy.zeros(data.shape[0])
     for index, value in enumerate(predictions):
         predicted[labels == index] = value
@@ -123,11 +126,8 @@ def calc_alpha(kwargs):
             c = get_sub_values(data, labels, [group, subgroup])
             W = append_ones(c[:, training_band])
             G = c[:, predictive_band]
-            print 'c %s' % str(c)
-            print 'W %s' % str(W)
-            print 'G %s' % str(G)
-            print 'gourp %i subgroup %i' % (group, subgroup)
-            alphas[subgroup, :] = numpy.column_stack(numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G)))
+            alphas[subgroup, :] = numpy.column_stack(
+                numpy.dot(numpy.linalg.inv(numpy.dot(W.T, W)), numpy.dot(W.T, G)))
         return alphas
 
 def get_alphas(**kwargs):
