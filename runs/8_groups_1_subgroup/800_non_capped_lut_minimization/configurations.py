@@ -79,7 +79,7 @@ if __name__ == '__main__':
 
     minimize(initial_values = means,
                          function = minimization_function,
-                         max_iterations = 1000)
+                         max_iterations = 4000)
 
 
     opt_means = all_means[numpy.asarray(sum_of_errors).argmin()]
