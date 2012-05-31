@@ -12,7 +12,7 @@ import random
 import gc
 import sys
 
-from Utils import load_cached_or_calculate_and_cached, multithreading_pool_map
+import Utils #load_cached_or_calculate_and_cached, multithreading_pool_map
 from GranuleLoader import GranuleLoader
 from labelling import labelling
 
@@ -96,7 +96,7 @@ def get_predicted(**kwargs):
     labels  = get_labels(data = data, means = means)
     #check_for_empty_groups(data = data, labels = labels, means = means)
     values  = [dict(kwargs, group = group, labels = labels) for group in xrange(means.shape[0])]
-    predictions = numpy.asarray(multithreading_pool_map(values = values, function = calc_predicted, multithreaded = enable_multithreading))
+    predictions = numpy.asarray(Utils.multithreading_pool_map(values = values, function = calc_predicted, multithreaded = enable_multithreading))
 
     #print 'predictions.shape %s' % str(predictions.shape)
     #print 'predictions %s' % str(predictions)
@@ -134,7 +134,7 @@ def get_alphas(**kwargs):
     means = kwargs['means']
     enable_multithreading = kwargs['enable_multithreading']
     values = [dict(kwargs, group = group) for group in xrange(means.shape[0])]
-    results = multithreading_pool_map(values = values,
+    results = Utils.multithreading_pool_map(values = values,
                                     function = calc_alpha,
                                     multithreaded = enable_multithreading)
     if len(means.shape) == 2:
@@ -194,7 +194,7 @@ def get_mean(kwargs):
                        number_of_groups = number_of_sub_groups,
                        threshold = threshold,
                        number_of_runs = number_of_runs) for group in xrange(means.shape[0])]
-        results = multithreading_pool_map(values = values, function = kmeans2_multithreading, multithreaded = True)
+        results = Utils.multithreading_pool_map(values = values, function = kmeans2_multithreading, multithreaded = True)
         means = numpy.asarray([result[0] for result in results])
         sub_labels = numpy.asarray([result[1] for result in results])
         total_labels = numpy.zeros((labels.shape[0], 2))
@@ -307,7 +307,7 @@ def calc_means(**kwargs):
     if len(files_and_clustering_properties) == 0:
         return []
 
-    results   = multithreading_pool_map(values       = files_and_clustering_properties, # calculate means for each granule
+    results   = Utils.multithreading_pool_map(values       = files_and_clustering_properties, # calculate means for each granule
                                        function      = kwargs['clustering_function'],
                                        multithreaded = kwargs['multithreaded'])
 
@@ -522,7 +522,7 @@ class MeanCalculator(object):
 
     def calculate_means(self):
         self.check_all_properties()
-        self.means = load_cached_or_calculate_and_cached(
+        self.means = Utils.load_cached_or_calculate_and_cached(
             caching     = self.is_caching(),
             file_name   = self.calc_caching_file_name(),
             function    = calc_means,
