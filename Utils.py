@@ -232,7 +232,7 @@ def get_standard_mean_calculator(threshold = None,
     mean_calculator.clustering_function = clustering_function
     return mean_calculator
 
-def get_previous_means(mean_calculator = None):
+def get_previous_means(mean_calculator = None, lut_data_flatten = None):
     assert mean_calculator != None
     if os.path.isfile('initial_mean.numpy'):
         if os.path.isfile('all_means.obj'):

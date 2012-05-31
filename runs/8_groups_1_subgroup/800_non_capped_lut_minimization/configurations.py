@@ -35,7 +35,7 @@ if __name__ == '__main__':
         number_of_runs = 10,
         clustering_function = 'kmeans2')
 
-    all_means, sum_of_errors, means = get_previous_means(mean_calculator = mean_calculator)
+    all_means, sum_of_errors, means = get_previous_means(mean_calculator = mean_calculator, lut_data_flatten = lut_data_flatten)
 
     training_band = [0,1,2]
     predictive_band = [3]
