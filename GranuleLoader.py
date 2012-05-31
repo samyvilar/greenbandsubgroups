@@ -2,7 +2,7 @@ __author__ = 'Samy Vilar'
 
 import fnmatch, os
 from HDFFile import HDFFile
-from Utils import multithreading_pool_map, load_cached_or_calculate_and_cached
+import Utils #multithreading_pool_map, load_cached_or_calculate_and_cached
 
 class GranuleLoader(object):
     def __init__(self):
@@ -115,10 +115,10 @@ class GranuleLoader(object):
             granules[index].crop_size   = self.crop_size
             granules[index].crop_orig   = self.crop_orig
 
-        granules = load_cached_or_calculate_and_cached(
+        granules = Utils.load_cached_or_calculate_and_cached(
                             caching = self.is_caching(),
                             file_name = self.calc_granules_cached_file_name(granules = granules),
-                            function = multithreading_pool_map,
+                            function = Utils.multithreading_pool_map,
                             arguments =
                             {
                                 'values':[{'granule':granule} for granule in granules],
