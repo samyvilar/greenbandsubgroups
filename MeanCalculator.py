@@ -26,8 +26,8 @@ def append_ones(matrix, axis = 1):
 def minimize(**kwargs):
     initial_values  = kwargs['initial_values']
     function        = kwargs['function']
-    max_iterations  = kwargs['max_iterations']
-
+    max_iterations  = kwargs.get('max_iterations', None)
+    
     return scipy.optimize.fmin(function, initial_values, maxiter = max_iterations, maxfun = max_iterations)[0]
 
 
