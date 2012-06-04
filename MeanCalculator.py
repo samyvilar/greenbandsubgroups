@@ -70,9 +70,10 @@ def check_for_empty_groups(data = None, labels = None, means = None):
             empty_groups = [group in labels for group in groups]
             if not all(empty_groups):
                 break
-            new_group = random.sample(data, 1)
-            means[groups[numpy.asarray(empty_groups, dtype = 'bool').argmin()]] = new_group
-            print "Empty group %s new group %s" % (str(groups[numpy.asarray(empty_groups, dtype = 'bool').argmin()]), str(new_group))
+            empty_groups_indices = empty_groups.where(empty_groups == False)[0]
+            new_groups = random.sample(data, len(empty_groups_indices))
+            means[empty_groups_indices] = new_groups
+            print "Empty group(s) %s new group(s) %s" % (str(empty_groups_indices), str(new_groups))
             labels = get_labels(data = data, means = means)
             sys.stdout.flush()
     elif len(labels.shape) == 2:
