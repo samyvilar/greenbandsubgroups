@@ -4,6 +4,7 @@ import os
 import inspect
 import ctypes
 import numpy
+import scipy.spatial
 
 _liblabelling = numpy.ctypeslib.load_library('liblabelling', os.path.dirname(inspect.getfile(inspect.currentframe())))
 
@@ -23,6 +24,9 @@ def get_labels(**kwargs):
     data = kwargs['data']
     means = kwargs['means']
     if len(means.shape) == 2:
+        if means.shape[0] > 100:
+            return scipy.spatial.cKDTree(means).query(data)[1]
+        
         _liblabelling.set_labels.argtypes = [double_2d_array,
                                              ctypes.c_uint,
                                              ctypes.c_uint,
