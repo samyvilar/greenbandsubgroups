@@ -251,15 +251,15 @@ def get_previous_means(mean_calculator = None, lut_data_flatten = None):
     return all_means, sum_of_errors, means
 
 def save_optimal_solutions(**kwargs):
-    opt_means = kwargs['opt_means']
+    opt_means = numpy.copy(kwargs['opt_means'])
     dir = kwargs['dir']
-    lut_data_flatten = kwargs['lut_data_flatten']
-    original = kwargs['original']
+    lut_data_flatten = numpy.copy(kwargs['lut_data_flatten'])
+    original = numpy.copy(kwargs['original'])
     training_band = kwargs['training_band']
     predictive_band = kwargs['predictive_band']
     granule_path = kwargs['granule_path']
     original_shape = kwargs['original_shape']
-    sum_of_errors = kwargs['sum_of_errors']
+    sum_of_errors = numpy.copy(kwargs['sum_of_errors'])
 
     pickle.dump(opt_means, open('%s/%s' % (dir, 'opt_means.obj'), 'wb'))
     predicted = get_predicted_from_means(data = lut_data_flatten,
