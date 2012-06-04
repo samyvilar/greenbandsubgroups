@@ -26,7 +26,7 @@ def get_labels(**kwargs):
     if len(means.shape) == 2:
         if means.shape[0] > 100:
             return scipy.spatial.cKDTree(means).query(data)[1]
-        
+
         _liblabelling.set_labels.argtypes = [double_2d_array,
                                              ctypes.c_uint,
                                              ctypes.c_uint,

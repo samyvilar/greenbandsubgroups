@@ -65,16 +65,23 @@ def is_empty_group(data = None, labels = None, group = None):
 def check_for_empty_groups(data = None, labels = None, means = None):
     assert data != None and labels != None and means != None
     if len(labels.shape) == 1:
-        groups = xrange(means.shape[0])
-        empty_groups = [group in labels for group in groups]
+        while True:
+            groups = xrange(means.shape[0])
+            empty_groups = [group in labels for group in groups]
+            if not all(empty_groups):
+                break
+            new_group = random.sample(data, 1)
+            means[groups[numpy.asarray(empty_groups, dtype = 'bool').argmin()]] = new_group
+            print "Empty group %s new group %s" % (str(groups[numpy.asarray(empty_groups, dtype = 'bool').argmin()]), str(new_group))
+            labels = get_labels(data = data, means = means)
     elif len(labels.shape) == 2:
         groups = [[group, subgroup] for group in xrange(means.shape[0]) for subgroup in xrange(means.shape[1])]
         empty_groups = [any(( (labels[:, 0] == group[0]) & (labels[:, 1] == group[1]) )) for group in groups]
     else:
         raise Exception("Only supporting clustering and sub-clustering ...")
 
-    if not all(empty_groups):
-        raise Exception("Empty group %s" % str(groups[numpy.asarray(empty_groups, dtype = 'bool').argmin()]))
+    return means, labels
+
     '''
     while not numpy.all(empty_groups):
         new_group = numpy.asarray([random.sample(data[:, index], 1)[0] for index in xrange(means.shape[1])])
@@ -277,7 +284,7 @@ def get_predicted_from_means(**kwargs):
 
     labels = get_labels(data = data, means = means)
     sys.stdout.flush()
-    check_for_empty_groups(data = data, labels = labels, means = means)
+    means, labels = check_for_empty_groups(data = data, labels = labels, means = means)
 
     alphas = get_alphas(data = data,
                         means = means,
