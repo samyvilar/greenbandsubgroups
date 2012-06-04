@@ -7,7 +7,7 @@ import scipy.spatial
 
 if __name__ == '__main__':
     data = numpy.random.rand(100000, 4)
-    means = numpy.random(5, 4)
+    means = numpy.random(200, 4)
 
     start = time.time()
     dist = numpy.zeros((data.shape[0], means.shape[0]))
