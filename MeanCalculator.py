@@ -74,6 +74,7 @@ def check_for_empty_groups(data = None, labels = None, means = None):
             means[groups[numpy.asarray(empty_groups, dtype = 'bool').argmin()]] = new_group
             print "Empty group %s new group %s" % (str(groups[numpy.asarray(empty_groups, dtype = 'bool').argmin()]), str(new_group))
             labels = get_labels(data = data, means = means)
+            sys.stdout.flush()
     elif len(labels.shape) == 2:
         groups = [[group, subgroup] for group in xrange(means.shape[0]) for subgroup in xrange(means.shape[1])]
         empty_groups = [any(( (labels[:, 0] == group[0]) & (labels[:, 1] == group[1]) )) for group in groups]
