@@ -88,7 +88,6 @@ class lookuptable(object):
     def load_flatten_table(self, lookuptable_flatten_path):
         if '.numpy' in lookuptable_flatten_path:
             self.flatten_table = numpy.fromfile(lookuptable_flatten_path)
-            self.flatten_table = self.flatten_table.reshape((self.flatten_table.shape[0]/4, 4))
             self.size = int(basename(lookuptable_flatten_path).split('_')[0])
         elif any(['_lookuptable_flatten_' in file for file in os.listdir(lookuptable_flatten_path)]):
             flatten_file = [file for file in os.listdir(lookuptable_flatten_path) if '_lookuptable_flatten_' in file]
