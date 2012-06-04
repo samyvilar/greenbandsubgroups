@@ -87,7 +87,7 @@ if __name__ == '__main__':
     minimize(initial_values = means, function = minimization_function)
 
     opt_means = all_means[numpy.asarray(sum_of_errors).argmin()]
-    save_optimal_solutions(dir = dir, opt_means = opt_means, lut_data_flatten = lut_data_flatten,
+    save_optimal_solutions(dir = os.getcwd(), opt_means = opt_means, lut_data_flatten = lut_data_flatten,
         original = test_data, training_band = training_band, predictive_band = predictive_band,
         granule_path = granule_path, original_shape = granule_loader.granules[0].original_shape,
         sum_of_errors = sum_of_errors)
