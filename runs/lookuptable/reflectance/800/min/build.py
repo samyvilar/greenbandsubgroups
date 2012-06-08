@@ -6,7 +6,6 @@ import numpy
 sys.path.extend('../../../..')
 
 from lookuptable.lookuptable import build_lookuptable, lookuptable
-from GranuleLoader import GranuleLoader
 from Utils import get_all_granules_path, get_standard_granule_loader
 
 if __name__ == '__main__':

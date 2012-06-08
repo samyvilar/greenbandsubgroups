@@ -13,7 +13,7 @@ void set_min_max     (int         *data,
                       unsigned int lutsize,
                       unsigned int function)
 {
-    int *row; float *lutbaseaddr, *countbaseaddr;
+    int *row; float *lutbaseaddr;
     unsigned int index, index1, temp;
 
     int **datap = (int **)malloc(numrows * sizeof(int *)); /*Mapping 1D array to 2D*/
@@ -39,12 +39,12 @@ void set_min_max     (int         *data,
         row = datap[index];
         if (function == 0)
         {
-            if row[3] < lookuptablep[row[0]][row[1]][row[2]]
+            if (row[3] < lookuptablep[row[0]][row[1]][row[2]])
             {    lookuptablep[row[0]][row[1]][row[2]] = row[3]; }
         }
         else if (function == 1)
         {
-            if row[3] >= lookuptablep[row[0]][row[1]][row[2]]
+            if (row[3] >= lookuptablep[row[0]][row[1]][row[2]])
             {    lookuptablep[row[0]][row[1]][row[2]] = row[3]; }
         }
         else
