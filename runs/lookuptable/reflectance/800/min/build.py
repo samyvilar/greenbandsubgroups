@@ -30,7 +30,7 @@ if __name__ == '__main__':
             if mins == None:
                 mins = new_lut.min
             else:
-                update_min(prev_mins = mins, new_mins = new_lut.min)
+                update_min(prev_mins = mins, new_mins = new_lut.min, lut_size = lut_size)
             del new_lut
             gc.collect()
         else:

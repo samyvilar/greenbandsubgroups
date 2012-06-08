@@ -30,7 +30,7 @@ if __name__ == '__main__':
             if max == None:
                 max = new_lut.max
             else:
-                update_max(prev_max = max, new_max = max)
+                update_max(prev_max = max, new_max = max, lut_size = lut_size)
             del new_lut
             gc.collect()
         else:

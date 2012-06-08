@@ -33,7 +33,10 @@ void free_3d_array(float ***values, unsigned int lut_size)
     free(values);
 }
 
-void update_min_max_lut(float *prev_values, float *new_values, unsigned int lut_size, unsigned int function)
+void update_min_max_lut(float *prev_values,
+                        float *new_values,
+                        unsigned int lut_size,
+                        unsigned int function)
 {
     unsigned int index = 0, index_1 = 0, index_2 = 0;
 
