@@ -5,6 +5,62 @@
 
 /* Author: Samy Vilar, create a lookup table on 4 bands, with first 3 being the indexes ...*/
 
+float ***map_1d_array_to_3d(float *values, unsigned int lut_size)
+{
+    unsigned int index = 0, index_1 = 0, temp = 0;
+    float *values_base_addr;
+    float ***values_p = (float ***)malloc(lut_size * sizeof(float **)); /*Mapping 1D arrays to 3D*/
+    for (index = 0; index < lut_size; index++)
+        {
+            values_p[index] = (float **)malloc(lut_size * sizeof(float *));
+            values_base_addr = (values + index*lut_size*lut_size);
+
+            for (index_1 = 0; index_1 < lut_size; index_1++)
+            {
+                temp = index_1*lut_size;
+                values_p[index][index_1] = values_base_addr + temp;
+            }
+        }
+    return values_p;
+}
+
+void free_3d_array(float ***values, unsigned int lut_size)
+{
+    unsigned int index = 0;
+    for (index = 0; index < lut_size; index++)
+        free(values[index]);
+
+    free(values);
+}
+
+void update_min_max_lut(float *prev_values, float *new_values, unsigned int lut_size, unsigned int function)
+{
+    unsigned int index = 0, index_1 = 0, index_2 = 0;
+
+    float ***prev_values_p = map_1d_array_to_3d(prev_values, lut_size);
+    float ***new_values_p = map_1d_array_to_3d(new_values, lut_size);
+
+
+    for (index = 0; index < lut_size; index++)
+        for (index_1 = 0; index_1 < lut_size; index_1++)
+            for (index_2 = 0; index_2 < lut_size; index_2++)
+                if (function == 0)
+                {
+                    if (new_values_p[index][index_1][index_2] < prev_values_p[index][index_1][index_2])
+                    {   prev_values_p[index][index_1][index_2] = new_values_p[index][index_1][index_2]; }
+                }
+                else if (function == 1)
+                {
+                    if (new_values_p[index][index_1][index_2] >= prev_values_p[index][index_1][index_2])
+                    {   prev_values_p[index][index_1][index_2] = new_values_p[index][index_1][index_2]; }
+                }
+                else
+                {
+                    printf("Only supporting min(0) max (1) got %i \n", function);
+                    exit(-2);
+                }
+
+}
 
 void set_min_max     (int         *data,
                       unsigned int numrows,

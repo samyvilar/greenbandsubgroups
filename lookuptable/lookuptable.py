@@ -49,6 +49,16 @@ _liblookuptable.set_min_max.argtypes = [int_2d_array,
                                         ctypes.c_uint,
                                         ctypes.c_uint]
 
+_liblookuptable.update_min_max_lut.argtypes = [float_3d_array, float_3d_array, ctypes.c_uint]
+
+def update_min(prev_mins = None, new_mins = None):
+    assert prev_mins != None and new_mins != None
+    _liblookuptable.update_min_max_lut(prev_mins, new_mins, 0)
+
+def update_max(prev_max = None, new_max = None):
+    assert prev_max != None and new_max != None
+    _liblookuptable.update_min_max_lut(prev_max, new_max, 1)
+
 def build_lookuptable(kwvalues):
     lut = lookuptable()
     lut.build(**kwvalues)

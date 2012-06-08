@@ -5,7 +5,7 @@ import sys
 import numpy
 sys.path.extend('../../../..')
 
-from lookuptable.lookuptable import build_lookuptable, lookuptable
+from lookuptable.lookuptable import build_lookuptable, lookuptable, update_min
 from Utils import get_all_granules_path, get_standard_granule_loader
 
 if __name__ == '__main__':
@@ -30,7 +30,7 @@ if __name__ == '__main__':
             if mins == None:
                 mins = new_lut.min
             else:
-                mins = numpy.asarray([mins, new_lut.mins]).min(axis = 0)
+                update_min(prev_mins = mins, new_mins = lut.min)
             del new_lut
             gc.collect()
         else:
