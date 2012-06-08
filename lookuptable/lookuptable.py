@@ -42,12 +42,16 @@ _liblookuptable.flatten_lookuptable.argtypes = [double_3d_array,
                                                 double_2d_array,
                                                 ctypes.c_uint]
 
+_liblookuptable.set_min_max.argtypes = [int_2d_array,
+                                        ctypes.c_uint,
+                                        ctypes.c_uint,
+                                        float_3d_array,
+                                        float_3d_array,
+                                        ctypes.c_uint]
+
 def build_lookuptable(kwvalues):
-    data = kwvalues['data']
-    size = kwvalues['size']
-    max_value = kwvalues['max_value']
     lut = lookuptable()
-    lut.build(data, size, max_value = max_value)
+    lut.build(**kwvalues)
     return lut
 
 
@@ -194,32 +198,56 @@ class lookuptable(object):
 
 
 
-    def build(self, data = None, size = None, max_value = None):
-        assert data != None and size != None and max_value != None
+    def build(self, data = None, size = None, max_value = None, function = None):
+        assert data != None and size != None
         self.size = size
-        self.max_value = max_value
-        counts = numpy.zeros((size, size, size), dtype = 'float32')
-        sums = numpy.zeros((size, size, size), dtype = 'float32')
-
         values = self.data_to_indices(data, max_value = max_value)
-
         shape = numpy.asarray(data.shape, dtype = 'uintc')
-        _liblookuptable.lookuptable(values,
-                                    shape[0],
-                                    shape[1],
-                                    sums,
-                                    counts,
-                                    numpy.asarray([size,], dtype = 'uintc')[0])
+        if function == None:
+            assert max_value != None
+            self.max_value = max_value
+            counts = numpy.zeros((size, size, size), dtype = 'float32')
+            sums = numpy.zeros((size, size, size), dtype = 'float32')
 
-        self.counts = counts
-        self.sums = sums
-        #self.table = numpy.zeros((size, size, size), dtype = 'float32')
-        #non_zero_locations = counts != 0
-        #self.table[non_zero_locations] = sums[non_zero_locations]/counts[non_zero_locations]
+            _liblookuptable.lookuptable(values,
+                                        shape[0],
+                                        shape[1],
+                                        sums,
+                                        counts,
+                                        numpy.asarray([size,], dtype = 'uintc')[0])
 
-        #del non_zero_locations
+            self.counts = counts
+            self.sums = sums
+        elif function == 'min':
+            mins = numpy.zeros((size, size, size), dtype = 'float32')
+            mins[:] = max_value + 1
+            _liblookuptable.set_min_max(values,
+                                        shape[0],
+                                        shape[1],
+                                        mins,
+                                        numpy.asarray([size,], dtype = 'uintc')[0],
+                                        0)
+            self.min = mins
+        elif function == 'max':
+            max = numpy.zeros((size, size, size), dtype = 'float32')
+            max[:] = -1
+            _liblookuptable.set_min_max(values,
+                                        shape[0],
+                                        shape[1],
+                                        max,
+                                        numpy.asarray([size,], dtype = 'uintc')[0],
+                                        1)
+            self.max = max
+        else:
+            raise Exception("function can only be min or max! got %s" % function)
+
+
         gc.collect()
 
+
+
+def get_best_bands(data_set = None, bands = [0,1,2,3,4,5]):
+    pass
 
 
 

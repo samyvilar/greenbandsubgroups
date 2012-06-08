@@ -5,12 +5,70 @@
 
 /* Author: Samy Vilar, create a lookup table on 4 bands, with first 3 being the indexes ...*/
 
+
+void set_min_max     (int         *data,
+                      unsigned int numrows,
+                      unsigned int numcols,
+                      float        *lookuptable,
+                      unsigned int lutsize,
+                      unsigned int function)
+{
+    int *row; float *lutbaseaddr, *countbaseaddr;
+    unsigned int index, index1, temp;
+
+    int **datap = (int **)malloc(numrows * sizeof(int *)); /*Mapping 1D array to 2D*/
+    for (index = 0; index < numrows; index++)
+            datap[index] = data + index*numcols;
+
+    float ***lookuptablep = (float ***)malloc(lutsize * sizeof(float **)); /*Mapping 1D arrays to 3D*/
+    for (index = 0; index < lutsize; index++)
+    {
+        lookuptablep[index] = (float **)malloc(lutsize * sizeof(float *));
+        lutbaseaddr = (lookuptable + index*lutsize*lutsize);
+
+        for (index1 = 0; index1 < lutsize; index1++)
+        {
+            temp = index1*lutsize;
+            lookuptablep[index][index1] = lutbaseaddr + temp;
+        }
+    }
+
+
+    for (index = 0; index < numrows; index++)
+    {
+        row = datap[index];
+        if (function == 0)
+        {
+            if row[3] < lookuptablep[row[0]][row[1]][row[2]]
+            {    lookuptablep[row[0]][row[1]][row[2]] = row[3]; }
+        }
+        else if (function == 1)
+        {
+            if row[3] >= lookuptablep[row[0]][row[1]][row[2]]
+            {    lookuptablep[row[0]][row[1]][row[2]] = row[3]; }
+        }
+        else
+        {
+            printf("Error! only supporting 0 for min and 1 for max got %i\n", function);
+            exit(-1);
+        }
+    }
+
+    free(datap); /*Deallocating all pointers ...*/
+    for (index = 0; index < lutsize; index++)
+        free(lookuptablep[index]);
+
+    free(lookuptablep);
+}
+
+
+
 void lookuptable(int          *data,        /* 2D DATA with n by r shape, n-1 used as indices, with DATA[n] being the sum up values.*/
                  unsigned int numrows,      /* The number of rows withing the 2D data matrix. */
                  unsigned int numcols,      /* The number of columns withing the 2D data matrix */
                  float        *lookuptable, /* The 3D look up table that will hold all the sum up values */
                  float        *count,       /* The 3D count table containing all the times an entry was sum up */
-                 unsigned int lutsize       /* The lookup table size */)
+                 unsigned int lutsize      /* The lookup table size */)
 {
     int *row; float *lutbaseaddr, *countbaseaddr;
     unsigned int index, index1, temp;

@@ -21,9 +21,10 @@ if __name__ == '__main__':
     lut.load_flatten_table('../../lookuptable/reflectance/800/800_lookuptable_flatten.numpy')
     lut_data_flatten = lut.indices_to_data(lut.flatten_table)
 
-    granule_path = get_granule_path() + 'MOD021KM.A2002179.1640.005.2010085164818.hdf'
+    granule_path = get_granule_path() + 'MOD021KM.A2007265.1725.005.2010206004132.hdf'
+    granule_path = '/DATA_5/TERRA/MOD021KM.A2007265.1725.005.2010206004132.hdf'
 
-    granule_loader = get_standard_granule_loader()
+    granule_loader = get_standard_granule_loader(bands = [1,2,3,4,5,6])
     granule_loader.load_granules(granules = [granule_path,])
     test_data = granule_loader.granules[0].data
     test_data[test_data > 1] = 1
@@ -51,7 +52,7 @@ if __name__ == '__main__':
             original = test_data,
             training_band = training_band,
             predictive_band = predictive_band,
-            enable_multithreading = False)
+            enable_multithreading = True)
         sum_of_errors.append(get_sum_of_errors_squared(
             predicted = predicted[:, predictive_band[0]],
             original  = test_data[:, predictive_band[0]]))
@@ -68,7 +69,7 @@ if __name__ == '__main__':
                 if os.path.isfile(file):
                     shutil.copy(file, dir + '/')
             opt_means = all_means[numpy.asarray(sum_of_errors).argmin()]
-            save_optimal_solutions(dir = dir, opt_means = opt_means, lut_data_flatten = lut_data_flatten,
+            save_optimal_solutions(dir = os.getcwd(), opt_means = opt_means, lut_data_flatten = lut_data_flatten,
                 original = test_data, training_band = training_band, predictive_band = predictive_band,
                 granule_path = granule_path, original_shape = granule_loader.granules[0].original_shape,
                 sum_of_errors = sum_of_errors)
