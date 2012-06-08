@@ -31,7 +31,6 @@ if __name__ == '__main__':
                 mins = new_lut.min
             else:
                 mins = numpy.asarray([mins, new_lut.mins]).min(axis = 0)
-
             del new_lut
             gc.collect()
         else:

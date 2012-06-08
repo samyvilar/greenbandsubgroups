@@ -46,7 +46,7 @@ _liblookuptable.set_min_max.argtypes = [int_2d_array,
                                         ctypes.c_uint,
                                         ctypes.c_uint,
                                         float_3d_array,
-                                        float_3d_array,
+                                        ctypes.c_uint,
                                         ctypes.c_uint]
 
 def build_lookuptable(kwvalues):
