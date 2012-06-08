@@ -30,22 +30,25 @@ if __name__ == '__main__':
             if mins == None:
                 mins = new_lut.min
             else:
-                update_min(prev_mins = mins, new_mins = lut.min)
+                update_min(prev_mins = mins, new_mins = new_lut.min)
             del new_lut
             gc.collect()
         else:
             continue
 
-    mins[mins == (max_value + 1)] = numpy.nan
-    mins.tofile(str(lut_size) + '_min_lookuptable.numpy')
+        mins[mins == (max_value + 1)] = numpy.nan
+        mins.tofile(str(lut_size) + '_min_lookuptable.numpy')
 
-    lut = lookuptable()
-    lut.table = mins
-    lut.size = lut_size
-    flatten_table = lut.flatten_2d_non_zero()
-    flatten_table.tofile(str(lut_size) + '_min_lookuptable_flatten.numpy')
+        lut = lookuptable()
+        lut.table = mins
+        lut.size = lut_size
+        flatten_table = lut.flatten_2d_non_zero()
+        flatten_table.tofile(str(lut_size) + '_min_lookuptable_flatten.numpy')
 
-
+'''
+2 mat files, one sorted by the (max - min) and the other by the standard deviation
+RGB, max - min, max, min, std, count
+'''
 
 
 

@@ -230,7 +230,7 @@ class lookuptable(object):
             self.sums = sums
         elif function == 'min':
             mins = numpy.zeros((size, size, size), dtype = 'float32')
-            mins[:] = max_value + 1
+            mins[:] = size + 1
             _liblookuptable.set_min_max(values,
                                         shape[0],
                                         shape[1],
