@@ -38,10 +38,30 @@ void update_min_max_lut(float *prev_values,
                         unsigned int lut_size,
                         unsigned int function)
 {
-    unsigned int index = 0, index_1 = 0, index_2 = 0;
+    unsigned int index = 0, index_1 = 0, index_2 = 0, temp = 0;
 
-    float ***prev_values_p = map_1d_array_to_3d(prev_values, lut_size);
-    float ***new_values_p = map_1d_array_to_3d(new_values, lut_size);
+    //map_1d_array_to_3d(prev_values, lut_size);
+    //map_1d_array_to_3d(new_values, lut_size);
+    float *prev_values_base_address = NULL, *new_values_base_address = NULL;
+
+    float ***prev_values_p = (float ***)malloc(lut_size * sizeof(float **)); /*Mapping 1D arrays to 3D*/
+    float ***new_values_p = (float ***)malloc(lut_size * sizeof(float **));
+    for (index = 0; index < lut_size; index++)
+    {
+        prev_values_p[index] = (float **)malloc(lut_size * sizeof(float *));
+        prev_values_base_address = (prev_values + index*lut_size*lut_size);
+
+        new_values_p[index] = (float **)malloc(lut_size * sizeof(float *));
+        new_values_base_address = (new_values + index*lut_size*lut_size);
+
+        for (index_1 = 0; index_1 < lut_size; index_1++)
+        {
+            temp = index_1*lut_size;
+            prev_values_p[index][index_1] = prev_values_base_address + temp;
+            new_values_p[index][index_1] = new_values_base_address + temp;
+        }
+    }
+
 
 
     for (index = 0; index < lut_size; index++)
@@ -72,8 +92,8 @@ void set_min_max     (int         *data,
                       unsigned int lutsize,
                       unsigned int function)
 {
-    int *row; float *lutbaseaddr;
-    unsigned int index, index1, temp;
+    int *row = NULL; float *lutbaseaddr = NULL;
+    unsigned int index = 0, index1 = 0, temp = 0;
 
     int **datap = (int **)malloc(numrows * sizeof(int *)); /*Mapping 1D array to 2D*/
     for (index = 0; index < numrows; index++)
