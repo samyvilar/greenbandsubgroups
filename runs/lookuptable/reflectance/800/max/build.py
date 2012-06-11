@@ -9,7 +9,6 @@ from lookuptable.lookuptable import build_lookuptable, lookuptable, update_max
 from Utils import get_all_granules_path, get_standard_granule_loader
 
 if __name__ == '__main__':
-
     granule_loader = get_standard_granule_loader()
     chunk_size = 1
     granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_all_granules_path(), pattern = '*.hdf', chunks = chunk_size)
@@ -36,7 +35,6 @@ if __name__ == '__main__':
         else:
             continue
 
-        max[max == -1] = numpy.nan
         max.tofile(str(lut_size) + '_max_lookuptable.numpy')
 
         lut = lookuptable()

@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     #/DATA_11/TERRA_1KM/
     chunk_size = 1
-    granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_all_granules_path(), pattern = '*.hdf', chunks = chunk_size)
+    granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_all_granules_path(), pattern = '*.hdf', chunks = chunk_size, max = 1)
     lut_size = 800
 
     sums = numpy.zeros((lut_size, lut_size, lut_size))
@@ -50,8 +50,3 @@ if __name__ == '__main__':
     lut.size = lut_size
     flatten_table = lut.flatten_2d_non_zero()
     flatten_table.tofile(str(lut_size) + '_lookuptable_flatten.numpy')
-
-
-
-
-
