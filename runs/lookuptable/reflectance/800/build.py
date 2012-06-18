@@ -18,25 +18,24 @@ if __name__ == '__main__':
 
 
     #/DATA_11/TERRA_1KM/
-    chunk_size = 1
-    granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_all_granules_path(), pattern = '*.hdf', chunks = chunk_size, max = 1)
-    lut_size = 800
-
-    sums = numpy.zeros((lut_size, lut_size, lut_size))
-    counts = numpy.zeros((lut_size, lut_size, lut_size))
-    for index, granule in enumerate(granule_loader_chunks):
-        if granule:
-            try:
-                new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size, 'max_value':1})
-            except Exception as ex:
-                print str(ex)
-                continue
-            sums += new_lut.sums
-            counts += new_lut.counts
-            del new_lut
-            gc.collect()
-        else:
+chunk_size = 1
+granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_all_granules_path(), pattern = '*.hdf', chunks = chunk_size, max = 2)
+lut_size = 800
+sums = numpy.zeros((lut_size, lut_size, lut_size))
+counts = numpy.zeros((lut_size, lut_size, lut_size))
+for index, granule in enumerate(granule_loader_chunks):
+    if granule:
+        try:
+            new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size, 'max_value':1})
+        except Exception as ex:
+            print str(ex)
             continue
+        sums += new_lut.sums
+        counts += new_lut.counts
+        del new_lut
+        gc.collect()
+    else:
+        continue
 
     table = numpy.zeros((lut_size, lut_size, lut_size))
     loc = counts != 0

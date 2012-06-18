@@ -9,31 +9,32 @@ from lookuptable.lookuptable import build_lookuptable, lookuptable, update_min
 from Utils import get_all_granules_path, get_standard_granule_loader
 
 if __name__ == '__main__':
-    granule_loader = get_standard_granule_loader()
-    chunk_size = 1
-    granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_all_granules_path(), pattern = '*.hdf', chunks = chunk_size, max = 1)
-    lut_size = 800
-    max_value = 1
-    mins = None
-
-    for index, granule in enumerate(granule_loader_chunks):
-        if granule:
-            try:
-                new_lut = build_lookuptable({'data':granule[0].data,
-                                             'size':lut_size,
-                                             'max_value':max_value,
-                                             'function':'min'})
-            except Exception as ex:
-                print str(ex)
-                continue
-            if mins == None:
-                mins = new_lut.min
-            else:
-                update_min(prev_mins = mins, new_mins = new_lut.min, lut_size = lut_size)
-            del new_lut
-            gc.collect()
-        else:
+granule_loader = get_standard_granule_loader()
+chunk_size = 1
+granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_all_granules_path(), pattern = '*.hdf', chunks = chunk_size, max = 2)
+lut_size = 800
+max_value = 1
+mins = None
+for index, granule in enumerate(granule_loader_chunks):
+    if granule:
+        try:
+            new_lut = build_lookuptable({'data':granule_loader_chunks.next()[0].data,
+                                         'size':lut_size,
+                                         'max_value':max_value,
+                                         'function':'min'})
+        except Exception as ex:
+            print str(ex)
             continue
+        if mins == None:
+            mins = new_lut.min
+        else:
+            mins = update_min(prev_mins = mins,
+                       new_mins = new_lut.min,
+                       lut_size = lut_size)
+        del new_lut
+        gc.collect()
+    else:
+        continue
 
         mins.tofile(str(lut_size) + '_min_lookuptable.numpy')
 
@@ -47,6 +48,4 @@ if __name__ == '__main__':
 2 mat files, one sorted by the (max - min) and the other by the standard deviation
 RGB, max - min, max, min, std, count
 '''
-
-
 

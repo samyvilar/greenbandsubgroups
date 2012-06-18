@@ -57,6 +57,7 @@ _liblookuptable.update_min_max_lut.argtypes = [float_3d_array,
 def update_min(prev_mins = None, new_mins = None, lut_size = None):
     assert prev_mins != None and new_mins != None and lut_size != None
     _liblookuptable.update_min_max_lut(prev_mins, new_mins, lut_size, 0)
+    return prev_mins
 
 def update_max(prev_max = None, new_max = None, lut_size = None):
     assert prev_max != None and new_max != None and lut_size != None

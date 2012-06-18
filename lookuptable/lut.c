@@ -69,20 +69,23 @@ void update_min_max_lut(float *prev_values,
             for (index_2 = 0; index_2 < lut_size; index_2++)
                 if (function == 0)
                 {
-                    if (new_values_p[index][index_1][index_2] < prev_values_p[index][index_1][index_2])
-                    {   prev_values_p[index][index_1][index_2] = new_values_p[index][index_1][index_2]; }
+                    if (new_values_p[index][index_1][index_2] <= prev_values_p[index][index_1][index_2])
+                    {
+                        prev_values_p[index][index_1][index_2] = new_values_p[index][index_1][index_2];
+                    }
                 }
                 else if (function == 1)
                 {
                     if (new_values_p[index][index_1][index_2] >= prev_values_p[index][index_1][index_2])
-                    {   prev_values_p[index][index_1][index_2] = new_values_p[index][index_1][index_2]; }
+                    {
+                        prev_values_p[index][index_1][index_2] = new_values_p[index][index_1][index_2];
+                    }
                 }
                 else
                 {
                     printf("Only supporting min(0) max (1) got %i \n", function);
                     exit(-2);
                 }
-
 }
 
 void set_min_max     (int         *data,
