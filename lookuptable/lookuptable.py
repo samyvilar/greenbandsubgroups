@@ -54,9 +54,17 @@ _liblookuptable.update_min_max_lut.argtypes = [float_3d_array,
                                                ctypes.c_uint,
                                                ctypes.c_uint]
 
-def update_min(prev_mins = None, new_mins = None, lut_size = None):
+def update_min(prev_mins = None, new_mins = None, lut_size = None, method = 'C'):
     assert prev_mins != None and new_mins != None and lut_size != None
-    _liblookuptable.update_min_max_lut(prev_mins, new_mins, lut_size, 0)
+    if method == 'C':
+        _liblookuptable.update_min_max_lut(prev_mins, new_mins, lut_size, 0)
+    elif method == 'numpy':
+        prev_mins.resize(lut_size, lut_size, lut_size, 1)
+        new_mins.resize(lut_size, lut_size, lut_size, 1)
+        prev_mins = numpy.concatenate((prev_mins, new_mins), axis = 3).min(axis = 3)
+    else:
+        raise ValueError("Expected either method 'C' or 'numpy'")
+
     return prev_mins
 
 def update_max(prev_max = None, new_max = None, lut_size = None):
@@ -234,7 +242,7 @@ class lookuptable(object):
             self.sums = sums
         elif function == 'min':
             mins = numpy.zeros((size, size, size), dtype = 'float32')
-            mins[:] = size + 1
+            mins[:] = size + 100
             _liblookuptable.set_min_max(values,
                                         shape[0],
                                         shape[1],
