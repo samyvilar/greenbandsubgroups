@@ -203,7 +203,7 @@ class lookuptable(object):
         non_zero_count = numpy.sum(self.table != default_value)
         lookuptable_flatten = numpy.zeros((non_zero_count, 4))
 
-        _liblookuptable.flatten_lookuptable(self.table,
+        _liblookuptable.flatten_lookuptable(self.table.astype('float64'),
                                             self.size,
                                             lookuptable_flatten,
                                             non_zero_count,
