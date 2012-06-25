@@ -243,7 +243,8 @@ void predict_double(int             *data,
 void flatten_lookuptable(double         *lookuptable,
                         unsigned int    lutsize,
                         double          *lookuptable_flatten,
-                        unsigned int    numrows)
+                        unsigned int    numrows,
+                        int default_value)
 {
     unsigned int index, index1, index2;
     double *lutbaseaddr;
@@ -266,7 +267,7 @@ void flatten_lookuptable(double         *lookuptable,
     for (index = 0; index < lutsize; index++)
         for (index1 = 0; index1 < lutsize; index1++)
             for (index2 = 0; index2 < lutsize; index2++)
-                if (lookuptablep[index][index1][index2])
+                if (lookuptablep[index][index1][index2] != default_value)
                 {
                     if (row > numrows)
                     {
