@@ -47,6 +47,3 @@ if __name__ == '__main__':
 2 mat files, one sorted by the (max - min) and the other by the standard deviation
 RGB, max - min, max, min, std, count
 '''
-
-
-

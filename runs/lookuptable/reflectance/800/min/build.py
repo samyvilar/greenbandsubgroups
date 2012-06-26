@@ -39,5 +39,5 @@ if __name__ == '__main__':
     lut = lookuptable()
     lut.table = mins
     lut.size = lut_size
-    flatten_table = lut.flatten_2d_non_zero()
+    flatten_table = lut.flatten_2d_non_zero(default_value = 900)
     flatten_table.tofile(str(lut_size) + '_min_lookuptable_flatten.numpy')
