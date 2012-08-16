@@ -34,7 +34,7 @@ if __name__ == '__main__':
                 sums += result['sum']
                 counts += result['counts']
             except Exception as ex:
-                print str(ex)
+                print 'Exception: ' + str(ex)
                 continue
 
     table = numpy.zeros((lut_size, lut_size, lut_size))

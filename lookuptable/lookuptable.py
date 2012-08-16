@@ -46,7 +46,7 @@ _liblookuptable.set_min_max.argtypes = [int_2d_array,
 
 def build_lookuptable(kwvalues):
     size = kwvalues['size']
-    max_value = kwvalues['max_size']
+    max_value = kwvalues['max_value']
     data = kwvalues['data']
     assert data is not None and size is not None and max_value is not None
 
