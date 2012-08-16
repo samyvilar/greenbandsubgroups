@@ -51,8 +51,8 @@ def build_lookuptable(kwvalues):
     assert data is not None and size is not None and max_value is not None
 
     values = data_to_indices(data = data, max_value = max_value, size = size)
-    counts = numpy.zeros((size, size, size), dtype = 'uint32')
-    sums = numpy.zeros((size, size, size), dtype = 'uint32')
+    counts = numpy.zeros((size, size, size), dtype = 'uintc')
+    sums = numpy.zeros((size, size, size), dtype = 'uintc')
 
     _liblookuptable.lookuptable.argtypes = [int_2d_array,
                                             ctypes.c_uint,
@@ -62,11 +62,12 @@ def build_lookuptable(kwvalues):
                                             ctypes.c_uint,]
 
     _liblookuptable.lookuptable(values,
-        data.shape[0],
-        data.shape[1],
+        values.shape[0],
+        values.shape[1],
         sums,
         counts,
         size,)
+
     return {'sum':sums, 'counts':counts}
 
 
