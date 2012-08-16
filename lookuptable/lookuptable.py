@@ -18,17 +18,11 @@ _liblookuptable = numpy.ctypeslib.load_library('liblut', os.path.dirname(inspect
 
 float_3d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float32, ndim = 3, flags = 'CONTIGUOUS')
 int_2d_array   = numpy.ctypeslib.ndpointer(dtype = numpy.intc,    ndim = 2, flags = 'CONTIGUOUS')
+uint_3d_array  = numpy.ctypeslib.ndpointer(dtype = numpy.uintc,   ndim = 3, flags = 'CONTIGUOUS')
 
 double_3d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float64, ndim = 3, flags = 'CONTIGUOUS')
 double_2d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float64, ndim = 2, flags = 'CONTIGUOUS')
 double_1d_array = numpy.ctypeslib.ndpointer(dtype = numpy.float64, ndim = 1, flags = 'CONTIGUOUS')
-
-_liblookuptable.lookuptable.argtypes = [int_2d_array,
-                                        ctypes.c_uint,
-                                        ctypes.c_uint,
-                                        float_3d_array,
-                                        float_3d_array,
-                                        ctypes.c_uint,]
 
 _liblookuptable.predict_double.argtypes = [int_2d_array,
                                            ctypes.c_uint,
@@ -50,12 +44,32 @@ _liblookuptable.set_min_max.argtypes = [int_2d_array,
                                         float_3d_array,
                                         ctypes.c_uint]
 
-
-
 def build_lookuptable(kwvalues):
-    lut = lookuptable()
-    lut.build(**kwvalues)
-    return lut
+    size = kwvalues['size']
+    max_value = kwvalues['max_size']
+    data = kwvalues['data']
+    assert data is not None and size is not None and max_value is not None
+
+    values = data_to_indices(data = data, max_value = max_value, size = size)
+    counts = numpy.zeros((size, size, size), dtype = 'uint32')
+    sums = numpy.zeros((size, size, size), dtype = 'uint32')
+
+    _liblookuptable.lookuptable.argtypes = [int_2d_array,
+                                            ctypes.c_uint,
+                                            ctypes.c_uint,
+                                            uint_3d_array,
+                                            uint_3d_array,
+                                            ctypes.c_uint,]
+
+    _liblookuptable.lookuptable(values,
+        data.shape[0],
+        data.shape[1],
+        sums,
+        counts,
+        size,)
+    return {'sum':sums, 'counts':counts}
+
+
 
 def update_min_max(kwvalues):
     data = kwvalues['data']
@@ -234,14 +248,4 @@ class lookuptable(object):
         self.sums = sums
 
         gc.collect()
-
-
-
-def get_best_bands(data_set = None, bands = [0,1,2,3,4,5]):
-    pass
-
-
-
-
-
 
