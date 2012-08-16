@@ -1,4 +1,4 @@
-__author__ = 'Samy Vilar'
+__author__ = 'Samy Vilar' 
 
 import multiprocessing, pickle, os, time
 from matplotlib import pyplot as plt
