@@ -24,19 +24,13 @@ lut_size = 800
 sums = numpy.zeros((lut_size, lut_size, lut_size))
 counts = numpy.zeros((lut_size, lut_size, lut_size))
 
-mins = numpy.zeros((lut_size, lut_size, lut_size), dtype = 'float32')
-mins.fill(10000)
-max = numpy.zeros((lut_size, lut_size, lut_size), dtype = 'float32')
-max.fill(-10000)
-
 for index, granule in enumerate(granule_loader_chunks):
     if granule:
         try:
             new_lut = build_lookuptable({'data':granule[0].data,
                                           'size':lut_size,
                                           'max_value':1,
-                                          'mins':mins,
-                                          'max':max})
+                                        })
         except Exception as ex:
             print str(ex)
             continue

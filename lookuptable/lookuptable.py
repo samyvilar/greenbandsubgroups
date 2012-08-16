@@ -28,9 +28,7 @@ _liblookuptable.lookuptable.argtypes = [int_2d_array,
                                         ctypes.c_uint,
                                         float_3d_array,
                                         float_3d_array,
-                                        ctypes.c_uint,
-                                        float_3d_array,
-                                        float_3d_array]
+                                        ctypes.c_uint,]
 
 _liblookuptable.predict_double.argtypes = [int_2d_array,
                                            ctypes.c_uint,
@@ -49,7 +47,7 @@ _liblookuptable.set_min_max.argtypes = [int_2d_array,
                                         ctypes.c_uint,
                                         ctypes.c_uint,
                                         float_3d_array,
-                                        ctypes.c_uint,
+                                        float_3d_array,
                                         ctypes.c_uint]
 
 _liblookuptable.update_min_max_lut.argtypes = [float_3d_array,
@@ -79,6 +77,41 @@ def build_lookuptable(kwvalues):
     lut.build(**kwvalues)
     return lut
 
+def update_min_max(kwvalues):
+    data = kwvalues['data']
+    mins = kwvalues['mins']
+    max = kwvalues['max']
+    size = kwvalues['size']
+    max_value = kwvalues['max_value']
+    values = data_to_indices(data = data, max_value = max_value, size = size)
+    _liblookuptable.set_min_max(values,
+                                values.shape[0],
+                                values.shape[1],
+                                mins,
+                                max,
+                                size
+                                )
+
+
+def data_to_indices(data = None, max_value = None, size = None):
+    assert data is not None and max_value is not None and size is not None
+    assert max_value > 0
+    values = (numpy.round( ((data/max_value) * size - 0.5) )).astype('intc') # redefine values to be used properly as indices
+    values[values >= size] = size - 1 # make sure none of the values exceed max, if they do simply set them to the max.
+    values[values < 0] = 0
+    return values
+
+def flatten_2d_non_zero(table = None, default_value = 0, size = None):
+    assert table is not None and size is not None
+    non_zero_count = numpy.sum(table != default_value)
+    lookuptable_flatten = numpy.zeros((non_zero_count, 4))
+    _liblookuptable.flatten_lookuptable(table.astype('float'),
+        size,
+        lookuptable_flatten,
+        non_zero_count,
+        default_value)
+
+    return lookuptable_flatten
 
 class lookuptable(object):
     def __init__(self):
@@ -172,7 +205,7 @@ class lookuptable(object):
 
     def predict(self, granule):
         prediction_green = numpy.zeros(granule.shape[0], dtype = 'float64')
-        indices = self.data_to_indices(granule, self.max_value)
+        indices = data_to_indices(data = granule, max_value = self.max_value, size = self.size)
 
         shape = numpy.asarray(indices.shape, dtype = 'uintc')
         _liblookuptable.predict_double(indices,
@@ -188,29 +221,9 @@ class lookuptable(object):
         return prediction
 
 
-
-    def data_to_indices(self, data, max_value):
-        assert max_value > 0
-        values = (numpy.round( ((data/max_value) * self.size - 0.5) )).astype('intc') # redefine values to be used properly as indices
-        values[values >= self.size] = self.size - 1 # make sure none of the values exceed max, if they do simply set them to the max.
-        values[values < 0] = 0
-
-        return values
-
     def indices_to_data(self, indices):
         return ((indices + 0.5)/self.size)*self.max_value
 
-    def flatten_2d_non_zero(self, default_value = 0):
-        assert self.table != None
-        non_zero_count = numpy.sum(self.table != default_value)
-        lookuptable_flatten = numpy.zeros((non_zero_count, 4))
-
-        _liblookuptable.flatten_lookuptable(self.table.astype('float64'),
-                                            self.size,
-                                            lookuptable_flatten,
-                                            non_zero_count,
-                                            default_value)
-        return lookuptable_flatten
 
     def load_or_calculate_flatten_table(self, table_path):
         assert self.table != None
@@ -218,31 +231,24 @@ class lookuptable(object):
             flatten_table = numpy.fromfile(table_path)
             self._flatten_table = flatten_table.reshape((flatten_table.shape[0]/4, 4))
         else:
-            self._flatten_table = self.flatten_2d_non_zero()
+            self._flatten_table = flatten_2d_non_zero(table = self.table, size = self.size)
 
 
-
-
-
-    def build(self, data = None, size = None, max_value = None, function = None, mins = None, max = None):
-        assert data != None and size != None
+    def build(self, data = None, size = None, max_value = None):
+        assert data != None and size != None and max_value != None
         self.size = size
-        values = self.data_to_indices(data, max_value = max_value)
-        shape = numpy.asarray(data.shape, dtype = 'uintc')
+        values = data_to_indices(data = data, max_value = max_value, size = self.size)
 
-        assert max_value != None
         self.max_value = max_value
         counts = numpy.zeros((size, size, size), dtype = 'float32')
         sums = numpy.zeros((size, size, size), dtype = 'float32')
 
         _liblookuptable.lookuptable(values,
-                                    shape[0],
-                                    shape[1],
+                                    data.shape[0],
+                                    data.shape[1],
                                     sums,
                                     counts,
-                                    size,
-                                    mins,
-                                    max)
+                                    size,)
 
         self.counts = counts
         self.sums = sums
