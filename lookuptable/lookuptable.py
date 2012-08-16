@@ -50,27 +50,7 @@ _liblookuptable.set_min_max.argtypes = [int_2d_array,
                                         float_3d_array,
                                         ctypes.c_uint]
 
-_liblookuptable.update_min_max_lut.argtypes = [float_3d_array,
-                                               float_3d_array,
-                                               ctypes.c_uint,
-                                               ctypes.c_uint]
 
-def update_min(prev_mins = None, new_mins = None, lut_size = None, method = 'C'):
-    assert prev_mins != None and new_mins != None and lut_size != None
-    if method == 'C':
-        _liblookuptable.update_min_max_lut(prev_mins, new_mins, lut_size, 0)
-    elif method == 'numpy':
-        prev_mins.resize(lut_size, lut_size, lut_size, 1)
-        new_mins.resize(lut_size, lut_size, lut_size, 1)
-        prev_mins = numpy.concatenate((prev_mins, new_mins), axis = 3).min(axis = 3)
-    else:
-        raise ValueError("Expected either method 'C' or 'numpy'")
-
-    return prev_mins
-
-def update_max(prev_max = None, new_max = None, lut_size = None):
-    assert prev_max != None and new_max != None and lut_size != None
-    _liblookuptable.update_min_max_lut(prev_max, new_max, lut_size, 1)
 
 def build_lookuptable(kwvalues):
     lut = lookuptable()
