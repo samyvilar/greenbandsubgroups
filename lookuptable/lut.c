@@ -133,16 +133,16 @@ void lookuptable(int          *data,        /* 2D DATA with n by r shape, n-1 us
         unsigned int prev_value = sums_p[row[0]][row[1]][row[2]];
         sums_p[row[0]][row[1]][row[2]] += row[3];
 
-        if (prev_sum > sums_p[row[0]][row[1]][row[2]])
+        if (prev_value > sums_p[row[0]][row[1]][row[2]])
         {
-           printf("Error, overflow detected! %u\n", lookuptable_p[row[0]][row[1]][row[2]]);
+           printf("Error, overflow detected! %u\n", sums_p[row[0]][row[1]][row[2]]);
            exit(-1);
         }
 
         counts_p[row[0]][row[1]][row[2]]++;
         if (counts_p[row[0]][row[1]][row[2]] == 0)
         {
-            printf("Error, overflow detected! %u\n", count_p[row[0]][row[1]][row[2]]);
+            printf("Error, overflow detected! %u\n", counts_p[row[0]][row[1]][row[2]]);
             exit(-1);
         }
     }
