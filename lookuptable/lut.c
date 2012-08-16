@@ -41,7 +41,7 @@ void set_min_max     (int         *data,
                       float        *max,
                       unsigned int lutsize)
 {
-    int *row = NULL; float *minsp_base_address = NULL, maxp_base_addrress = NULL;
+    int *row = NULL; float *minsp_base_address = NULL, *maxp_base_addrress = NULL;
     unsigned int index = 0, index1 = 0, temp = 0;
 
     int **datap = (int **)malloc(numrows * sizeof(int *)); /*Mapping 1D array to 2D*/
@@ -99,7 +99,7 @@ void lookuptable(int          *data,        /* 2D DATA with n by r shape, n-1 us
                  unsigned int numcols,      /* The number of columns withing the 2D data matrix */
                  float        *lookuptable, /* The 3D look up table that will hold all the sum up values */
                  float        *count,       /* The 3D count table containing all the times an entry was sum up */
-                 unsigned int lutsize,      /* The lookup table size */
+                 unsigned int lutsize      /* The lookup table size */
                  )
 {
     int *row; float *lutbaseaddr, *countbaseaddr;
@@ -150,8 +150,6 @@ void lookuptable(int          *data,        /* 2D DATA with n by r shape, n-1 us
     {
         free(lookuptablep[index]);
         free(countp[index]);
-        free(max_valuesp[index]);
-        free(min_valuesp[index]);
     }
     
     free(lookuptablep);
