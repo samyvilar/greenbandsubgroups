@@ -38,13 +38,13 @@ def multithreading_pool_map(**kwargs):
         pools.close()
         pools.join()
         end = time.time()
-        print "Done %f" % (end - start)
+        print "Done %fs" % (end - start)
         return results
 
     start = time.time()
     results = [function(value) for value in values]
     end = time.time()
-    print "Done %f" % (end - start)
+    print "Done %fs" % (end - start)
     return results
 
 def image_show(**kwargs):
@@ -68,7 +68,7 @@ def image_show(**kwargs):
     if kwargs:
         raise ValueError('Received invalid keyword argument(s) %s' % str(kwargs))
 
-    assert source != None
+    assert source is not None
 
     plt.figure()
     if reshape:
@@ -81,7 +81,7 @@ def image_show(**kwargs):
     if not crop_size:
         crop_size = source.shape
 
-    if red_index != None and blue_index != None and green_index != None:
+    if red_index is not None and blue_index is not None and green_index is not None:
         source = numpy.dstack((source[crop_origin[0]:(crop_origin[0] + crop_size[0]), crop_origin[1]:(crop_origin[1] + crop_size[1]), red_index],
                                source[crop_origin[0]:(crop_origin[0] + crop_size[0]), crop_origin[1]:(crop_origin[1] + crop_size[1]), green_index],
                                source[crop_origin[0]:(crop_origin[0] + crop_size[0]), crop_origin[1]:(crop_origin[1] + crop_size[1]), blue_index]))
@@ -101,12 +101,12 @@ def image_show(**kwargs):
 
 
 def get_root_mean_square(original = None, predicted = None):
-    assert original != None and predicted != None
+    assert original is not None and predicted is not None
     std = numpy.sqrt(numpy.sum((predicted - original)**2)/original.shape[0])
     return std/numpy.mean(original) * 100
 
 def get_sum_of_errors_squared(original = None, predicted = None):
-    assert original != None and predicted != None
+    assert original is not None and predicted is not None
     return numpy.sum(numpy.square(original - predicted))
 
 def save_images(**kwargs):
@@ -233,7 +233,7 @@ def get_standard_mean_calculator(threshold = None,
     return mean_calculator
 
 def get_previous_means(mean_calculator = None, lut_data_flatten = None):
-    assert mean_calculator != None
+    assert mean_calculator is not None
     if os.path.isfile('initial_mean.numpy'):
         if os.path.isfile('all_means.obj'):
             all_means = pickle.load(open('all_means.obj', 'rb'))

@@ -30,7 +30,7 @@ if __name__ == '__main__':
                                             'size':lut_size,
                                             'max_value':1,
                                             })
-                assert result['sum'].sum()
+
                 sums += result['sum']
                 counts += result['counts']
             except Exception as ex:
