@@ -150,7 +150,10 @@ void lookuptable(int          *data,        /* 2D DATA with n by r shape, n-1 us
                  unsigned int numcols,      /* The number of columns withing the 2D data matrix */
                  float        *lookuptable, /* The 3D look up table that will hold all the sum up values */
                  float        *count,       /* The 3D count table containing all the times an entry was sum up */
-                 unsigned int lutsize      /* The lookup table size */)
+                 unsigned int lutsize,      /* The lookup table size */
+                 float *min_values,         /* Th3 3D lookup table containing all the min values */
+                 float *max_values          /* The 3D lookup table containg all the max values */
+                 )
 {
     int *row; float *lutbaseaddr, *countbaseaddr;
     unsigned int index, index1, temp;
@@ -159,20 +162,31 @@ void lookuptable(int          *data,        /* 2D DATA with n by r shape, n-1 us
     for (index = 0; index < numrows; index++)
             datap[index] = data + index*numcols;
 
-    float ***lookuptablep = (float ***)malloc(lutsize * sizeof(float **)); /*Mapping 1D arrays to 3D*/
-    float ***countp = (float ***)malloc(lutsize * sizeof(float **));
+    float ***lookuptablep = malloc(lutsize * sizeof(float **)); /*Mapping 1D arrays to 3D*/
+    float ***countp = malloc(lutsize * sizeof(float **));
+    float ***min_valuesp = malloc(lutsize * sizeof(float **));
+    float ***max_valuesp = malloc(lutsize * sizeof(float **));
+
     for (index = 0; index < lutsize; index++)
     {
-        lookuptablep[index] = (float **)malloc(lutsize * sizeof(float *));
-        countp[index] = (float **)malloc(lutsize * sizeof(float *));
-        lutbaseaddr = (lookuptable + index*lutsize*lutsize);
-        countbaseaddr = (count + index*lutsize*lutsize);
+        lookuptablep[index] = malloc(lutsize * sizeof(float *));
+        countp[index] = malloc(lutsize * sizeof(float *));
+        min_valuesp[index] = malloc(lutsize * sizeof(float *));
+        max_valuesp[index] = malloc(lutsize * sizeof(float *));
+
+        long long int temp_base_addr_offset = index*lutsize*lutsize;
+        lutbaseaddr = lookuptable + temp_base_addr_offset;
+        countbaseaddr = (count + temp_base_addr_offset);
+        float *min_values_base_addr = (min_values + temp_base_addr_offset);
+        float *max_values_base_addr = (max_values + temp_base_addr_offset);
         
         for (index1 = 0; index1 < lutsize; index1++)
         {
             temp = index1*lutsize;
             lookuptablep[index][index1] = lutbaseaddr + temp;
             countp[index][index1] = countbaseaddr + temp;
+            min_valuesp[index][index1] = min_values_base_addr + temp;
+            max_valuesp[index][index1] = max_values_base_addr + temp;
         }
     }
 
@@ -182,6 +196,13 @@ void lookuptable(int          *data,        /* 2D DATA with n by r shape, n-1 us
         row = datap[index];
 
         lookuptablep[row[0]][row[1]][row[2]] += row[3];
+
+        if (min_valuesp[row[0]][row[1]][row[2]] >= row[3])
+            min_valuesp[row[0]][row[1]][row[2]] = row[3];
+
+        if (max_valuesp[row[0]][row[1]][row[2]] <= row[3])
+            max_valuesp[row[0]][row[1]][row[2]] = row[3];
+
         if (isinf(lookuptablep[row[0]][row[1]][row[2]]))
         {
            printf("Error, overflow detected! %f\n", lookuptablep[row[0]][row[1]][row[2]]);
@@ -196,10 +217,14 @@ void lookuptable(int          *data,        /* 2D DATA with n by r shape, n-1 us
     {
         free(lookuptablep[index]);
         free(countp[index]);
+        free(max_valuesp[index]);
+        free(min_valuesp[index]);
     }
     
     free(lookuptablep);
     free(countp);
+    free(max_valuesp);
+    free(min_valuesp);
 }
 
 void predict_double(int             *data,

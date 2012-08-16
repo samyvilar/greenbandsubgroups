@@ -280,4 +280,3 @@ def save_optimal_solutions(**kwargs):
     plt.savefig(dir + '/sum_of_errors_per_iterations.png')
     open(dir + "/RMSE:%f%%" % error, 'wb')
 
-

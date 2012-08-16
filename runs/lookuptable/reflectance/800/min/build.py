@@ -41,3 +41,21 @@ if __name__ == '__main__':
     lut.size = lut_size
     flatten_table = lut.flatten_2d_non_zero(default_value = 900)
     flatten_table.tofile(str(lut_size) + '_min_lookuptable_flatten.numpy')
+
+    import time
+    from matplotlib import pyplot as pltlib
+
+    pltlib.ion()
+    pltlib.interactive(True)
+    pltlib.figure(1)
+    pltlib.plot(range(10),range(10), "r-")
+    pltlib.show()
+
+    deconvFig = pltlib.figure(2)
+    ax = deconvFig.add_subplot(111)
+    X, Y = range(10), range(10)
+    line1,line2 = ax.plot(X,Y,'r-',X,Y,'r-')
+    for x in xrange(2, 6, 1):
+        line2.set_ydata(range(0, 10*x, x))
+        deconvFig.canvas.draw()
+        time.sleep(2)

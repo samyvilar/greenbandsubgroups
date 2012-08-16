@@ -23,10 +23,20 @@ granule_loader_chunks = granule_loader.load_granules_chunk(dir = get_all_granule
 lut_size = 800
 sums = numpy.zeros((lut_size, lut_size, lut_size))
 counts = numpy.zeros((lut_size, lut_size, lut_size))
+
+mins = numpy.zeros((lut_size, lut_size, lut_size), dtype = 'float32')
+mins.fill(10000)
+max = numpy.zeros((lut_size, lut_size, lut_size), dtype = 'float32')
+max.fill(-10000)
+
 for index, granule in enumerate(granule_loader_chunks):
     if granule:
         try:
-            new_lut = build_lookuptable({'data':granule[0].data, 'size':lut_size, 'max_value':1})
+            new_lut = build_lookuptable({'data':granule[0].data,
+                                          'size':lut_size,
+                                          'max_value':1,
+                                          'mins':mins,
+                                          'max':max})
         except Exception as ex:
             print str(ex)
             continue
@@ -43,6 +53,8 @@ for index, granule in enumerate(granule_loader_chunks):
     table.tofile(str(lut_size) + '_lookuptable.numpy')
     counts.tofile(str(lut_size) + '_counts.numpy')
     sums.tofile(str(lut_size) + '_sums.numpy')
+    mins.astype('float').tofile(str(lut_size) + '_mins.numpy')
+    max.astype('float').tofile(str(lut_size) + '_max.numpy')
 
     lut = lookuptable()
     lut.table = table
