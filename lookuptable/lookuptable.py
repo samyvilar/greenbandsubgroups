@@ -31,12 +31,6 @@ _liblookuptable.predict_double.argtypes = [int_2d_array,
                                            ctypes.c_uint,
                                            double_1d_array]
 
-_liblookuptable.flatten_lookuptable.argtypes = [double_3d_array,
-                                                ctypes.c_uint,
-                                                double_2d_array,
-                                                ctypes.c_uint,
-                                                ctypes.c_int]
-
 _liblookuptable.set_min_max.argtypes = [int_2d_array,
                                         ctypes.c_uint,
                                         ctypes.c_uint,
@@ -100,12 +94,17 @@ def flatten_2d_non_zero(table = None, default_value = 0, size = None):
     assert table is not None and size is not None
     non_zero_count = numpy.sum(table != default_value)
     lookuptable_flatten = numpy.zeros((non_zero_count, 4))
-    _liblookuptable.flatten_lookuptable(table.astype('float'),
-        size,
-        lookuptable_flatten,
-        non_zero_count,
-        default_value)
+    _liblookuptable.flatten_lookuptable.argtypes = [double_3d_array,
+                                                    ctypes.c_uint,
+                                                    double_2d_array,
+                                                    ctypes.c_uint,
+                                                    ctypes.c_int]
 
+    _liblookuptable.flatten_lookuptable(table,
+                                        size,
+                                        lookuptable_flatten,
+                                        non_zero_count,
+                                        default_value)
     return lookuptable_flatten
 
 class lookuptable(object):

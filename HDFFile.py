@@ -26,7 +26,7 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
 
             data.append(img)
     elif param == 'reflectance':
-        data = glasslab_cluster.io.modis_crefl(file, bands = bands)
+        data = glasslab_cluster.io.modis.crefl(file, bands = bands)
 
     data = numpy.dstack(data)
     if crop_orig and crop_size:

@@ -131,6 +131,9 @@ void lookuptable(int          *data,        /* 2D DATA with n by r shape, n-1 us
     {
         row = data_p[index];
         unsigned int prev_value = sums_p[row[0]][row[1]][row[2]];
+
+
+
         sums_p[row[0]][row[1]][row[2]] += row[3];
 
         if (prev_value > sums_p[row[0]][row[1]][row[2]])
