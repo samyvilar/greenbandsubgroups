@@ -41,6 +41,7 @@ if __name__ == '__main__':
 
     table = numpy.zeros((lut_size, lut_size, lut_size))
     loc = counts != 0
+    counts = counts.astype('float64')
     table[loc] = sums[loc]/counts[loc]
     table.tofile(str(lut_size) + '_lookuptable.numpy')
     counts.tofile(str(lut_size) + '_counts_uint32.numpy')

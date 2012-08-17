@@ -54,7 +54,6 @@ def build_lookuptable(kwvalues):
                                             uint_3d_array,
                                             uint_3d_array,
                                             ctypes.c_uint,]
-
     _liblookuptable.lookuptable(values,
         values.shape[0],
         values.shape[1],

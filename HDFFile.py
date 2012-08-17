@@ -1,34 +1,39 @@
 __author__ = 'Samy Vilar'
 
-import glasslab_cluster.io
+from glasslab_cluster.io import modis
 import numpy
 import os
+import shutil
 
 
 def read_file(file = None, bands = None, param = None, crop_size = None, crop_orig = None):
-    assert file and bands and param
+    assert file and bands and param and (param == 'reflectance' or param == 'radiance')
     data = []
     valid_range  = numpy.zeros((len(bands), 2))
 
-    if param == 'radiance':
-        for index, band in enumerate(bands):
-            mod = glasslab_cluster.io.modis_level1b_read(file, band, param = param, clean = True)
+    if param == 'reflectance':
+        temp_file = '/tmp/' + os.path.basename(file)
+        shutil.copyfile(file, '/tmp/' + temp_file)
+    else:
+        temp_file = file
 
-            if numpy.any(mod['mimage'].mask):
-                print "flags exist in band %d of granule %s" % (band, os.path.basename(file))
-                raise Exception('Bad Granule')
-            img = numpy.asarray(mod['mimage'].data, dtype = 'float64')
-            valid_range[index, :] = mod['validrange']
-            n  = numpy.sum((valid_range[index, 0] > img) | (img > valid_range[index, 1]))
-            if n > 0:
-                print "Valid Range:", mod['validrange'], " %d values out of valid range in band %d" % (n, band)
-                raise Exception('Bad Granule')
+    granule = modis.Level1B(temp_file)
+    for index, band in enumerate(bands):
+        if param == 'reflectance':
+            b = granule.reflectance(band)
+        elif param == 'radiance':
+            b = granule.radiance(band)
+        else:
+            raise Exception("Param wasn't set to 'reflectance' or 'radiance' got '%s'" % str(param))
 
-            data.append(img)
-    elif param == 'reflectance':
-        data = glasslab_cluster.io.modis.crefl(file, bands = bands)
+        b.write(b.fill_invalid(b.read()))
+        data.append(b.read())
+
+    if param == 'reflectance':
+        data = modis.crefl(temp_file, bands = bands)
 
     data = numpy.dstack(data)
+
     if crop_orig and crop_size:
         data = data[crop_orig[0]:crop_orig[0] + crop_size[0], crop_orig[1]:crop_orig[1] + crop_size[1]]
 
