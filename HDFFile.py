@@ -28,7 +28,8 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
         else:
             raise Exception("Param wasn't set to 'reflectance' or 'radiance' got '%s'" % str(param))
 
-        b.write(b.fill_invalid(b.read()))
+        img = b.read()
+        b.write(b.fill_invalid(img)) 
         b.close()
 
         if param == 'reflectance':
