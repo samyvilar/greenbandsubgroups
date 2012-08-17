@@ -35,9 +35,12 @@ if __name__ == '__main__':
                 counts += result['counts']
                 result = None
                 _ = gc.collect()
+                print 'Granule %s' % granule[0].file_name
             except Exception as ex:
                 print 'Exception: ' + str(ex)
                 continue
+        else:
+            print 'Skipping granule'
 
     table = numpy.zeros((lut_size, lut_size, lut_size))
     loc = counts != 0

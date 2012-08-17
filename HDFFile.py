@@ -14,8 +14,10 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
     if param == 'reflectance':
         temp_file = '/tmp/' + os.path.basename(file)
         shutil.copyfile(file, temp_file)
-    else:
+    elif param == 'radiance':
         temp_file = file
+    else:
+        raise Exception("Param wasn't set to 'reflectance' or 'radiance' got '%s'" % str(param))
 
     granule = modis.Level1B(temp_file)
     for index, band in enumerate(bands):
