@@ -33,6 +33,8 @@ if __name__ == '__main__':
 
                 sums += result['sum']
                 counts += result['counts']
+                result = None
+                _ = gc.collect()
             except Exception as ex:
                 print 'Exception: ' + str(ex)
                 continue
@@ -43,6 +45,10 @@ if __name__ == '__main__':
     table.tofile(str(lut_size) + '_lookuptable.numpy')
     counts.tofile(str(lut_size) + '_counts_uint32.numpy')
     sums.tofile(str(lut_size) + '_sums_uint64.numpy')
+
+    sums = None
+    count = None
+    _ = gc.collect()
 
     flatten_table = flatten_2d_non_zero(table = table, size = lut_size)
     flatten_table.tofile(str(lut_size) + '_lookuptable_flatten.numpy')
