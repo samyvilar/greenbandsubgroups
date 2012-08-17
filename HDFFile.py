@@ -29,6 +29,13 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
             raise Exception("Param wasn't set to 'reflectance' or 'radiance' got '%s'" % str(param))
 
         b.write(b.fill_invalid(b.read()))
+        b.close()
+
+        if param == 'reflectance':
+            b = granule.reflectance(band)
+        elif param == 'radiance':
+            b = granule.radiance(band)
+            
         data.append(b.read())
 
     if param == 'reflectance':
