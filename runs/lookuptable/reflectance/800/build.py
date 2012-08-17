@@ -14,7 +14,7 @@ if __name__ == '__main__':
     granule_loader.bands = [1,2,3,4]
     granule_loader.param = 'reflectance'
     granule_loader.disable_caching()
-    granule_loader.enable_multithreading()
+    granule_loader.disable_multithreading()
 
 
     #/DATA_11/TERRA_1KM/
