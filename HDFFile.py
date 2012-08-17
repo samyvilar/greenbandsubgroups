@@ -13,7 +13,7 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
 
     if param == 'reflectance':
         temp_file = '/tmp/' + os.path.basename(file)
-        shutil.copyfile(file, '/tmp/' + temp_file)
+        shutil.copyfile(file, temp_file)
     else:
         temp_file = file
 
