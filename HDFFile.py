@@ -19,7 +19,7 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
     else:
         raise Exception("Param wasn't set to 'reflectance' or 'radiance' got '%s'" % str(param))
 
-    granule = modis.Level1B(temp_file)
+    granule = modis.Level1B(temp_file, mode = 'w')
     for index, band in enumerate(bands):
         if param == 'reflectance':
             b = granule.reflectance(band)
@@ -28,8 +28,7 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
         else:
             raise Exception("Param wasn't set to 'reflectance' or 'radiance' got '%s'" % str(param))
 
-        img = b.read()
-        b.write(b.fill_invalid(img)) 
+        b.write(b.fill_invalid(b.read()))
         b.close()
 
         if param == 'reflectance':
