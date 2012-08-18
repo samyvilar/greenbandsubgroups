@@ -37,7 +37,9 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
             b = granule.radiance(band)
 
         data.append(b.read())
+        b.close()
 
+    granule.close()
     if temp_file.startswith('/tmp/temp_'):
         os.remove(temp_file)
     if param == 'reflectance':
