@@ -38,7 +38,7 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
 
         data.append(b.read())
 
-    if '/tmp/temp_' in temp_file:
+    if temp_file.startswith('/tmp/temp_'):
         os.remove(temp_file)
     if param == 'reflectance':
         data = modis.crefl(temp_file, bands = bands)
