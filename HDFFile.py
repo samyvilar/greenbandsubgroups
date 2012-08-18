@@ -12,7 +12,7 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
     valid_range  = numpy.zeros((len(bands), 2))
 
     if param == 'reflectance':
-        temp_file = '/tmp/temp_' + os.path.basename(file)
+        temp_file = '/home1/student/svilar/Development/tmptemp_' + os.path.basename(file)
         shutil.copyfile(file, temp_file)
     elif param == 'radiance':
         temp_file = file
@@ -40,7 +40,7 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
         b.close()
 
     granule.close()
-    if temp_file.startswith('/tmp/temp_'):
+    if temp_file.startswith('/home1/student/svilar/Development/tmp'):
         os.remove(temp_file)
     if param == 'reflectance':
         data = modis.crefl(temp_file, bands = bands)
