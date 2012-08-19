@@ -25,20 +25,22 @@ if __name__ == '__main__':
 
     for index, granule in enumerate(granule_loader_chunks):
         if granule:
-            try:
-                result = build_lookuptable({'data':granule[0].data,
-                                            'size':lut_size,
-                                            'max_value':1,
-                                            })
 
-                sums += result['sum']
-                counts += result['counts']
-                result = None
-                _ = gc.collect()
-                print 'Granule %s' % granule[0].file_name
+            result = build_lookuptable({'data':granule[0].data,
+                                        'size':lut_size,
+                                        'max_value':1,
+                                        })
+
+            sums += result['sum']
+            counts += result['counts']
+            result = None
+            _ = gc.collect()
+            print 'Granule %s' % granule[0].file_name
+            '''
             except Exception as ex:
                 print 'Exception: ' + str(ex)
                 continue
+            '''
         else:
             print 'Skipping granule'
 

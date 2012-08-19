@@ -11,16 +11,12 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
     data = []
     valid_range  = numpy.zeros((len(bands), 2))
 
-    if param == 'reflectance':
-        temp_file = '/home1/student/svilar/Development/tmp/temp_' + os.path.basename(file)
-        shutil.copyfile(file, temp_file)
-    elif param == 'radiance':
-        temp_file = file
-    else:
-        raise Exception("Param wasn't set to 'reflectance' or 'radiance' got '%s'" % str(param))
+    temp_file = '/home1/student/svilar/Development/tmp/temp_' + os.path.basename(file)
+    shutil.copyfile(file, temp_file)
 
-    granule_read = modis.Level1B(temp_file, mode = 'r')
+    granule_read = modis.Level1B(file, mode = 'r')
     granule_write = modis.Level1B(temp_file, mode = 'w')
+
     for index, band in enumerate(bands):
         if param == 'reflectance':
             b_read = granule_read.reflectance(band)
@@ -35,16 +31,18 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
         b_read.close()
         b_write.close()
 
+        g = modis.Level1B(temp_file)
         if param == 'reflectance':
-            b = granule_read.reflectance(band)
+            b = g.reflectance(band)
         elif param == 'radiance':
-            b = granule_read.radiance(band)
+            b = g.radiance(band)
 
         data.append(b.read())
         b.close()
 
     granule_write.close()
     granule_read.close()
+    g.close()
 
     if param == 'reflectance':
         data = modis.crefl(temp_file, bands = bands)
