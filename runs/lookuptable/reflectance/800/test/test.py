@@ -12,7 +12,7 @@ if __name__ == '__main__':
     lut.load_table('../800_lookuptable.numpy')
 
     granule_path = '/DATA_11/TERRA_1KM/temp/MOD021KM.A2002179.1640.005.2010085164818.hdf'
-    original_clean, valid_range, original_shape = read_file(file = granule_path,
+    original, valid_range, original_shape = read_file(file = granule_path,
                          bands = [1,2,3,4],
                          param = 'reflectance',
                          winsize = 75,
