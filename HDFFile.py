@@ -6,7 +6,14 @@ import os
 import shutil
 
 
-def read_file(file = None, bands = None, param = None, crop_size = None, crop_orig = None, winsize = 11, maxinvalid = 0.35,):
+def read_file(file = None,
+              bands = None,
+              param = None,
+              crop_size = None,
+              crop_orig = None,
+              winsize = 11,
+              maxinvalid = 0.35,
+              clean = True,):
     assert file and bands and param and (param == 'reflectance' or param == 'radiance')
     data = []
     valid_range  = numpy.zeros((len(bands), 2))
@@ -27,7 +34,8 @@ def read_file(file = None, bands = None, param = None, crop_size = None, crop_or
         else:
             raise Exception("Param wasn't set to 'reflectance' or 'radiance' got '%s'" % str(param))
 
-        b_write.write(b_read.fill_invalid(b_read.read(), winsize = winsize, maxinvalid = maxinvalid))
+        if clean:
+            b_write.write(b_read.fill_invalid(b_read.read(), winsize = winsize, maxinvalid = maxinvalid))
         b_read.close()
         b_write.close()
 
