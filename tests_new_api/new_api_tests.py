@@ -31,7 +31,6 @@ def test_clean_crefl(granule_path, bands = [1,2,2,4]):
     g_read.close()
     g_write.close()
 
-    plt.imshow()
     crefl_data = modis.crefl(temp_file, bands = bands)
 
     data = numpy.dstack(data)
@@ -47,6 +46,7 @@ def test_clean_crefl(granule_path, bands = [1,2,2,4]):
         plt.colorbar()
         plt.savefig('corrected_band_%i.png' % (index + 1))
 
+    os.remove(temp_file)
 
 
 if __name__ == "__main__":
