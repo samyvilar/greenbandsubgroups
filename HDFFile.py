@@ -37,7 +37,6 @@ def read_file(file = None,
         if clean:
             b_write.write(b_read.read(clean = True, winsize = winsize, maxinvalid = maxinvalid))
 
-
         b_read.close()
         b_write.close()
 
@@ -49,10 +48,10 @@ def read_file(file = None,
 
         data.append(b.read())
         b.close()
+        g.close()
 
-    granule_write.close()
     granule_read.close()
-    g.close()
+    granule_write.close()
 
     if param == 'reflectance':
         print 'reading crefl'

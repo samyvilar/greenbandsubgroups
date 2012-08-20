@@ -7,7 +7,7 @@ import numpy
 from matplotlib import pyplot as plt
 
 
-def test_clean_crefl(granule_path, bands = [1,2,2,4]):
+def test_clean_crefl(granule_path, bands = [1,2,3,4]):
     temp_file = os.path.join(os.getcwd(), 'temp_' + os.path.basename(granule_path))
     shutil.copy(granule_path, temp_file)
 
@@ -18,7 +18,6 @@ def test_clean_crefl(granule_path, bands = [1,2,2,4]):
     for band in bands:
         b_read = g_read.reflectance(band)
         b_write = g_write.reflectance(band)
-
         img = b_read.read()
         b_write.write(
             b_read.destripe(
@@ -28,21 +27,21 @@ def test_clean_crefl(granule_path, bands = [1,2,2,4]):
         b_read.close()
         original.append(img)
 
+
     g_read.close()
     g_write.close()
 
     crefl_data = modis.crefl(temp_file, bands = bands)
-
     original = numpy.dstack(original)
     crefl_data = numpy.dstack(crefl_data)
 
     for index in range(len(bands)):
         plt.figure()
-        plt.imshow(original[:, index], vmin = 0, vmax = 1, interpolation = 'nearest')
+        plt.imshow(original[:,:, index], vmin = 0, vmax = 1, interpolation = 'nearest')
         plt.colorbar()
         plt.savefig('original_band_%i.png' % (index + 1))
         plt.figure()
-        plt.imshow(crefl_data[:, index], vmin = 0, vmax = 1, interpolation = 'nearest')
+        plt.imshow(crefl_data[:,:, index], vmin = 0, vmax = 1, interpolation = 'nearest')
         plt.colorbar()
         plt.savefig('corrected_band_%i.png' % (index + 1))
 
