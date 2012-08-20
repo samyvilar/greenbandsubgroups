@@ -20,7 +20,7 @@ def test_clean_crefl(granule_path, bands = [1,2,2,4]):
         b_write = g_write.reflectance(band)
 
         img = b_read.read()
-        b_write(
+        b_write.write(
             b_read.destripe(
                 b_read.fill_invalid(
                     img, winsize = 75))) # b.read() only supports clean, but really should have options to set winsize and ...
