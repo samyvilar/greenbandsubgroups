@@ -38,11 +38,11 @@ def test_clean_crefl(granule_path, bands = [1,2,2,4]):
 
     for index in range(len(bands)):
         plt.figure()
-        plt.imshow(original[:, index], vmin = 0, min = 0, vmax = 1, max = 1, interpolation = 'nearest')
+        plt.imshow(original[:, index], vmin = 0, vmax = 1, interpolation = 'nearest')
         plt.colorbar()
         plt.savefig('original_band_%i.png' % (index + 1))
         plt.figure()
-        plt.imshow(crefl_data[:, index], vmin = 0, min = 0, vmax = 1, max = 1, interpolation = 'nearest')
+        plt.imshow(crefl_data[:, index], vmin = 0, vmax = 1, interpolation = 'nearest')
         plt.colorbar()
         plt.savefig('corrected_band_%i.png' % (index + 1))
 
