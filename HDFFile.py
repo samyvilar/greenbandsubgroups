@@ -21,8 +21,8 @@ def read_file(file = None,
     temp_file = '/home1/student/svilar/Development/tmp/temp_' + os.path.basename(file)
     shutil.copyfile(file, temp_file)
 
-    granule_read = modis.Level1B(file, mode = 'rb')
-    granule_write = modis.Level1B(temp_file, mode = 'wb')
+    granule_read = modis.Level1B(file, mode = 'r')
+    granule_write = modis.Level1B(temp_file, mode = 'w')
 
     for index, band in enumerate(bands):
         if param == 'reflectance':
