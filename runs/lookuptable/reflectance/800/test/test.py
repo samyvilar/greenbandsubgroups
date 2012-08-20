@@ -16,7 +16,7 @@ if __name__ == '__main__':
                          bands = [1,2,3,4],
                          param = 'reflectance',
                          winsize = 11,
-                         maxinvalid = 0.4)
+                         maxinvalid = 1)
 
     predicted = lut.predict(original)
 
