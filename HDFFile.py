@@ -56,7 +56,7 @@ def read_file(file = None,
 
     if param == 'reflectance':
         print 'reading crefl'
-        data = modis.crefl(temp_file, bands = bands)
+        data = modis.crefl(temp_file, bands = bands, verbose = True)
 
     if 'temp_' in temp_file:
         os.remove(temp_file)
