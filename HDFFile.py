@@ -18,7 +18,7 @@ def read_file(file = None,
     data = []
     valid_range  = numpy.zeros((len(bands), 2))
 
-    temp_file = '/tmp/' + os.path.basename(file)
+    temp_file = '/tmp/temp_' + os.path.basename(file)
     shutil.copyfile(file, temp_file)
 
     granule_read = modis.Level1B(file, mode = 'r')
@@ -55,7 +55,7 @@ def read_file(file = None,
     if param == 'reflectance':
         data = modis.crefl(temp_file, bands = bands)
 
-    if temp_file.startswith('/home1/student/svilar/Development/tmp'):
+    if 'temp_' in temp_file:
         os.remove(temp_file)
 
     data = numpy.dstack(data)
