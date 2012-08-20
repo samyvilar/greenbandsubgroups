@@ -33,8 +33,8 @@ def test_clean_crefl(granule_path, bands = [1,2,2,4]):
 
     crefl_data = modis.crefl(temp_file, bands = bands)
 
-    data = numpy.dstack(data)
-    crefl_data = numpy.dstack(crefl_data )
+    original = numpy.dstack(original)
+    crefl_data = numpy.dstack(crefl_data)
 
     for index in range(len(bands)):
         plt.figure()
