@@ -11,8 +11,8 @@ def test_clean_crefl(granule_path, bands = [1,2,2,4]):
     temp_file = os.path.join(os.getcwd(), 'temp_' + os.path.basename(granule_path))
     shutil.copy(granule_path, temp_file)
 
-    g_read = modis.modis.Level1B(granule_path, mode = 'r')
-    g_write = modis.modis.Level1B(temp_file, mode = 'w')
+    g_read = modis.Level1B(granule_path, mode = 'r')
+    g_write = modis.Level1B(temp_file, mode = 'w')
 
     original = []
     for band in bands:
