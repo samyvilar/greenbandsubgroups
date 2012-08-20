@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 
 
 def test_clean_crefl(granule_path, bands = [1,2,2,4]):
-    temp_file = os.path.join(os.getcwd(), 'temp_' + os.basename(granule_path))
+    temp_file = os.path.join(os.getcwd(), 'temp_' + os.path.basename(granule_path))
     shutil.copy(granule_path, temp_file)
 
     g_read = modis(granule_path, mode = 'r')
