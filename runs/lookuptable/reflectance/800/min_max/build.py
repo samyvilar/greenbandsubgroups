@@ -33,8 +33,11 @@ if __name__ == '__main__':
                 print str(ex)
                 continue
 
-    mins.astype('float').tofile(str(lut_size) + '_min_lookuptable.numpy')
-    max.astype('float').tofile(str(lut_size) + '_max_lookuptable.numpy')
+    mins = mins.astype('float64')
+    max = max.astype('float64')
+
+    mins.tofile(str(lut_size) + '_min_lookuptable.numpy')
+    max.tofile(str(lut_size) + '_max_lookuptable.numpy')
 
 
 
