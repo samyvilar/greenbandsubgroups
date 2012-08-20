@@ -15,8 +15,8 @@ if __name__ == '__main__':
     original, valid_range, origina_shape = read_file(file = granule_path,
                          bands = [1,2,3,4],
                          param = 'reflectance',
-                         winsize = 11,
-                         maxinvalid = 1)
+                         winsize = 75,
+                         maxinvalid = .35)
 
     predicted = lut.predict(original)
 
