@@ -18,7 +18,7 @@ def read_file(file = None,
     data = []
     valid_range  = numpy.zeros((len(bands), 2))
 
-    temp_file = '/home1/student/svilar/Development/tmp/temp_' + os.path.basename(file)
+    temp_file = '/tmp/' + os.path.basename(file)
     shutil.copyfile(file, temp_file)
 
     granule_read = modis.Level1B(file, mode = 'r')

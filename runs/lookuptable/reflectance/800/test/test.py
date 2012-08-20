@@ -12,11 +12,12 @@ if __name__ == '__main__':
     lut.load_table('../800_lookuptable.numpy')
 
     granule_path = '/home1/FermiData/DATA_3/SNOW_CLOUD_MODIS/data/MOD021KM.A2002179.1640.005.2010085164818.hdf'
-    original, valid_range, origina_shape = read_file(file = granule_path,
+    original_clean, valid_range, origina_shape = read_file(file = granule_path,
                          bands = [1,2,3,4],
                          param = 'reflectance',
                          winsize = 75,
-                         maxinvalid = .35)
+                         maxinvalid = .35,
+                         clean = True)
 
     predicted = lut.predict(original)
 
