@@ -34,10 +34,8 @@ def read_file(file = None,
         else:
             raise Exception("Param wasn't set to 'reflectance' or 'radiance' got '%s'" % str(param))
 
-        if clean:
-            img = b_read.read()
-            clean_img = b_read.fill_invalid(img, winsize = winsize, maxinvalid = maxinvalid)
-            b_write.write(clean_img)
+        if clean:        
+            b_write.write(b_read.read(clean = True))
 
 
         b_read.close()
