@@ -35,27 +35,17 @@ def read_file(file = None,
             raise Exception("Param wasn't set to 'reflectance' or 'radiance' got '%s'" % str(param))
 
         if clean:
-            b_write.write(b_read.read(clean = True, winsize = winsize, maxinvalid = maxinvalid))
+            b_write.write(
+                b_read.read(clean = True, winsize = winsize, maxinvalid = maxinvalid))
 
         b_read.close()
         b_write.close()
-
-        g = modis.Level1B(temp_file)
-        if param == 'reflectance':
-            b = g.reflectance(band)
-        elif param == 'radiance':
-            b = g.radiance(band)
-
-        data.append(b.read())
-        b.close()
-        g.close()
 
     granule_read.close()
     granule_write.close()
 
     if param == 'reflectance':
-        print 'reading crefl'
-        data = modis.crefl(temp_file, bands = bands, verbose = True)
+        data = modis.crefl(temp_file, bands = bands)
 
     if 'temp_' in temp_file:
         os.remove(temp_file)
