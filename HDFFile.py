@@ -18,12 +18,11 @@ def read_file(file = None,
     data = []
     valid_range  = numpy.zeros((len(bands), 2))
 
-    temp_file = '/tmp/temp_' + os.path.basename(file)
+    temp_file = '/home1/student/svilar/Development/tmp/temp_' + os.path.basename(file)
     shutil.copyfile(file, temp_file)
 
     granule_read = modis.Level1B(file, mode = 'r')
     granule_write = modis.Level1B(temp_file, mode = 'w')
-
     for band in bands:
         if param == 'reflectance':
             b_read = granule_read.reflectance(band)
@@ -38,11 +37,13 @@ def read_file(file = None,
             b_write.write(
                 b_read.read(clean = True, winsize = winsize, maxinvalid = maxinvalid))
 
-        b_read.close()
         b_write.close()
+        b_read.close()
 
-    granule_read.close()
+
     granule_write.close()
+    granule_read.close()
+
 
     if param == 'reflectance':
         data = modis.crefl(temp_file, bands = bands)
