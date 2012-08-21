@@ -28,7 +28,7 @@ def test_clean_crefl(granule_path, bands = [1,2,3,4]):
         original.append(img)
 
     g_read.close()
-    #g_write.close()
+    g_write.close()
 
     crefl_data = modis.crefl(temp_file, bands = bands)
     original = numpy.dstack(original)

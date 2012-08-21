@@ -24,7 +24,7 @@ def read_file(file = None,
     granule_read = modis.Level1B(file, mode = 'r')
     granule_write = modis.Level1B(temp_file, mode = 'w')
 
-    for index, band in enumerate(bands):
+    for band in bands:
         if param == 'reflectance':
             b_read = granule_read.reflectance(band)
             b_write = granule_write.reflectance(band)
@@ -46,6 +46,11 @@ def read_file(file = None,
 
     if param == 'reflectance':
         data = modis.crefl(temp_file, bands = bands)
+    else:
+        granule_read = modis.Level1B(file, mode = 'r')
+        data = []
+        for band in bands:
+            data.append(granule_read.reflectance(band).read())
 
     if 'temp_' in temp_file:
         os.remove(temp_file)
