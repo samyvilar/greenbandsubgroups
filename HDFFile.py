@@ -155,14 +155,3 @@ class HDFFile(object):
                                                 crop_size = self.crop_size,
                                                 crop_orig = self.crop_orig)
         return self
-
-
-
-import numpy as np
-from glasslab_cluster.io import modis
-g = modis.Level1B("/tmp/MOD021KM.A2002179.1640.005.2010085164818.hdf")
-b = g.reflectance(4)
-img = b.read()
-b.write(b.fill_invalid(img, winsize = 73))
-b.close()
-g.close()
