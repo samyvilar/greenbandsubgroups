@@ -28,9 +28,9 @@ if __name__ == '__main__':
                                 'size':lut_size,
                                 'max_value':max_value,
                                 })
-
+                print 'Granule: %s' % granule[0].file_name
             except Exception as ex:
-                print str(ex)
+                print 'Exception: ' + str(ex)
                 continue
 
     mins = mins.astype('float64')
